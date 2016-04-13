@@ -1,2 +1,1 @@
-# AfyaDataApp
-#AfyaData Mobile Application
+# AfyaDataApp Mobile App

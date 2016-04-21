@@ -17,6 +17,7 @@ package org.odk.collect.android.activities;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.prefs.Preferences;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -27,10 +28,12 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -40,6 +43,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Locale;
 
 public class SplashScreenActivity extends Activity {
 
@@ -71,6 +75,14 @@ public class SplashScreenActivity extends Activity {
         // get the shared preferences object
         SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         Editor editor = mSharedPreferences.edit();
+
+        String defaultLocale = mSharedPreferences.getString(Preferences.DEFAULT_LOCALE, "sw");
+
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.locale = new Locale(defaultLocale);
+        res.updateConfiguration(conf, dm);
 
         // get the package info object with version number
         PackageInfo packageInfo = null;

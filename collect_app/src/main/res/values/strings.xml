@@ -337,6 +337,9 @@
     <string name="url_error_whitespace">whitespace is not allowed in urls</string>
     <string name="password_error_whitespace">leading or trailing whitespace not allowed in passwords</string>
     <string name="username_error_whitespace">leading or trailing whitespace not allowed in usernames</string>
-    <string name="google_play_services_error_occured">Unable to access Google Maps. Is Google Play Services installed?
-    </string>
+    <string name="google_play_services_error_occured">Unable to access Google Maps. Is Google Play Services installed?</string>
+    <string name="lang_swahili">Swahili</string>
+    <string name="lang_english">English</string>
+    <string name="btn_change_language">Change language</string>
+    <string name="title_choose_language">Choose language</string>
 </resources>

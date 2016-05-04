@@ -52,7 +52,7 @@ public class SplashScreenActivity extends Activity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main_menu activity
-                Intent i = new Intent(SplashScreenActivity.this, MainMenuActivity.class);
+                Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
                 startActivity(i);
                 //progressBar Gone
                 progressBar.setProgress(View.GONE);

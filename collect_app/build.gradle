@@ -19,8 +19,7 @@ android {
     // The following are set in the common.gradle file
     compileSdkVersion('Google Inc.:Google APIs:23')
     buildToolsVersion('23.0.1')
-    useLibrary  'org.apache.http.legacy'
-
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId("org.odk.collect.android")
         minSdkVersion(8)
@@ -28,7 +27,6 @@ android {
         versionCode(1053)
         versionName("1.4.7")
     }
-
     buildTypes {
         release {
             minifyEnabled(minify)
@@ -41,11 +39,13 @@ android {
             testCoverageEnabled(testCoverage) // Allows AndroidTest JaCoCo reports to be generated
         }
     }
-
-    packagingOptions { // Pick first occurrence of any files that cause conflicts, as defined in common.gradle
+    packagingOptions {
+        // Pick first occurrence of any files that cause conflicts, as defined in common.gradle
         packageList.each {
             pickFirst it
         }
+    }
+    productFlavors {
     }
 }
 

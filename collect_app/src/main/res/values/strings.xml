@@ -346,4 +346,7 @@
     <string name="lang_english">English</string>
     <string name="btn_change_language">Change language</string>
     <string name="title_choose_language">Choose language</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

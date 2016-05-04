@@ -12,7 +12,7 @@
 		android:layout_centerHorizontal="true"
 		android:layout_gravity="center"
 		android:layout_marginBottom="60dp"
-		android:indeterminateTint="@color/accent"
+		android:indeterminateTint="@color/primary"
 		android:indeterminateTintMode="src_atop" />
 
 </RelativeLayout>

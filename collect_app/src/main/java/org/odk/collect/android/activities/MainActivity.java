@@ -1,15 +1,22 @@
 package org.odk.collect.android.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,10 +27,14 @@ import android.widget.ListView;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.NavDrawerListAdapter;
 import org.odk.collect.android.fragments.CampaignFragment;
+import org.odk.collect.android.fragments.FormsFragment;
+import org.odk.collect.android.fragments.HealthTipsFragment;
 import org.odk.collect.android.models.NavDrawerItem;
 import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.prefs.Preferences;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends Activity {
 
@@ -44,10 +55,18 @@ public class MainActivity extends Activity {
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
 
+    private Context context = this;
+    SharedPreferences settings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        settings = getSharedPreferences(Preferences.AFYA_DATA,MODE_PRIVATE);
+        if (settings.getBoolean(Preferences.FIRST_TIME_APP_OPENED, true)) {
+            showChangeLanguageDialog();
+        }
 
         //deal with Navigation drawer
         mTitle = mDrawerTitle = getTitle();
@@ -61,30 +80,20 @@ public class MainActivity extends Activity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
-        //View header = getLayoutInflater().inflate(R.layout.header_layout, null);
-        //mDrawerList.addHeaderView(header);
 
         navDrawerItems = new ArrayList<NavDrawerItem>();
 
         // adding nav drawer items to array
         // Home
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-        // Fill blank form
+        // Form Feedback
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-        // Edit saved Forms
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
-        // Send Finalized forms
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-        // Delete saved forms
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
-        // Download Forms
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
-        //Forms Feedback
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
         // Health Tips
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[7], navMenuIcons.getResourceId(7, -1)));
-        //Settings
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[8], navMenuIcons.getResourceId(8, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+        // Settings
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
+        // Change language
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
 
         // Recycle the typed array
         navMenuIcons.recycle();
@@ -203,48 +212,21 @@ public class MainActivity extends Activity {
                 fragment = new CampaignFragment();
                 break;
             case 1:
-                //fill blank form
-                Intent blankForms = new Intent(getApplicationContext(),
-                        FormChooserList.class);
-                startActivity(blankForms);
+                //Forms feedback
+                fragment = new FormsFragment();
                 break;
             case 2:
-                //Edit forms
-                Intent editForms = new Intent(getApplicationContext(),
-                        InstanceChooserList.class);
-                startActivity(editForms);
+                //Health Tips
+                fragment = new HealthTipsFragment();
                 break;
             case 3:
-                //send finalized Forms
-                Intent sendForms = new Intent(getApplicationContext(),
-                        InstanceUploaderList.class);
-                startActivity(sendForms);
-                break;
-            case 4:
-                //delete saved forms
-                Intent deleteForms = new Intent(getApplicationContext(),
-                        FileManagerTabs.class);
-                startActivity(deleteForms);
-                break;
-            case 5:
-                //Download form from server
-                Intent downloadForms = new Intent(getApplicationContext(),
-                        FormDownloadList.class);
-                startActivity(downloadForms);
-                break;
-            case 6:
-                //Forms feedback
-                //fragment = new FormsFragment();
-                break;
-            case 7:
-                //Health Tips
-                //Intent healthTips = new Intent(getApplicationContext(), HealthTipsActivity.class);
-                //startActivity(healthTips);
-                break;
-            case 8:
                 //General Settings
                 Intent mySettings = new Intent(getApplicationContext(), PreferencesActivity.class);
                 startActivity(mySettings);
+                break;
+            case 4:
+                //General Settings
+                showChangeLanguageDialog();
                 break;
 
             default:
@@ -290,6 +272,82 @@ public class MainActivity extends Activity {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+
+    private void showChangeLanguageDialog() {
+
+        LayoutInflater li = LayoutInflater.from(context);
+        View promptView = li.inflate(R.layout.dialog_change_language, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+        alertDialogBuilder.setView(promptView);
+
+        // set dialog message
+        alertDialogBuilder.setTitle(R.string.title_choose_language);
+        alertDialogBuilder.setIcon(R.drawable.ic_language_black_48dp);
+        // create alert dialog
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+
+        promptView.findViewById(R.id.btn_swahili).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLocale("sw");
+                alertDialog.dismiss();
+            }
+
+        });
+
+        promptView.findViewById(R.id.btn_english).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLocale("en");
+                alertDialog.dismiss();
+            }
+
+        });
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
+
+        alertDialog.show();
+        alertDialog.setCanceledOnTouchOutside(false);
+    }
+
+    private void setLocale(String locale) {
+        Resources res = context.getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.locale = new Locale(locale);
+        res.updateConfiguration(conf, dm);
+        settings.edit().putString(Preferences.DEFAULT_LOCALE, locale).commit();
+        settings.edit().putBoolean(Preferences.FIRST_TIME_APP_OPENED, false).commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        moveTaskToBack(true);
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+
     }
 
 

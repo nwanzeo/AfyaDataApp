@@ -25,40 +25,23 @@
 	<string name="drawer_open">Open</string>
 	<string name="drawer_close">Close</string>
 
-	<string name="nav_item_forms">Home</string>
-	<string name="nav_item_blank">Fill Blank Forms</string>
-	<string name="nav_item_edit">Edit Saved Forms</string>
-	<string name="nav_item_send">Send Finalized Forms</string>
-	<string name="nav_item_delete">Delete Saved Forms</string>
-	<string name="nav_item_download">Download Forms</string>
-	<string name="nav_item_feedback">Form Feedback</string>
-	<string name="nav_item_tips">Health Tips</string>
-	<string name="nav_item_settings">Settings</string>
 
 	<!-- Nav Drawer Menu Items -->
 	<string-array name="nav_drawer_items">
 		<item>@string/nav_item_forms</item>
-		<item>@string/nav_item_blank</item>
-		<item>@string/nav_item_edit</item>
-		<item>@string/nav_item_send</item>
-		<item>@string/nav_item_delete</item>
-		<item>@string/nav_item_download</item>
 		<item>@string/nav_item_feedback</item>
 		<item>@string/nav_item_tips</item>
 		<item>@string/nav_item_settings</item>
+		<item>@string/nav_item_language</item>
 	</string-array>
 
 	<!-- Nav Drawer List Item Icons -->
 	<!-- Keep them in order as the titles are in -->
 	<array name="nav_drawer_icons">
 		<item>@drawable/ic_home_white_48dp</item>
-		<item>@drawable/ic_folder_open_white_48dp</item>
-		<item>@drawable/ic_mode_edit_white_48dp</item>
-		<item>@drawable/ic_file_upload_white_48dp</item>
-		<item>@drawable/ic_delete_forever_white_48dp</item>
-		<item>@drawable/ic_action_download</item>
-		<item>@drawable/ic_mode_comment_white_48dp</item>
+		<item>@drawable/ic_feedback_white_48dp</item>
 		<item>@drawable/ic_note_add_white_48dp</item>
 		<item>@drawable/ic_action_settings</item>
+		<item>@drawable/ic_language_white_48dp</item>
 	</array>
 </resources>

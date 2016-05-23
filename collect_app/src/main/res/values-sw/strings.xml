@@ -244,4 +244,15 @@
   <string name="lang_english">Kiingereza</string>
   <string name="btn_change_language">Badilisha lugha</string>
   <string name="title_choose_language">Chagua lugha</string>
+
+
+     <!-- NEW STRING -->
+  <string name="nav_item_forms">Mwanzo</string>
+  <string name="nav_item_feedback">Maoni</string>
+  <string name="nav_item_tips">Afya Taarifa</string>
+  <string name="nav_item_settings">Mpangilio</string>
+  <string name="nav_item_language">Badili Lugha</string>
+
+  <string name="edit_feedback">Weka maoni yako</string>
+  <string name="submit_feedback">Tuma</string>
 </resources>

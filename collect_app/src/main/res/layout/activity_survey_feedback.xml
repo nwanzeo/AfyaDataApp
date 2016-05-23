@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null"
+    android:orientation="vertical"
+    tools:context=".activities.SurveyFeedbackActivity">
+
+    <ListView
+        android:id="@+id/list_feedback"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        android:divider="@null"
+        android:scrollbars="none"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/list_feedback"
+        android:layout_marginTop="5dp"
+        android:background="@color/grey" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <EditText
+            android:id="@+id/edit_feedback"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:paddingLeft="5dp"
+            android:hint="@string/edit_feedback"
+            android:background="@color/white" />
+
+        <Button
+            android:id="@+id/btn_submit_feedback"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_weight="1"
+            android:textAllCaps="true"
+            android:textColor="@color/primary"
+            android:text="@string/submit_feedback" />
+
+    </LinearLayout>
+</LinearLayout>

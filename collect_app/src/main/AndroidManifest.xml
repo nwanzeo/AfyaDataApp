@@ -84,7 +84,7 @@
         <activity
             android:name=".activities.MainMenuActivity"
             android:configChanges="orientation"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
         <activity
             android:name=".activities.FormEntryActivity"
             android:configChanges="orientation"
@@ -243,7 +243,8 @@
 
         <uses-library android:name="com.google.android.maps" />
 
-        <activity android:name=".activities.MainActivity"></activity>
+        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.SurveyFeedbackActivity" />
     </application>
 
 </manifest>

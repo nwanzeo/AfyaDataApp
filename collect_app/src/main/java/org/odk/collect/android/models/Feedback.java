@@ -20,8 +20,6 @@ public class Feedback {
 
     }
 
-
-
     //Another constructor
     public Feedback(long _id, String _formId, String _instanceId, String _message, String _date){
         this.id = _id;

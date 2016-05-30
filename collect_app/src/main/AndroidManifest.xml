@@ -245,6 +245,7 @@
 
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.SurveyFeedbackActivity" />
+        <activity android:name=".activities.CampaignActivity"></activity>
     </application>
 
 </manifest>

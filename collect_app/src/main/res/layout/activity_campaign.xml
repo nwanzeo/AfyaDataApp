@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+
+    <!-- Logo Image -->
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:background="@color/white" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/icon"
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:textColor="@color/primary_text"
+        android:textAllCaps="true"
+        android:textSize="@dimen/title_large" />
+
+    <TextView
+        android:id="@+id/form_id"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:paddingTop="2dp"
+        android:textAllCaps="true"
+        android:textColor="@color/primary_text"
+        android:textSize="@dimen/text_medium" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/form_id"
+        android:layout_marginTop="2dp"
+        android:background="@color/grey" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider"
+        android:padding="5dp"
+        android:textColor="@color/primary_text"
+        android:textSize="@dimen/text_large" />
+
+    <Button
+        android:id="@+id/btn_fill_form"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/primary_dark"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+        android:textSize="@dimen/text_large"
+        android:visibility="gone"
+        android:text="@string/enter_data"/>
+
+</RelativeLayout>
+
+

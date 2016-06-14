@@ -15,23 +15,12 @@ import java.net.URL;
 /**
  * Created by Renfrid-Sacids on 3/16/2016.
  */
+
 public class RestClient {
     private static AsyncHttpClient client = new AsyncHttpClient();
-    private URL urlObject;
 
-
-    public static void get(String username, String password, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-
-        Uri u = Uri.parse(url);
-        client.clearCredentialsProvider();
-        client.setCredentials(
-                new AuthScope(u.getHost(), u.getPort() == -1 ? 80 : u.getPort()),
-                new UsernamePasswordCredentials(
-                        username,
-                        password
-                )
-        );
-        client.setAuthenticationPreemptive(true);
+    public static void get(String url, RequestParams params,
+                           AsyncHttpResponseHandler responseHandler) {
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
@@ -41,8 +30,8 @@ public class RestClient {
     }
 
     private static String getAbsoluteUrl(String relativeUrl) {
-        Log.d("Rest client", "Request page => " + relativeUrl);
-        return relativeUrl;
+        Log.d("Request url ", "Request page => " + relativeUrl);
+        return  relativeUrl;
     }
 }
 

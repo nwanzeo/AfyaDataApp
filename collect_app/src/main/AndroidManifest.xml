@@ -244,8 +244,9 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity android:name=".activities.MainActivity" />
-        <activity android:name=".activities.SurveyFeedbackActivity" />
-        <activity android:name=".activities.CampaignActivity"></activity>
+        <activity android:name=".activities.ChatListActivity" />
+        <activity android:name=".activities.CampaignActivity" />
+        <activity android:name=".activities.HeathTipsActivity"></activity>
     </application>
 
 </manifest>

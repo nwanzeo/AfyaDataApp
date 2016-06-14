@@ -1,33 +1,52 @@
 package org.odk.collect.android.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.Date;
+
 /**
  * Created by Renfrid-Sacids on 3/15/2016.
  */
-public class Feedback {
+public class Feedback implements Parcelable{
 
     private long id;
-    private long userId;
-    private String userName;
     private String formId;
     private String instanceId;
+    private String title;
     private String message;
-    private String dateCreated;
-    private String viewedBy;
     public String sender;
+    private String userName;
+    private String dateCreated;
+    private String status;
 
-    //empty Constructor
-    public Feedback(){
-
+    public Feedback() {
     }
 
-    //Another constructor
-    public Feedback(long _id, String _formId, String _instanceId, String _message, String _date){
-        this.id = _id;
-        this.formId = _formId;
-        this.instanceId = _instanceId;
-        this.message = _message;
-        this.dateCreated = _date;
+    public Feedback(long id, String formId, String instanceId, String title, String message, String sender, String userName, String dateCreated, String status) {
+        this.id = id;
+        this.formId = formId;
+        this.instanceId = instanceId;
+        this.title = title;
+        this.message = message;
+        this.sender = sender;
+        this.userName = userName;
+        this.dateCreated = dateCreated;
+        this.status = status;
     }
+
+    public Feedback(Parcel in){
+        id = in.readInt();
+        formId = in.readString();
+        instanceId = in.readString();
+        title = in.readString();
+        message = in.readString();
+        sender = in.readString();
+        userName = in.readString();
+        dateCreated = in.readString();
+        status = in.readString();
+    }
+
 
     public long getId() {
         return id;
@@ -35,22 +54,6 @@ public class Feedback {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getFormId() {
@@ -69,28 +72,20 @@ public class Feedback {
         this.instanceId = instanceId;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public String getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(String dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public String getViewedBy() {
-        return viewedBy;
-    }
-
-    public void setViewedBy(String viewedBy) {
-        this.viewedBy = viewedBy;
     }
 
     public String getSender() {
@@ -101,20 +96,60 @@ public class Feedback {
         this.sender = sender;
     }
 
-    @Override
-    public String toString() {
-        return "Feedback{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", formId='" + formId + '\'' +
-                ", instanceId='" + instanceId + '\'' +
-                ", message='" + message + '\'' +
-                ", dateCreated='" + dateCreated + '\'' +
-                ", viewedBy='" + viewedBy + '\'' +
-                ", sender='" + sender + '\'' +
-                '}';
+    public String getUserName() {
+        return userName;
     }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(formId);
+        dest.writeString(instanceId);
+        dest.writeString(title);
+        dest.writeString(message);
+        dest.writeString(sender);
+        dest.writeString(userName);
+        dest.writeString(dateCreated);
+        dest.writeString(status);
+    }
+
+    public static final Parcelable.Creator<Feedback> CREATOR = new Parcelable.Creator<Feedback>() {
+
+        @Override
+        public Feedback createFromParcel(Parcel source) {
+            return new Feedback(source);
+        }
+
+        @Override
+        public Feedback[] newArray(int size) {
+            return new Feedback[size];
+        }
+    };
 }
 
 

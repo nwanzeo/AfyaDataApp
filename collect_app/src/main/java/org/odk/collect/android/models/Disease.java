@@ -1,9 +1,12 @@
 package org.odk.collect.android.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Renfrid-Sacids on 5/30/2016.
  */
-public class Disease {
+public class Disease implements Parcelable {
     private long id;
     private String title;
     private String specie_title;
@@ -17,6 +20,13 @@ public class Disease {
         this.title = title;
         this.specie_title = specie_title;
         this.description = description;
+    }
+
+    public Disease(Parcel in){
+        id = in.readLong();
+        title = in.readString();
+        specie_title = in.readString();
+        description = in.readString();
     }
 
     public long getId() {
@@ -50,4 +60,30 @@ public class Disease {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(title);
+        dest.writeString(specie_title);
+        dest.writeString(description);
+    }
+
+    public static final Parcelable.Creator<Disease> CREATOR = new Parcelable.Creator<Disease>() {
+
+        @Override
+        public Disease createFromParcel(Parcel source) {
+            return new Disease(source);
+        }
+
+        @Override
+        public Disease[] newArray(int size) {
+            return new Disease[size];
+        }
+    };
 }

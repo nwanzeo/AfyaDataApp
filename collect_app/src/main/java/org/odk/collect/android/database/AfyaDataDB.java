@@ -17,6 +17,7 @@ import android.util.Log;
 import org.odk.collect.android.models.Campaign;
 import org.odk.collect.android.models.Disease;
 import org.odk.collect.android.models.Feedback;
+import org.odk.collect.android.picasa.Feed;
 
 public class AfyaDataDB extends SQLiteOpenHelper {
 
@@ -24,7 +25,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 4;
 
     // Database Name
     private static final String DATABASE_NAME = "afyadata.db";
@@ -34,10 +35,12 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     public static final String KEY_FEEDBACK_ID = "id";
     public static final String KEY_FEEDBACK_FORM_ID = "form_id";
     public static final String KEY_INSTANCE_ID = "instance_id";
+    public static final String KEY_FORM_TITLE = "title";
     public static final String KEY_MESSAGE = "message";
+    public static final String KEY_SENDER = "sender";
+    public static final String KEY_USER = "user";
     public static final String KEY_DATE_CREATED = "date_created";
-
-    private Feedback feedback = null;
+    public static final String KEY_FEEDBACK_STATUS = "status";
 
     //Campaign table
     public static final String TABLE_CAMPAIGN = "campaign";
@@ -49,9 +52,8 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     public static final String KEY_CAMPAIGN_FORM_ID = "form_id";
     public static final String KEY_CAMPAIGN_DATE_CREATED = "date_created";
 
-
     //OHKR disease table
-    public  static final String TABLE_OHKR_DISEASE = "ohkr_disease";
+    public static final String TABLE_OHKR_DISEASE = "ohkr_disease";
     public static final String KEY_DISEASE_ID = "id";
     public static final String KEY_DISEASE_TITLE = "title";
     public static final String KEY_DISEASE_DESCRIPTION = "description";
@@ -70,8 +72,12 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 + KEY_FEEDBACK_ID + " INTEGER PRIMARY KEY,"
                 + KEY_FEEDBACK_FORM_ID + " TEXT,"
                 + KEY_INSTANCE_ID + " TEXT,"
+                + KEY_FORM_TITLE + " TEXT,"
                 + KEY_MESSAGE + " TEXT,"
-                + KEY_DATE_CREATED + " TEXT" + ")";
+                + KEY_SENDER + " TEXT,"
+                + KEY_USER + " TEXT,"
+                + KEY_DATE_CREATED + " TEXT,"
+                + KEY_FEEDBACK_STATUS + " TEXT" + ")";
 
         String CREATE_CAMPAIGN_TABLE = "CREATE TABLE "
                 + TABLE_CAMPAIGN + "("
@@ -119,48 +125,19 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_FEEDBACK_ID, feedback.getId()); // Feedback id
-        values.put(KEY_FEEDBACK_FORM_ID, feedback.getFormId()); // Form id
+        values.put(KEY_FEEDBACK_ID, feedback.getId());
+        values.put(KEY_FEEDBACK_FORM_ID, feedback.getFormId());
         values.put(KEY_INSTANCE_ID, feedback.getInstanceId());
-        values.put(KEY_MESSAGE, feedback.getMessage()); //Message
-        values.put(KEY_DATE_CREATED, feedback.getDateCreated()); //date created
+        values.put(KEY_FORM_TITLE, feedback.getTitle());
+        values.put(KEY_MESSAGE, feedback.getMessage());
+        values.put(KEY_SENDER, feedback.getSender());
+        values.put(KEY_USER, feedback.getUserName());
+        values.put(KEY_DATE_CREATED, feedback.getDateCreated());
+        values.put(KEY_FEEDBACK_STATUS, feedback.getStatus());
 
         // Inserting Row
         db.insert(TABLE_FEEDBACK, null, values);
         db.close(); // Closing database connection
-    }
-
-    // Getting single Feedback
-    public Feedback getFeedback(Long id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_FEEDBACK, new String[]{KEY_FEEDBACK_ID,
-                        KEY_FEEDBACK_ID, KEY_INSTANCE_ID, KEY_MESSAGE, KEY_DATE_CREATED}, KEY_FEEDBACK_ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null, null);
-
-        if (cursor != null)
-            cursor.moveToFirst();
-
-        Feedback feedback = new Feedback(Long.parseLong(cursor.getString(1)),
-                cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
-        // return feedback
-        return feedback;
-    }
-
-    public Feedback getLastFeedback() {
-        String selectQuery = "SELECT  * FROM " + TABLE_FEEDBACK + " ORDER BY " + KEY_FEEDBACK_ID + " DESC LIMIT 1";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        //check if cursor not null
-        if (cursor != null && cursor.moveToFirst()) {
-            //feedback constructor
-            feedback = new Feedback(Long.parseLong(cursor.getString(1)),
-                    cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5));
-        }
-        // return feedback
-        return feedback;
     }
 
     // Getting All Feedback
@@ -168,7 +145,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
         List<Feedback> feedbackList = new ArrayList<Feedback>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_FEEDBACK;
+        String selectQuery = "SELECT  * FROM " + TABLE_FEEDBACK + " GROUP BY " + KEY_INSTANCE_ID;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -177,11 +154,15 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 Feedback feedback = new Feedback();
-                feedback.setId(Integer.parseInt(cursor.getString(1)));
-                feedback.setFormId(cursor.getString(2));
-                feedback.setInstanceId(cursor.getString(3));
-                feedback.setMessage(cursor.getString(4));
-                feedback.setDateCreated(cursor.getString(5));
+                feedback.setId(Long.parseLong(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_ID))));
+                feedback.setFormId(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_FORM_ID)));
+                feedback.setInstanceId(cursor.getString(cursor.getColumnIndex(KEY_INSTANCE_ID)));
+                feedback.setTitle(cursor.getString(cursor.getColumnIndex(KEY_FORM_TITLE)));
+                feedback.setMessage(cursor.getString(cursor.getColumnIndex(KEY_MESSAGE)));
+                feedback.setSender(cursor.getString(cursor.getColumnIndex(KEY_SENDER)));
+                feedback.setUserName(cursor.getString(cursor.getColumnIndex(KEY_USER)));
+                feedback.setDateCreated(cursor.getString(cursor.getColumnIndex(KEY_DATE_CREATED)));
+                feedback.setStatus(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_STATUS)));
 
                 // Adding feedback to list
                 feedbackList.add(feedback);
@@ -193,15 +174,68 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     }
 
 
+    // Getting Feedback by Instance
+    public List<Feedback> getFeedbackByInstance(String instanceId) {
+
+        List<Feedback> feedbackList = new ArrayList<Feedback>();
+        // Select All Query based on instanceId
+        String selectQuery = "SELECT * FROM " + TABLE_FEEDBACK + " WHERE " + KEY_INSTANCE_ID + " = ?";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, new String[] {instanceId});
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Feedback feedback = new Feedback();
+                feedback.setId(Long.parseLong(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_ID))));
+                feedback.setFormId(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_FORM_ID)));
+                feedback.setInstanceId(cursor.getString(cursor.getColumnIndex(KEY_INSTANCE_ID)));
+                feedback.setTitle(cursor.getString(cursor.getColumnIndex(KEY_FORM_TITLE)));
+                feedback.setMessage(cursor.getString(cursor.getColumnIndex(KEY_MESSAGE)));
+                feedback.setSender(cursor.getString(cursor.getColumnIndex(KEY_SENDER)));
+                feedback.setUserName(cursor.getString(cursor.getColumnIndex(KEY_USER)));
+                feedback.setDateCreated(cursor.getString(cursor.getColumnIndex(KEY_DATE_CREATED)));
+                feedback.setStatus(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_STATUS)));
+
+                // Adding feedback to list
+                feedbackList.add(feedback);
+            } while (cursor.moveToNext());
+        }
+
+        // return feedback list
+        return feedbackList;
+    }
+
+    //check if feedback exists
+    public boolean isFeedbackExist(Feedback feedback) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_FEEDBACK, new String[]{KEY_FEEDBACK_ID,
+                        KEY_FEEDBACK_FORM_ID, KEY_INSTANCE_ID, KEY_FORM_TITLE, KEY_MESSAGE, KEY_SENDER, KEY_USER,
+                        KEY_DATE_CREATED, KEY_FEEDBACK_STATUS},
+                KEY_FEEDBACK_ID + "=?", new String[]{String.valueOf(feedback.getId())}, null, null, null, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+        return (count > 0) ? true : false;
+    }
+
+
     // Updating single feedback
     public int updateFeedback(Feedback feedback) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_FEEDBACK_ID, feedback.getId());
+
         values.put(KEY_FEEDBACK_FORM_ID, feedback.getFormId());
+        values.put(KEY_INSTANCE_ID, feedback.getInstanceId());
+        values.put(KEY_FORM_TITLE, feedback.getTitle());
         values.put(KEY_MESSAGE, feedback.getMessage());
+        values.put(KEY_SENDER, feedback.getSender());
+        values.put(KEY_USER, feedback.getUserName());
         values.put(KEY_DATE_CREATED, feedback.getDateCreated());
+        values.put(KEY_FEEDBACK_STATUS, feedback.getStatus());
 
         // updating row
         return db.update(TABLE_FEEDBACK, values, KEY_FEEDBACK_ID + " = ?",
@@ -216,16 +250,20 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         db.close();
     }
 
-
     // Getting feedback Count
     public int getFeedbackCount() {
+        int count = 0;
         String countQuery = "SELECT  * FROM " + TABLE_FEEDBACK;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
+
+        if(cursor != null && !cursor.isClosed()){
+            count = cursor.getCount();
+            cursor.close();
+        }
 
         // return count
-        return cursor.getCount();
+        return count;
     }
 
     /**
@@ -336,6 +374,22 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 KEY_CAMPAIGN_ID + " = " + campaign.getId(), null);
     }
 
+    // Getting feedback Count
+    public int getCampaignCount() {
+        int count = 0;
+
+        String countQuery = "SELECT  * FROM " + TABLE_CAMPAIGN;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        if(cursor != null && !cursor.isClosed()){
+            count = cursor.getCount();
+            cursor.close();
+        }
+        // return count
+        return count;
+    }
+
 
     /**
      * All CRUD(Create, Read, Update, Delete) Operations for OHKR Disease
@@ -429,7 +483,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         values.put(KEY_SPECIE_TITLE, disease.getSpecie_title());
 
         db.update(TABLE_OHKR_DISEASE, values,
-                KEY_DISEASE_ID+ " = " + disease.getId(), null);
+                KEY_DISEASE_ID + " = " + disease.getId(), null);
     }
 
 

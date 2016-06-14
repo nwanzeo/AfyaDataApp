@@ -6,11 +6,12 @@
     android:orientation="vertical">
 
     <ListView
-        android:id="@+id/lv_survey_forms_status"
+        android:id="@+id/list_feedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:listSelector="@drawable/list_row_selector"
         android:scrollbars="none" />
+
 </RelativeLayout>

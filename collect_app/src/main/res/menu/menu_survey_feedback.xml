@@ -1,11 +1,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.SurveyFeedbackActivity">
+    tools:context=".activities.ChatListActivity">
+
     <item
-        android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh"
+        android:id="@+id/action_form_details"
+        android:icon="@drawable/ic_create_new_folder_white_48dp"
         android:showAsAction="always"
-        android:title="Refresh" />
+        android:title="Form Details" />
 
 </menu>

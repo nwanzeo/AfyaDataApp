@@ -249,7 +249,7 @@ public class InstanceUploaderList extends ListActivity implements
             i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIDs);
             startActivityForResult(i, INSTANCE_UPLOADER);
         } else {
-            // otherwise, do the normal agregate/other thing.
+            // otherwise, do the normal aggregate/other thing.
             Intent i = new Intent(this, InstanceUploaderActivity.class);
             i.putExtra(FormEntryActivity.KEY_INSTANCES, instanceIDs);
             startActivityForResult(i, INSTANCE_UPLOADER);

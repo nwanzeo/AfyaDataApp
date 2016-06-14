@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@null"
     android:orientation="vertical"
-    tools:context=".activities.SurveyFeedbackActivity">
+    tools:context=".activities.ChatListActivity">
 
     <ListView
         android:id="@+id/list_feedback"
@@ -29,26 +29,30 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:layout_margin="2dp"
+        android:weightSum="1">
 
         <EditText
             android:id="@+id/edit_feedback"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="2"
+            android:layout_weight="0.8"
             android:paddingLeft="5dp"
-            android:hint="@string/edit_feedback"
-            android:background="@color/white" />
+            android:textColorHint="@color/color_text"
+            android:background="@null"
+            android:hint="@string/edit_feedback" />
 
         <Button
             android:id="@+id/btn_submit_feedback"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            android:layout_weight="1"
+            android:background="@color/primary"
+            android:layout_weight="0.2"
             android:textAllCaps="true"
-            android:textColor="@color/primary"
+            android:textStyle="bold"
+            android:textColor="@color/white"
             android:text="@string/submit_feedback" />
 
     </LinearLayout>

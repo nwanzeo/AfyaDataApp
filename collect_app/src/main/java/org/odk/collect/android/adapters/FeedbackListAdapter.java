@@ -1,30 +1,28 @@
 package org.odk.collect.android.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import org.odk.collect.android.R;
 import org.odk.collect.android.models.Feedback;
 
 import java.util.List;
 
-
 /**
- * Created by Renfrid-Sacids on 2/11/2016.
+ * Created by Renfrid-Sacids on 2/22/2016.
  */
-public class FeedbackListAdapter extends BaseAdapter {
 
-    private Activity activity;
-    private LayoutInflater inflater;
+public class FeedbackListAdapter extends BaseAdapter {
+    private Context context;
     private List<Feedback> feedbackList;
 
-    public FeedbackListAdapter(Activity activity, List<Feedback> feedback) {
-        this.activity = activity;
-        this.feedbackList = feedback;
+    public FeedbackListAdapter(Context context, List<Feedback> feedbackList) {
+        this.context = context;
+        this.feedbackList = feedbackList;
     }
 
     @Override
@@ -44,27 +42,23 @@ public class FeedbackListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = li.inflate(R.layout.list_item_feedback, null);
 
-        if (inflater == null)
-            inflater = (LayoutInflater) activity
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null) {
+        Feedback feedback = feedbackList.get(position);
 
-            Feedback msg = feedbackList.get(position);
+        TextView form_name = (TextView) convertView.findViewById(R.id.form_name);
+        form_name.setText(feedback.getTitle());
 
-            //check user
-            if (msg.getSender().equalsIgnoreCase("user")) {
-                convertView = inflater.inflate(R.layout.feedback_item_right, null);
-            } else {
-                convertView = inflater.inflate(R.layout.feedback_item_left, null);
-            }
+        TextView last_message = (TextView) convertView.findViewById(R.id.last_message);
+        last_message.setText(feedback.getMessage());
 
-            //get TextView
-            TextView tv = (TextView) convertView.findViewById(R.id.tv_message);
-            tv.setText(msg.getMessage());
+        TextView instance_id = (TextView) convertView.findViewById(R.id.instance_id);
+        instance_id.setText(feedback.getInstanceId());
 
-        }
+        TextView form_id = (TextView) convertView.findViewById(R.id.form_id);
+        form_id.setText(feedback.getFormId());
+
         return convertView;
     }
 }
-

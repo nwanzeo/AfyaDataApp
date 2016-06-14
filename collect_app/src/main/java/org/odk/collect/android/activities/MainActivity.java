@@ -27,7 +27,7 @@ import android.widget.ListView;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.NavDrawerListAdapter;
 import org.odk.collect.android.fragments.CampaignFragment;
-import org.odk.collect.android.fragments.FormsFragment;
+import org.odk.collect.android.fragments.FeedbackFragment;
 import org.odk.collect.android.fragments.HealthTipsFragment;
 import org.odk.collect.android.models.NavDrawerItem;
 import org.odk.collect.android.preferences.PreferencesActivity;
@@ -218,7 +218,7 @@ public class MainActivity extends Activity {
                 break;
             case 1:
                 //Forms feedback
-                fragment = new FormsFragment();
+                fragment = new FeedbackFragment();
                 break;
             case 2:
                 //Health Tips
@@ -352,7 +352,6 @@ public class MainActivity extends Activity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
-
     }
 
 

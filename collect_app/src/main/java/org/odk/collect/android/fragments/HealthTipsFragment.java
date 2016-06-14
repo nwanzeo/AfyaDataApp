@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import web.BackgroundClient;
 import web.RestClient;
 
 
@@ -43,9 +46,6 @@ public class HealthTipsFragment extends Fragment {
     private List<Disease> diseaseList = new ArrayList<Disease>();
     private ListView listView;
     private DiseaseListAdapter adapter;
-
-    private String username;
-    private String password;
     private String serverUrl;
 
     private ProgressDialog progressDialog;
@@ -53,6 +53,11 @@ public class HealthTipsFragment extends Fragment {
 
     //AfyaData database
     private AfyaDataDB db;
+
+    private static final String TAG_ID = "id";
+    private static final String TAG_TITLE = "disease_title";
+    private static final String TAG_SPECIE_TITLE = "specie_title";
+    private static final String TAG_DESCRIPTION = "description";
 
 
     public HealthTipsFragment() {
@@ -70,9 +75,8 @@ public class HealthTipsFragment extends Fragment {
         NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        username = mSharedPreferences.getString(PreferencesActivity.KEY_USERNAME, getResources().getString(R.string.default_sacids_username));
-        password = mSharedPreferences.getString(PreferencesActivity.KEY_PASSWORD, getResources().getString(R.string.default_sacids_password));
-        serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL, getString(R.string.default_server_url));
+        serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL,
+                getString(R.string.default_server_url));
 
         listView = (ListView) rootView.findViewById(R.id.list_tips);
 
@@ -93,33 +97,16 @@ public class HealthTipsFragment extends Fragment {
         if (ni == null || !ni.isConnected())
             Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
         else
-            loadDisease();
+            new FetchTipsTask().execute();
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity(), "Disease Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return  rootView;
-    }
-
-
-    private List<Disease> getDiseaseList(JSONArray disease) throws JSONException, ParseException {
-        for (int i = 0; i < disease.length(); i++) {
-            JSONObject obj = disease.getJSONObject(i);
-
-            //Disease Object
-            Disease ds = new Disease();
-            ds.setId(obj.getInt("id"));
-            ds.setTitle(obj.getString("disease_title"));
-            ds.setSpecie_title(obj.getString("specie_title"));
-
-            //add campaign to a list
-            diseaseList.add(ds);
-
-            if (!db.isDiseaseExist(ds)) {
-                db.addDisease(ds);
-
-            } else {
-                db.updateDisease(ds);
-            }
-        }
-        return diseaseList;
     }
 
     //refresh display
@@ -130,49 +117,71 @@ public class HealthTipsFragment extends Fragment {
     }
 
 
-    //get data from server
-    public void loadDisease() {
+    class FetchTipsTask extends AsyncTask<Void, Void, Void> {
 
-        RequestParams params = new RequestParams();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
-        String diseaseURL = serverUrl + "/ohkr/get_diseases";
+        @Override
+        protected Void doInBackground(Void... params) {
 
-        RestClient.get(username, password, diseaseURL, params, new JsonHttpResponseHandler() {
+            RequestParams param = new RequestParams();
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                progressDialog.dismiss();
-                Log.d(TAG, "Server Response:" + response.toString());
+            String tipsURL = serverUrl + "/ohkr/get_diseases";
 
-                try {
-                    if (response.getString("status").equalsIgnoreCase("success")) {
-                        JSONArray diseaseArray = response.getJSONArray("disease");
-                        diseaseList = getDiseaseList(diseaseArray);
+            BackgroundClient.get(tipsURL, param, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    // If the response is JSONObject instead of expected JSONArray
+                    try {
+                        if (response.getString("status").equalsIgnoreCase("success")) {
+                            JSONArray diseaseArray = response.getJSONArray("disease");
+
+                            for (int i = 0; i < diseaseArray.length(); i++) {
+                                JSONObject obj = diseaseArray.getJSONObject(i);
+                                Disease ds = new Disease();
+                                ds.setId(obj.getInt(TAG_ID));
+                                ds.setTitle(obj.getString(TAG_TITLE));
+                                ds.setSpecie_title(obj.getString(TAG_SPECIE_TITLE));
+                                ds.setDescription(obj.getString(TAG_DESCRIPTION));
+
+                                if (!db.isDiseaseExist(ds)) {
+                                    db.addDisease(ds);
+                                } else {
+                                    db.updateDisease(ds);
+                                }
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
-                    e.printStackTrace();
                 }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                Log.d(TAG, "on Failure " + responseString);
-                Toast.makeText(getActivity(), "Unauthorized", Toast.LENGTH_SHORT).show();
-            }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                    Log.d(TAG, "on Failure " + responseString);
+                    Toast.makeText(getActivity(), "Unauthorized", Toast.LENGTH_SHORT).show();
+                }
+            });
+            return null;
+        }
 
-            @Override
-            public void onCancel() {
-                super.onCancel();
-                progressDialog.dismiss();
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            diseaseList = db.getAllDisease();
+
+            if (diseaseList.size() > 0) {
+                refreshDisplay();
             }
-        });
+        }
     }
 
 
 }
+
 

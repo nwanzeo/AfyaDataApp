@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -37,6 +38,7 @@ import org.odk.collect.android.preferences.PreferencesActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import web.BackgroundClient;
 import web.RestClient;
 
 /**
@@ -51,15 +53,21 @@ public class CampaignFragment extends Fragment {
     private GridView gridView;
     private CampaignListAdapter campaignAdapter;
 
-    private String username;
-    private String password;
-    private String serverUrl;
-
     private ProgressDialog progressDialog;
     private SharedPreferences mSharedPreferences;
+    private String serverUrl;
 
     //AfyaData database
     private AfyaDataDB db;
+
+    //variable Tag
+    private static final String TAG_ID = "id";
+    private static final String TAG_TITLE = "title";
+    private static final String TAG_TYPE = "type";
+    private static final String TAG_ICON = "icon";
+    private static final String TAG_FORM_ID = "form_id";
+    private static final String TAG_DESCRIPTION = "description";
+    private static final String TAG_DATE_CREATED = "date_created";
 
 
     public CampaignFragment() {
@@ -78,9 +86,8 @@ public class CampaignFragment extends Fragment {
         NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        username = mSharedPreferences.getString(PreferencesActivity.KEY_USERNAME, getResources().getString(R.string.default_sacids_username));
-        password = mSharedPreferences.getString(PreferencesActivity.KEY_PASSWORD, getResources().getString(R.string.default_sacids_password));
-        serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL, getString(R.string.default_server_url));
+        serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL,
+                getString(R.string.default_server_url));
 
         gridView = (GridView) rootView.findViewById(R.id.gridView);
 
@@ -101,10 +108,10 @@ public class CampaignFragment extends Fragment {
         if (ni == null || !ni.isConnected())
             Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
         else
-            loadCampaign();
+            new FetchCampaignTask().execute();
+
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
@@ -118,36 +125,6 @@ public class CampaignFragment extends Fragment {
         return rootView;
     }
 
-
-
-
-    private List<Campaign> getCampaignList(JSONArray campaign) throws JSONException, ParseException {
-        for (int i = 0; i < campaign.length(); i++) {
-            JSONObject obj = campaign.getJSONObject(i);
-
-            //campaign object
-            Campaign cmp = new Campaign();
-            cmp.setId(obj.getInt("id"));
-            cmp.setTitle(obj.getString("title"));
-            cmp.setType(obj.getString("type"));
-            cmp.setIcon(obj.getString("icon"));
-            cmp.setFormId(obj.getString("form_id"));
-            cmp.setDescription(obj.getString("description"));
-            cmp.setDateCreated(obj.getString("date_created"));
-
-            //add campaign to a list
-            campaignList.add(cmp);
-
-            if (!db.isCampaignExist(cmp)) {
-                db.addCampaign(cmp);
-
-            } else {
-                db.updateCampaign(cmp);
-            }
-        }
-        return campaignList;
-    }
-
     //refresh display
     private void refreshDisplay() {
         campaignAdapter = new CampaignListAdapter(getActivity(), campaignList);
@@ -156,47 +133,71 @@ public class CampaignFragment extends Fragment {
     }
 
 
-    //get data from server
-    public void loadCampaign() {
+    class FetchCampaignTask extends AsyncTask<Void, Void, Void> {
 
-        RequestParams params = new RequestParams();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
-        String campaignURL = serverUrl + "/campaign/get_campaign";
+        @Override
+        protected Void doInBackground(Void... params) {
 
-        RestClient.get(username, password, campaignURL, params, new JsonHttpResponseHandler() {
+            RequestParams param = new RequestParams();
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                progressDialog.dismiss();
-                Log.d(TAG, "Server Response:" + response.toString());
+            String campaignURL = serverUrl + "/campaign/get_campaign";
 
-                try {
-                    if (response.getString("status").equalsIgnoreCase("success")) {
-                        JSONArray campaignArray = response.getJSONArray("campaign");
-                        campaignList = getCampaignList(campaignArray);
+            BackgroundClient.get(campaignURL, param, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    // If the response is JSONObject instead of expected JSONArray
+                    try {
+                        if (response.getString("status").equalsIgnoreCase("success")) {
+                            JSONArray campaignArray = response.getJSONArray("campaign");
+
+                            for (int i = 0; i < campaignArray.length(); i++) {
+                                JSONObject obj = campaignArray.getJSONObject(i);
+                                Campaign cmp = new Campaign();
+                                cmp.setId(obj.getInt(TAG_ID));
+                                cmp.setTitle(obj.getString(TAG_TITLE));
+                                cmp.setType(obj.getString(TAG_TYPE));
+                                cmp.setIcon(obj.getString(TAG_ICON));
+                                cmp.setFormId(obj.getString(TAG_FORM_ID));
+                                cmp.setDescription(obj.getString(TAG_DESCRIPTION));
+                                cmp.setDateCreated(obj.getString(TAG_DATE_CREATED));
+
+                                if (!db.isCampaignExist(cmp)) {
+                                    db.addCampaign(cmp);
+                                } else {
+                                    db.updateCampaign(cmp);
+                                }
+                            }
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
-                    e.printStackTrace();
                 }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                Log.d(TAG, "on Failure " + responseString);
-                Toast.makeText(getActivity(), "Unauthorized", Toast.LENGTH_SHORT).show();
-            }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                    Log.d(TAG, "on Failure " + responseString);
+                    Toast.makeText(getActivity(), "Unauthorized", Toast.LENGTH_SHORT).show();
+                }
+            });
+            return null;
+        }
 
-            @Override
-            public void onCancel() {
-                super.onCancel();
-                progressDialog.dismiss();
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            campaignList = db.getAllCampaign();
+
+            if (campaignList.size() > 0) {
+                refreshDisplay();
             }
-        });
+        }
     }
 
 

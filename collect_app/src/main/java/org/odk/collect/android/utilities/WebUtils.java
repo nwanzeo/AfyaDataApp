@@ -160,7 +160,7 @@ public final class WebUtils {
 		clearHostCredentials(host);
 		if (username != null && username.trim().length() != 0) {
 			Log.i(t, "adding credential for host: " + host + " username:"
-					+ username);
+					+ username + " password:" + password);
 			Credentials c = new UsernamePasswordCredentials(username, password);
 			addCredentials(c, host);
 		}

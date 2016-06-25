@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,10 +62,11 @@ public class FeedbackFragment extends Fragment {
     private SharedPreferences mSharedPreferences;
     private String username;
     private String serverUrl;
-    private ProgressDialog progressDialog;
 
     //AfyaData database
     private AfyaDataDB db;
+
+    private ProgressBar progressBar;
 
     //variable Tag
     private static final String TAG_ID = "id";
@@ -76,6 +78,7 @@ public class FeedbackFragment extends Fragment {
     private static final String TAG_USER = "user";
     private static final String TAG_DATE_CREATED = "date_created";
     private static final String TAG_STATUS = "status";
+    private static final String TAG_REPLY_BY = "reply_by";
 
     private View rootView;
 
@@ -96,25 +99,25 @@ public class FeedbackFragment extends Fragment {
         NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        username = mSharedPreferences.getString(PreferencesActivity.KEY_USERNAME,
-                getResources().getString(R.string.default_sacids_username));
+        username = mSharedPreferences.getString(PreferencesActivity.KEY_USERNAME, null);
 
         serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL,
                 getString(R.string.default_server_url));
 
         listFeedback = (ListView) rootView.findViewById(R.id.list_feedback);
 
-        //show progress dialog
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Wait while loading feedback ....");
-        progressDialog.show();
+        //show progress bar
+        progressBar = new ProgressBar(getActivity());
+        progressBar.setVisibility(View.VISIBLE);
 
         db = new AfyaDataDB(getActivity());
 
-        feedbackList = db.getAllFeedback();
+        feedbackList = db.getAllFeedback(username);
 
         if (feedbackList.size() > 0) {
             refreshDisplay();
+        } else {
+            Toast.makeText(getActivity(), R.string.no_content, Toast.LENGTH_LONG).show();
         }
 
         //check network connectivity
@@ -152,7 +155,8 @@ public class FeedbackFragment extends Fragment {
     private void refreshDisplay() {
         feedbackAdapter = new FeedbackListAdapter(getActivity(), feedbackList);
         listFeedback.setAdapter(feedbackAdapter);
-        progressDialog.dismiss();
+        feedbackAdapter.notifyDataSetChanged(); //TODO: check this issue
+        progressBar.setVisibility(View.GONE);
     }
 
     class FetchFeedbackTask extends AsyncTask<Void, Void, Void> {
@@ -168,7 +172,7 @@ public class FeedbackFragment extends Fragment {
             RequestParams param = new RequestParams();
             param.add("username", username);
 
-            String feedbackURL = serverUrl + "/feedback/get_feedback";
+            String feedbackURL = serverUrl + "/api/v1/feedback/get_feedback";
 
             BackgroundClient.get(feedbackURL, param, new JsonHttpResponseHandler() {
                 @Override
@@ -190,6 +194,7 @@ public class FeedbackFragment extends Fragment {
                                 fb.setUserName(obj.getString(TAG_USER));
                                 fb.setDateCreated(obj.getString(TAG_DATE_CREATED));
                                 fb.setStatus(obj.getString(TAG_STATUS));
+                                fb.setReplyBy(obj.getString(TAG_REPLY_BY));
 
                                 if (!db.isFeedbackExist(fb)) {
                                     db.addFeedback(fb);
@@ -217,7 +222,7 @@ public class FeedbackFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            feedbackList = db.getAllFeedback();
+            feedbackList = db.getAllFeedback(username);
 
             if (feedbackList.size() > 0) {
                 refreshDisplay();

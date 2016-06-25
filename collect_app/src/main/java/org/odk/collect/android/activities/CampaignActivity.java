@@ -3,6 +3,7 @@ package org.odk.collect.android.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,7 +22,6 @@ public class CampaignActivity extends Activity {
     private AfyaDataDB db;
 
     TextView title, form_id, description;
-    private ImageLoader imageLoader;
     private ImageView icon;
     private Button btnForm;
 
@@ -42,6 +42,10 @@ public class CampaignActivity extends Activity {
 
             if (campaign != null) {
                 campaign.setId(campaign.getId());
+
+                //set Title
+                setTitle(getString(R.string.app_name) + " > " + campaign.getTitle());
+
                 try {
                     refreshDisplay();
                 } catch (ParseException e) {

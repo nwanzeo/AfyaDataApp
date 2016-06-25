@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.preferences.PrefManager;
 
 
 public class SplashScreenActivity extends Activity {
@@ -31,11 +32,16 @@ public class SplashScreenActivity extends Activity {
 
     private ProgressBar progressBar;
 
+    private PrefManager prefManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
         getActionBar().hide();
+
+        //pref Manager
+        prefManager = new PrefManager(this);
 
         //progressBar
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -51,9 +57,16 @@ public class SplashScreenActivity extends Activity {
             @Override
             public void run() {
                 // This method will be executed once the timer is over
-                // Start your app main_menu activity
-                Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
-                startActivity(i);
+                //check login
+                if (prefManager.isLoggedIn()) {
+                    Intent mainIntent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                    startActivity(mainIntent);
+                } else {
+                    //Direct to Login Activity
+                    Intent loginIntent = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                    loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(loginIntent);
+                }
                 //progressBar Gone
                 progressBar.setProgress(View.GONE);
                 finish();

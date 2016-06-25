@@ -8,9 +8,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -34,132 +36,59 @@ import web.RestClient;
 
 public class HeathTipsActivity extends Activity {
 
-    private static String TAG = "Health Tips Fragment";
-
-    private List<Disease> diseaseList = new ArrayList<Disease>();
-    private ListView listView;
-    private DiseaseListAdapter adapter;
-    private String serverUrl;
-
-    private ProgressDialog progressDialog;
-    private SharedPreferences mSharedPreferences;
-
-    //AfyaData database
+    private Bundle bundle;
+    private Disease disease = null;
     private AfyaDataDB db;
 
-    private static final String TAG_ID = "id";
-    private static final String TAG_TITLE = "disease_title";
-    private static final String TAG_SPECIE_TITLE = "specie_title";
-    private static final String TAG_DESCRIPTION = "description";
+    TextView title, description, causes, symptoms, diagnosis, treatment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heath_tips);
 
-        ConnectivityManager connectivityManager =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo ni = connectivityManager.getActiveNetworkInfo();
-
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL, getString(R.string.default_server_url));
-
-        listView = (ListView) findViewById(R.id.list_tips);
-
-        //show progress dialog
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Wait while loading tips ....");
-        progressDialog.show();
-
+        bundle = getIntent().getExtras();
+        disease = new Disease();
         db = new AfyaDataDB(this);
 
-        diseaseList = db.getAllDisease();
+        //initialize form
+        initializeView();
 
-        if (diseaseList.size() > 0) {
-            refreshDisplay();
-        }
+        if (bundle != null) {
+            disease = bundle.getParcelable(".models.Disease");
 
-        //check network connectivity
-        if (ni == null || !ni.isConnected())
-            Toast.makeText(this, R.string.no_connection, Toast.LENGTH_SHORT).show();
-        else
-            loadDisease();
+            if (disease != null) {
+                disease.setId(disease.getId());
 
-
-    }
-
-    private List<Disease> getDiseaseList(JSONArray disease) throws JSONException, ParseException {
-        for (int i = 0; i < disease.length(); i++) {
-            JSONObject obj = disease.getJSONObject(i);
-
-            //Disease Object
-            Disease ds = new Disease();
-            ds.setId(obj.getInt(TAG_ID));
-            ds.setTitle(obj.getString(TAG_TITLE));
-            ds.setSpecie_title(obj.getString(TAG_SPECIE_TITLE));
-
-            //add campaign to a list
-            diseaseList.add(ds);
-
-            if (!db.isDiseaseExist(ds)) {
-                db.addDisease(ds);
-
-            } else {
-                db.updateDisease(ds);
-            }
-        }
-        return diseaseList;
-    }
-
-    //refresh display
-    private void refreshDisplay() {
-        adapter = new DiseaseListAdapter(this, diseaseList);
-        listView.setAdapter(adapter);
-        progressDialog.dismiss();
-    }
-
-
-    //get data from server
-    public void loadDisease() {
-
-        RequestParams params = new RequestParams();
-
-        String diseaseURL = serverUrl + "/ohkr/get_diseases";
-
-        RestClient.get(diseaseURL, params, new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                progressDialog.dismiss();
-                Log.d(TAG, "Server Response:" + response.toString());
+                //set Title
+                setTitle(getString(R.string.app_name) + " > " + disease.getTitle());
 
                 try {
-                    if (response.getString("status").equalsIgnoreCase("success")) {
-                        JSONArray diseaseArray = response.getJSONArray("disease");
-                        diseaseList = getDiseaseList(diseaseArray);
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    refreshDisplay();
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
+        }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                Log.d(TAG, "on Failure " + responseString);
-                Toast.makeText(HeathTipsActivity.this, "Unauthorized", Toast.LENGTH_SHORT).show();
-            }
+    }
 
-            @Override
-            public void onCancel() {
-                super.onCancel();
-                progressDialog.dismiss();
-            }
-        });
+    public void initializeView() {
+        title = (TextView) findViewById(R.id.title);
+        description = (TextView) findViewById(R.id.description);
+        causes = (TextView) findViewById(R.id.causes);
+        symptoms = (TextView) findViewById(R.id.symptoms);
+        diagnosis = (TextView) findViewById(R.id.diagnosis);
+        treatment = (TextView) findViewById(R.id.treatment);
+    }
+
+    private void refreshDisplay() throws ParseException {
+        title.setText(disease.getTitle());
+        description.setText(Html.fromHtml(disease.getDescription()));
+        causes.setText(Html.fromHtml(disease.getCauses()));
+        symptoms.setText(Html.fromHtml(disease.getSymptoms()));
+        diagnosis.setText(Html.fromHtml(disease.getDiagnosis()));
+        treatment.setText(Html.fromHtml(disease.getTreatment()));
     }
 
 }

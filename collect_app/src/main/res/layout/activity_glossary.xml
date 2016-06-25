@@ -1,0 +1,50 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey">
+
+        <LinearLayout
+            android:id="@+id/layout_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/icon"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:textAllCaps="true"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/title_large" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/title"
+                android:layout_marginTop="2dp"
+                android:background="@color/grey" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/divider"
+                android:padding="5dp"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/text_large" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</ScrollView>

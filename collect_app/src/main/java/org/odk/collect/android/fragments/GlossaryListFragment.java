@@ -1,7 +1,7 @@
 package org.odk.collect.android.fragments;
 
+
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,10 +27,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.odk.collect.android.R;
-import org.odk.collect.android.activities.HeathTipsActivity;
-import org.odk.collect.android.adapters.DiseaseListAdapter;
+import org.odk.collect.android.activities.GlossaryActivity;
+import org.odk.collect.android.adapters.GlossaryListAdapter;
 import org.odk.collect.android.database.AfyaDataDB;
-import org.odk.collect.android.models.Disease;
+import org.odk.collect.android.models.Glossary;
 import org.odk.collect.android.preferences.PreferencesActivity;
 
 import java.util.ArrayList;
@@ -38,15 +38,17 @@ import java.util.List;
 
 import web.BackgroundClient;
 
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class GlossaryListFragment extends Fragment {
 
-public class HealthTipsFragment extends Fragment {
-
-    private static String TAG = "Health Tips Fragment";
+    private static String TAG = "Glossary Fragment";
     private View rootView;
 
-    private List<Disease> diseaseList = new ArrayList<Disease>();
+    private List<Glossary> glossaryList = new ArrayList<Glossary>();
     private ListView listView;
-    private DiseaseListAdapter diseaseAdapter;
+    private GlossaryListAdapter glossaryListAdapter;
     private String serverUrl;
 
     private SharedPreferences mSharedPreferences;
@@ -57,24 +59,21 @@ public class HealthTipsFragment extends Fragment {
     private AfyaDataDB db;
 
     private static final String TAG_ID = "id";
-    private static final String TAG_TITLE = "disease_title";
-    private static final String TAG_SPECIE_TITLE = "specie_title";
+    private static final String TAG_TITLE = "title";
+    private static final String TAG_CODE = "code";
     private static final String TAG_DESCRIPTION = "description";
-    private static final String TAG_CAUSES = "cause";
-    private static final String TAG_SYMPTOMS = "symptoms";
-    private static final String TAG_DIAGNOSIS = "diagnosis";
-    private static final String TAG_TREATMENT = "treatment";
 
 
-    public HealthTipsFragment() {
+    public GlossaryListFragment() {
         // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_health_tips, container, false);
+        rootView = inflater.inflate(R.layout.fragment_glossary_list, container, false);
 
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -84,7 +83,7 @@ public class HealthTipsFragment extends Fragment {
         serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL,
                 getString(R.string.default_server_url));
 
-        listView = (ListView) rootView.findViewById(R.id.list_tips);
+        listView = (ListView) rootView.findViewById(R.id.list_glossary);
 
         //show progress bar
         progressBar = new ProgressBar(getActivity());
@@ -92,9 +91,9 @@ public class HealthTipsFragment extends Fragment {
 
         db = new AfyaDataDB(getActivity());
 
-        diseaseList = db.getAllDisease();
+        glossaryList = db.getAllGlossary();
 
-        if (diseaseList.size() > 0) {
+        if (glossaryList.size() > 0) {
             refreshDisplay();
         } else {
             Toast.makeText(getActivity(), R.string.no_content, Toast.LENGTH_LONG).show();
@@ -104,31 +103,32 @@ public class HealthTipsFragment extends Fragment {
         if (ni == null || !ni.isConnected())
             Toast.makeText(getActivity(), R.string.no_connection, Toast.LENGTH_SHORT).show();
         else
-            new FetchTipsTask().execute();
+            new FetchGlossaryTask().execute();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Disease disease = diseaseList.get(position);
-                Intent intent = new Intent(getActivity(), HeathTipsActivity.class);
-                intent.putExtra(".models.Disease", disease);
+                Glossary glossary = glossaryList.get(position);
+                Intent intent = new Intent(getActivity(), GlossaryActivity.class);
+                intent.putExtra(".models.Glossary", glossary);
                 startActivity(intent);
             }
         });
+
 
         return rootView;
     }
 
     //refresh display
     private void refreshDisplay() {
-        diseaseAdapter = new DiseaseListAdapter(getActivity(), diseaseList);
-        listView.setAdapter(diseaseAdapter);
-        diseaseAdapter.notifyDataSetChanged(); //TODO: check this issue
+        glossaryListAdapter = new GlossaryListAdapter(getActivity(), glossaryList);
+        listView.setAdapter(glossaryListAdapter);
+        glossaryListAdapter.notifyDataSetChanged(); //TODO: check this issue
         progressBar.setVisibility(View.GONE);
     }
 
 
-    class FetchTipsTask extends AsyncTask<Void, Void, Void> {
+    class FetchGlossaryTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -140,7 +140,7 @@ public class HealthTipsFragment extends Fragment {
 
             RequestParams param = new RequestParams();
 
-            String tipsURL = serverUrl + "/api/v1/ohkr/get_diseases";
+            String tipsURL = serverUrl + "/api/v1/ohkr/get_symptoms";
 
             BackgroundClient.get(tipsURL, param, new JsonHttpResponseHandler() {
                 @Override
@@ -148,24 +148,20 @@ public class HealthTipsFragment extends Fragment {
                     // If the response is JSONObject instead of expected JSONArray
                     try {
                         if (response.getString("status").equalsIgnoreCase("success")) {
-                            JSONArray diseaseArray = response.getJSONArray("disease");
+                            JSONArray symptomArray = response.getJSONArray("symptom");
 
-                            for (int i = 0; i < diseaseArray.length(); i++) {
-                                JSONObject obj = diseaseArray.getJSONObject(i);
-                                Disease ds = new Disease();
-                                ds.setId(obj.getInt(TAG_ID));
-                                ds.setTitle(obj.getString(TAG_TITLE));
-                                ds.setSpecie_title(obj.getString(TAG_SPECIE_TITLE));
-                                ds.setDescription(obj.getString(TAG_DESCRIPTION));
-                                ds.setCauses(obj.getString(TAG_CAUSES));
-                                ds.setSymptoms(obj.getString(TAG_SYMPTOMS));
-                                ds.setDiagnosis(obj.getString(TAG_DIAGNOSIS));
-                                ds.setTreatment(obj.getString(TAG_TREATMENT));
+                            for (int i = 0; i < symptomArray.length(); i++) {
+                                JSONObject obj = symptomArray.getJSONObject(i);
+                                Glossary gs = new Glossary();
+                                gs.setId(obj.getInt(TAG_ID));
+                                gs.setTitle(obj.getString(TAG_TITLE));
+                                gs.setCode(obj.getString(TAG_CODE));
+                                gs.setDescription(obj.getString(TAG_DESCRIPTION));
 
-                                if (!db.isDiseaseExist(ds)) {
-                                    db.addDisease(ds);
+                                if (!db.isGlossaryExist(gs)) {
+                                    db.addGlossary(gs);
                                 } else {
-                                    db.updateDisease(ds);
+                                    db.updateGlossary(gs);
                                 }
                             }
                         }
@@ -188,13 +184,12 @@ public class HealthTipsFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            diseaseList = db.getAllDisease();
+            glossaryList = db.getAllGlossary();
 
-            if (diseaseList.size() > 0) {
+            if (glossaryList.size() > 0) {
                 refreshDisplay();
             }
         }
     }
+
 }
-
-

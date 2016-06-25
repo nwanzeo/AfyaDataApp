@@ -11,15 +11,23 @@ public class Disease implements Parcelable {
     private String title;
     private String specie_title;
     private String description;
+    private String causes;
+    private String symptoms;
+    private String diagnosis;
+    private String treatment;
 
     public Disease() {
     }
 
-    public Disease(long id, String title, String description, String specie_title) {
+    public Disease(long id, String title, String description, String causes, String symptoms, String diagnosis, String treatment, String specie_title) {
         this.id = id;
         this.title = title;
         this.specie_title = specie_title;
         this.description = description;
+        this.causes = causes;
+        this.symptoms = symptoms;
+        this.diagnosis = diagnosis;
+        this.treatment = treatment;
     }
 
     public Disease(Parcel in){
@@ -27,6 +35,10 @@ public class Disease implements Parcelable {
         title = in.readString();
         specie_title = in.readString();
         description = in.readString();
+        causes = in.readString();
+        symptoms = in.readString();
+        diagnosis = in.readString();
+        treatment = in.readString();
     }
 
     public long getId() {
@@ -57,9 +69,43 @@ public class Disease implements Parcelable {
         return description;
     }
 
+    public String getCauses() {
+        return causes;
+    }
+
+    public void setCauses(String causes) {
+        this.causes = causes;
+    }
+
+    public String getSymptoms() {
+        return symptoms;
+    }
+
+    public void setSymptoms(String symptoms) {
+        this.symptoms = symptoms;
+    }
+
+    public String getDiagnosis() {
+        return diagnosis;
+    }
+
+    public void setDiagnosis(String diagnosis) {
+        this.diagnosis = diagnosis;
+    }
+
+    public String getTreatment() {
+        return treatment;
+    }
+
+    public void setTreatment(String treatment) {
+        this.treatment = treatment;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 
     @Override
     public int describeContents() {
@@ -72,6 +118,10 @@ public class Disease implements Parcelable {
         dest.writeString(title);
         dest.writeString(specie_title);
         dest.writeString(description);
+        dest.writeString(causes);
+        dest.writeString(symptoms);
+        dest.writeString(diagnosis);
+        dest.writeString(treatment);
     }
 
     public static final Parcelable.Creator<Disease> CREATOR = new Parcelable.Creator<Disease>() {

@@ -19,11 +19,12 @@ public class Feedback implements Parcelable{
     private String userName;
     private String dateCreated;
     private String status;
+    private String replyBy;
 
     public Feedback() {
     }
 
-    public Feedback(long id, String formId, String instanceId, String title, String message, String sender, String userName, String dateCreated, String status) {
+    public Feedback(long id, String formId, String instanceId, String title, String message, String sender, String userName, String dateCreated, String status, String replyBy) {
         this.id = id;
         this.formId = formId;
         this.instanceId = instanceId;
@@ -33,6 +34,7 @@ public class Feedback implements Parcelable{
         this.userName = userName;
         this.dateCreated = dateCreated;
         this.status = status;
+        this.replyBy = replyBy;
     }
 
     public Feedback(Parcel in){
@@ -45,6 +47,7 @@ public class Feedback implements Parcelable{
         userName = in.readString();
         dateCreated = in.readString();
         status = in.readString();
+        replyBy = in.readString();
     }
 
 
@@ -120,6 +123,14 @@ public class Feedback implements Parcelable{
         this.status = status;
     }
 
+    public String getReplyBy() {
+        return replyBy;
+    }
+
+    public void setReplyBy(String replyBy) {
+        this.replyBy = replyBy;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -136,6 +147,7 @@ public class Feedback implements Parcelable{
         dest.writeString(userName);
         dest.writeString(dateCreated);
         dest.writeString(status);
+        dest.writeString(replyBy);
     }
 
     public static final Parcelable.Creator<Feedback> CREATOR = new Parcelable.Creator<Feedback>() {

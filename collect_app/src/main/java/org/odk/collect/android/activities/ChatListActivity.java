@@ -21,27 +21,16 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.gson.FieldNamingStrategy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import org.apache.http.Header;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.ChatListAdapter;
 import org.odk.collect.android.database.AfyaDataDB;
 import org.odk.collect.android.models.Feedback;
-import org.odk.collect.android.models.SurveyForm;
 import org.odk.collect.android.preferences.PreferencesActivity;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -165,7 +154,7 @@ public class ChatListActivity extends Activity {
         feedback.setInstanceId(instanceId);
         feedback.setStatus("pending");
 
-        String postFeedbackURL = serverUrl + "/feedback/post_feedback";
+        String postFeedbackURL = serverUrl + "/api/v1/feedback/post_feedback";
 
         RestClient.post(postFeedbackURL, params, new JsonHttpResponseHandler() {
 

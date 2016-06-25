@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -53,12 +54,13 @@ public class CampaignFragment extends Fragment {
     private GridView gridView;
     private CampaignListAdapter campaignAdapter;
 
-    private ProgressDialog progressDialog;
     private SharedPreferences mSharedPreferences;
     private String serverUrl;
 
     //AfyaData database
     private AfyaDataDB db;
+
+    private ProgressBar progressBar;
 
     //variable Tag
     private static final String TAG_ID = "id";
@@ -91,10 +93,10 @@ public class CampaignFragment extends Fragment {
 
         gridView = (GridView) rootView.findViewById(R.id.gridView);
 
-        //show progress dialog
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Wait while loading campaigns ....");
-        progressDialog.show();
+        //show progress bar
+        progressBar = new ProgressBar(getActivity());
+        progressBar.setVisibility(View.VISIBLE);
+
 
         db = new AfyaDataDB(getActivity());
 
@@ -102,6 +104,8 @@ public class CampaignFragment extends Fragment {
 
         if (campaignList.size() > 0) {
             refreshDisplay();
+        } else {
+            Toast.makeText(getActivity(), R.string.no_content, Toast.LENGTH_LONG).show();
         }
 
         //check network connectivity
@@ -129,7 +133,8 @@ public class CampaignFragment extends Fragment {
     private void refreshDisplay() {
         campaignAdapter = new CampaignListAdapter(getActivity(), campaignList);
         gridView.setAdapter(campaignAdapter);
-        progressDialog.dismiss();
+        campaignAdapter.notifyDataSetChanged(); //TODO: check this issue
+        progressBar.setVisibility(View.GONE);
     }
 
 
@@ -145,7 +150,7 @@ public class CampaignFragment extends Fragment {
 
             RequestParams param = new RequestParams();
 
-            String campaignURL = serverUrl + "/campaign/get_campaign";
+            String campaignURL = serverUrl + "/api/v1/campaign/get_campaign";
 
             BackgroundClient.get(campaignURL, param, new JsonHttpResponseHandler() {
                 @Override

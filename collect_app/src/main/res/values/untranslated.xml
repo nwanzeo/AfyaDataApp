@@ -31,8 +31,10 @@
 		<item>@string/nav_item_forms</item>
 		<item>@string/nav_item_feedback</item>
 		<item>@string/nav_item_tips</item>
+		<item>@string/nav_item_glossary</item>
 		<item>@string/nav_item_settings</item>
 		<item>@string/nav_item_language</item>
+		<item>@string/nav_item_logout</item>
 	</string-array>
 
 	<!-- Nav Drawer List Item Icons -->
@@ -41,7 +43,9 @@
 		<item>@drawable/ic_home_white_48dp</item>
 		<item>@drawable/ic_feedback_white_48dp</item>
 		<item>@drawable/ic_note_add_white_48dp</item>
+		<item>@drawable/ic_note_add_white_48dp</item>
 		<item>@drawable/ic_action_settings</item>
 		<item>@drawable/ic_language_white_48dp</item>
+		<item>@drawable/ic_lock_white_48dp</item>
 	</array>
 </resources>

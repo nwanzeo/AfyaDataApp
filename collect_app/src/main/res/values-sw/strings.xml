@@ -250,9 +250,27 @@
   <string name="nav_item_forms">Mwanzo</string>
   <string name="nav_item_feedback">Maoni</string>
   <string name="nav_item_tips">Afya Taarifa</string>
+  <string name="nav_item_glossary">Orodha ya Dalili</string>
   <string name="nav_item_settings">Mpangilio</string>
   <string name="nav_item_language">Badili Lugha</string>
+  <string name="nav_item_logout">Toka Nje</string>
 
   <string name="edit_feedback">Weka maoni yako</string>
   <string name="submit_feedback">Tuma</string>
+  <string name="new_feedback">Mrejesho mpya umepokea</string>
+
+  <!--Login issues -->
+  <string name="full_name">Jina Kamili</string>
+  <string name="email">Barua Pepe</string>
+  <string name="phone">Namba ya Simu  e.g 255717705746</string>
+  <string name="password_confirm">Password Confirm</string>
+  <string name="name_required">Full name required</string>
+  <string name="username_required">Username required</string>
+  <string name="password_required">Password required</string>
+  <string name="sign_in">SIGN IN</string>
+  <string name="sign_up">SIGN UP</string>
+  <string name="btn_link_to_register">New to AfyaData? Register Now.</string>
+  <string name="btn_link_to_login">Already have account! Log in .</string>
+  <string name="no_content">Hakuna cha kuonesha</string>
+
 </resources>

@@ -61,6 +61,6 @@ dependencies {
         debugCompile(group: groupId, name: playServicesArtifactName, version: playServicesSnapshot, ext: 'aar')
     }
     testCompile 'junit:junit:4.12'
-    compile 'com.loopj.android:android-async-http:1.4.8'
     compile files('libs/android-smart-image-view-1.0.0.jar')
+    compile 'com.loopj.android:android-async-http:1.4.8'
 }

@@ -447,11 +447,11 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
                 Log.i(t, "Trying to get formList from: " + url);
 
                 EditText username = (EditText) dialogView.findViewById(R.id.username_edit);
-                String storedUsername = settings.getString(PreferencesActivity.KEY_USERNAME, getResources().getString(R.string.default_sacids_username));
+                String storedUsername = settings.getString(PreferencesActivity.KEY_USERNAME, null);
                 username.setText(storedUsername);
 
                 EditText password = (EditText) dialogView.findViewById(R.id.password_edit);
-                String storedPassword = settings.getString(PreferencesActivity.KEY_PASSWORD, getResources().getString(R.string.default_sacids_password));
+                String storedPassword = settings.getString(PreferencesActivity.KEY_PASSWORD, null);
                 password.setText(storedPassword);
 
                 b.setTitle(getString(R.string.server_requires_auth));
@@ -669,11 +669,9 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
             Uri u = Uri.parse(url);
 
             //username and password
-            String username = settings.getString(PreferencesActivity.KEY_USERNAME,
-                    getResources().getString(R.string.default_sacids_username));
+            String username = settings.getString(PreferencesActivity.KEY_USERNAME, null);
 
-            String password = settings.getString(PreferencesActivity.KEY_PASSWORD,
-                    getResources().getString(R.string.default_sacids_password));
+            String password = settings.getString(PreferencesActivity.KEY_PASSWORD, null);
 
             WebUtils.addCredentials(username, password, u.getHost());
             downloadFormList();

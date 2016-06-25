@@ -244,9 +244,50 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity android:name=".activities.MainActivity" />
-        <activity android:name=".activities.ChatListActivity" />
-        <activity android:name=".activities.CampaignActivity" />
-        <activity android:name=".activities.HeathTipsActivity"></activity>
+        <activity
+            android:name=".activities.ChatListActivity"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.CampaignActivity"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.HeathTipsActivity"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.LoginActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:windowSoftInputMode="stateHidden" />
+
+        <service
+            android:name=".tasks.DownloadFeedback"
+            android:exported="false" />
+
+        <receiver
+            android:name=".receivers.FeedbackReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".activities.GlossaryActivity"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+
+        </activity>
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ package org.odk.collect.android.database;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.util.Log;
 import org.odk.collect.android.models.Campaign;
 import org.odk.collect.android.models.Disease;
 import org.odk.collect.android.models.Feedback;
+import org.odk.collect.android.models.Glossary;
 import org.odk.collect.android.picasa.Feed;
 
 public class AfyaDataDB extends SQLiteOpenHelper {
@@ -25,7 +27,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 6;
 
     // Database Name
     private static final String DATABASE_NAME = "afyadata.db";
@@ -41,6 +43,10 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     public static final String KEY_USER = "user";
     public static final String KEY_DATE_CREATED = "date_created";
     public static final String KEY_FEEDBACK_STATUS = "status";
+    public static final String KEY_FEEDBACK_REPLY_BY = "reply_by";
+
+
+    private Feedback feedback = null;
 
     //Campaign table
     public static final String TABLE_CAMPAIGN = "campaign";
@@ -57,7 +63,18 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     public static final String KEY_DISEASE_ID = "id";
     public static final String KEY_DISEASE_TITLE = "title";
     public static final String KEY_DISEASE_DESCRIPTION = "description";
+    public static final String KEY_DISEASE_CAUSES = "cause";
+    public static final String KEY_DISEASE_SYMPTOMS = "symptoms";
+    public static final String KEY_DISEASE_DIAGNOSIS = "diagnosis";
+    public static final String KEY_DISEASE_TREATMENT = "treatment";
     public static final String KEY_SPECIE_TITLE = "specie_title";
+
+    //OHKR Glossary List
+    public static final String TABLE_OHKR_GLOSSARY = "ohkr_glossary";
+    public static final String KEY_GLOSSARY_ID = "id";
+    public static final String KEY_GLOSSARY_TITLE = "title";
+    public static final String KEY_GLOSSARY_DESCRIPTION = "description";
+    public static final String KEY_GLOSSARY_CODE = "code";
 
 
     public AfyaDataDB(Context context) {
@@ -77,7 +94,8 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 + KEY_SENDER + " TEXT,"
                 + KEY_USER + " TEXT,"
                 + KEY_DATE_CREATED + " TEXT,"
-                + KEY_FEEDBACK_STATUS + " TEXT" + ")";
+                + KEY_FEEDBACK_STATUS + " TEXT,"
+                + KEY_FEEDBACK_REPLY_BY + " TEXT" + ")";
 
         String CREATE_CAMPAIGN_TABLE = "CREATE TABLE "
                 + TABLE_CAMPAIGN + "("
@@ -94,12 +112,23 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 + KEY_DISEASE_ID + " INTEGER PRIMARY KEY," // and auto increment will be handled with
                 + KEY_DISEASE_TITLE + " TEXT,"
                 + KEY_DISEASE_DESCRIPTION + " TEXT,"
+                + KEY_DISEASE_CAUSES + " TEXT,"
+                + KEY_DISEASE_SYMPTOMS + " TEXT,"
+                + KEY_DISEASE_DIAGNOSIS + " TEXT,"
+                + KEY_DISEASE_TREATMENT + " TEXT,"
                 + KEY_SPECIE_TITLE + " TEXT" + ")";
 
+        String CREATE_GLOSSARY_TABLE = "CREATE TABLE "
+                + TABLE_OHKR_GLOSSARY + "("
+                + KEY_GLOSSARY_ID + " INTEGER PRIMARY KEY," // and auto increment will be handled with
+                + KEY_GLOSSARY_TITLE + " TEXT,"
+                + KEY_GLOSSARY_CODE + " TEXT,"
+                + KEY_DISEASE_DESCRIPTION + " TEXT" + ")";
 
         db.execSQL(CREATE_FEEDBACK_TABLE);
         db.execSQL(CREATE_CAMPAIGN_TABLE);
         db.execSQL(CREATE_DISEASE_TABLE);
+        db.execSQL(CREATE_GLOSSARY_TABLE);
 
         Log.d(TAG, "Database tables created");
     }
@@ -111,6 +140,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FEEDBACK);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CAMPAIGN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_OHKR_DISEASE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_OHKR_GLOSSARY);
 
         // Create tables again
         onCreate(db);
@@ -134,6 +164,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         values.put(KEY_USER, feedback.getUserName());
         values.put(KEY_DATE_CREATED, feedback.getDateCreated());
         values.put(KEY_FEEDBACK_STATUS, feedback.getStatus());
+        values.put(KEY_FEEDBACK_REPLY_BY, feedback.getReplyBy());
 
         // Inserting Row
         db.insert(TABLE_FEEDBACK, null, values);
@@ -141,14 +172,15 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     }
 
     // Getting All Feedback
-    public List<Feedback> getAllFeedback() {
+    public List<Feedback> getAllFeedback(String username) {
 
         List<Feedback> feedbackList = new ArrayList<Feedback>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_FEEDBACK + " GROUP BY " + KEY_INSTANCE_ID;
+        String selectQuery = "SELECT  * FROM " + TABLE_FEEDBACK + " WHERE " + KEY_USER + " = ?"
+                + " GROUP BY " + KEY_INSTANCE_ID;
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{username});
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -163,6 +195,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 feedback.setUserName(cursor.getString(cursor.getColumnIndex(KEY_USER)));
                 feedback.setDateCreated(cursor.getString(cursor.getColumnIndex(KEY_DATE_CREATED)));
                 feedback.setStatus(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_STATUS)));
+                feedback.setReplyBy(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_REPLY_BY)));
 
                 // Adding feedback to list
                 feedbackList.add(feedback);
@@ -182,7 +215,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         String selectQuery = "SELECT * FROM " + TABLE_FEEDBACK + " WHERE " + KEY_INSTANCE_ID + " = ?";
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, new String[] {instanceId});
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{instanceId});
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -197,6 +230,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 feedback.setUserName(cursor.getString(cursor.getColumnIndex(KEY_USER)));
                 feedback.setDateCreated(cursor.getString(cursor.getColumnIndex(KEY_DATE_CREATED)));
                 feedback.setStatus(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_STATUS)));
+                feedback.setReplyBy(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_REPLY_BY)));
 
                 // Adding feedback to list
                 feedbackList.add(feedback);
@@ -213,7 +247,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
         Cursor cursor = db.query(TABLE_FEEDBACK, new String[]{KEY_FEEDBACK_ID,
                         KEY_FEEDBACK_FORM_ID, KEY_INSTANCE_ID, KEY_FORM_TITLE, KEY_MESSAGE, KEY_SENDER, KEY_USER,
-                        KEY_DATE_CREATED, KEY_FEEDBACK_STATUS},
+                        KEY_DATE_CREATED, KEY_FEEDBACK_STATUS, KEY_FEEDBACK_REPLY_BY},
                 KEY_FEEDBACK_ID + "=?", new String[]{String.valueOf(feedback.getId())}, null, null, null, null);
 
         int count = cursor.getCount();
@@ -236,6 +270,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         values.put(KEY_USER, feedback.getUserName());
         values.put(KEY_DATE_CREATED, feedback.getDateCreated());
         values.put(KEY_FEEDBACK_STATUS, feedback.getStatus());
+        values.put(KEY_FEEDBACK_REPLY_BY, feedback.getReplyBy());
 
         // updating row
         return db.update(TABLE_FEEDBACK, values, KEY_FEEDBACK_ID + " = ?",
@@ -257,13 +292,40 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
 
-        if(cursor != null && !cursor.isClosed()){
+        if (cursor != null && !cursor.isClosed()) {
             count = cursor.getCount();
             cursor.close();
         }
 
         // return count
         return count;
+    }
+
+
+    //get Last Feedback
+    public Feedback getLastFeedback() {
+        String selectQuery = "SELECT  * FROM " + TABLE_FEEDBACK + " ORDER BY " + KEY_FEEDBACK_ID + " DESC LIMIT 1";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        //check if cursor not null
+        if (cursor != null && cursor.moveToFirst()) {
+            //feedback constructor
+            feedback = new Feedback(
+                    Long.parseLong(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_ID))),
+                    cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_FORM_ID)),
+                    cursor.getString(cursor.getColumnIndex(KEY_INSTANCE_ID)),
+                    cursor.getString(cursor.getColumnIndex(KEY_FORM_TITLE)),
+                    cursor.getString(cursor.getColumnIndex(KEY_MESSAGE)),
+                    cursor.getString(cursor.getColumnIndex(KEY_SENDER)),
+                    cursor.getString(cursor.getColumnIndex(KEY_USER)),
+                    cursor.getString(cursor.getColumnIndex(KEY_DATE_CREATED)),
+                    cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_STATUS)),
+                    cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_REPLY_BY)));
+        }
+        // return feedback
+        return feedback;
     }
 
     /**
@@ -382,7 +444,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
 
-        if(cursor != null && !cursor.isClosed()){
+        if (cursor != null && !cursor.isClosed()) {
             count = cursor.getCount();
             cursor.close();
         }
@@ -403,6 +465,10 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         values.put(KEY_DISEASE_ID, disease.getId());
         values.put(KEY_DISEASE_TITLE, disease.getTitle());
         values.put(KEY_DISEASE_DESCRIPTION, disease.getDescription());
+        values.put(KEY_DISEASE_CAUSES, disease.getCauses());
+        values.put(KEY_DISEASE_SYMPTOMS, disease.getSymptoms());
+        values.put(KEY_DISEASE_DIAGNOSIS, disease.getDiagnosis());
+        values.put(KEY_DISEASE_TREATMENT, disease.getTreatment());
         values.put(KEY_SPECIE_TITLE, disease.getSpecie_title());
 
         // Inserting Row
@@ -416,7 +482,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
         List<Disease> diseasesList = new ArrayList<Disease>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_OHKR_DISEASE;
+        String selectQuery = "SELECT  * FROM " + TABLE_OHKR_DISEASE + " ORDER BY " + KEY_DISEASE_TITLE + " ASC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -428,6 +494,10 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 disease.setId(Long.parseLong(cursor.getString(cursor.getColumnIndex(KEY_DISEASE_ID))));
                 disease.setTitle(cursor.getString(cursor.getColumnIndex(KEY_DISEASE_TITLE)));
                 disease.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DISEASE_DESCRIPTION)));
+                disease.setCauses(cursor.getString(cursor.getColumnIndex(KEY_DISEASE_CAUSES)));
+                disease.setSymptoms(cursor.getString(cursor.getColumnIndex(KEY_DISEASE_SYMPTOMS)));
+                disease.setDiagnosis(cursor.getString(cursor.getColumnIndex(KEY_DISEASE_DIAGNOSIS)));
+                disease.setTreatment(cursor.getString(cursor.getColumnIndex(KEY_DISEASE_TREATMENT)));
                 disease.setSpecie_title(cursor.getString(cursor.getColumnIndex(KEY_SPECIE_TITLE)));
 
                 // Adding disease to list
@@ -443,7 +513,8 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_OHKR_DISEASE, new String[]{KEY_DISEASE_ID,
-                        KEY_DISEASE_TITLE, KEY_DISEASE_DESCRIPTION, KEY_SPECIE_TITLE}, KEY_DISEASE_ID + "=?",
+                        KEY_DISEASE_TITLE, KEY_DISEASE_DESCRIPTION, KEY_DISEASE_CAUSES, KEY_DISEASE_SYMPTOMS,
+                        KEY_DISEASE_DIAGNOSIS, KEY_DISEASE_TREATMENT, KEY_SPECIE_TITLE}, KEY_DISEASE_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
         if (cursor != null)
@@ -453,18 +524,23 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 Long.parseLong(cursor.getString(cursor.getColumnIndex(KEY_DISEASE_ID))),
                 cursor.getString(cursor.getColumnIndex(KEY_DISEASE_TITLE)),
                 cursor.getString(cursor.getColumnIndex(KEY_DISEASE_DESCRIPTION)),
+                cursor.getString(cursor.getColumnIndex(KEY_DISEASE_CAUSES)),
+                cursor.getString(cursor.getColumnIndex(KEY_DISEASE_SYMPTOMS)),
+                cursor.getString(cursor.getColumnIndex(KEY_DISEASE_DIAGNOSIS)),
+                cursor.getString(cursor.getColumnIndex(KEY_DISEASE_TREATMENT)),
                 cursor.getString(cursor.getColumnIndex(KEY_SPECIE_TITLE))
         );
 
         return disease;
     }
 
-    //check if campaign exists
+    //check if disease exists
     public boolean isDiseaseExist(Disease disease) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_OHKR_DISEASE, new String[]{KEY_DISEASE_ID,
-                        KEY_DISEASE_TITLE, KEY_DISEASE_DESCRIPTION, KEY_SPECIE_TITLE}, KEY_DISEASE_ID + "=?",
+                        KEY_DISEASE_TITLE, KEY_DISEASE_DESCRIPTION, KEY_DISEASE_CAUSES, KEY_DISEASE_SYMPTOMS,
+                        KEY_DISEASE_DIAGNOSIS, KEY_DISEASE_TREATMENT, KEY_SPECIE_TITLE}, KEY_DISEASE_ID + "=?",
                 new String[]{String.valueOf(disease.getId())}, null, null, null, null);
 
         int count = cursor.getCount();
@@ -473,17 +549,91 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     }
 
     public void updateDisease(Disease disease) {
-
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
-
         values.put(KEY_DISEASE_TITLE, disease.getTitle());
         values.put(KEY_DISEASE_DESCRIPTION, disease.getDescription());
+        values.put(KEY_DISEASE_CAUSES, disease.getCauses());
+        values.put(KEY_DISEASE_SYMPTOMS, disease.getSymptoms());
+        values.put(KEY_DISEASE_DIAGNOSIS, disease.getDiagnosis());
+        values.put(KEY_DISEASE_TREATMENT, disease.getTreatment());
         values.put(KEY_SPECIE_TITLE, disease.getSpecie_title());
 
         db.update(TABLE_OHKR_DISEASE, values,
                 KEY_DISEASE_ID + " = " + disease.getId(), null);
+    }
+
+
+    /**
+     * All CRUD(Create, Read, Update, Delete) Operations for OHKR Glossary
+     */
+
+    // Adding new Disease
+    public void addGlossary(Glossary glossary) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_GLOSSARY_ID, glossary.getId());
+        values.put(KEY_GLOSSARY_TITLE, glossary.getTitle());
+        values.put(KEY_GLOSSARY_CODE, glossary.getCode());
+        values.put(KEY_GLOSSARY_DESCRIPTION, glossary.getDescription());
+
+        // Inserting Row
+        db.insert(TABLE_OHKR_GLOSSARY, null, values);
+        db.close();
+    }
+
+
+    // Getting All glossary
+    public List<Glossary> getAllGlossary() {
+
+        List<Glossary> glossaryList = new ArrayList<Glossary>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_OHKR_GLOSSARY + " ORDER BY " + KEY_GLOSSARY_TITLE + " ASC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Glossary glossary = new Glossary();
+                glossary.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(KEY_GLOSSARY_ID))));
+                glossary.setTitle(cursor.getString(cursor.getColumnIndex(KEY_GLOSSARY_TITLE)));
+                glossary.setCode(cursor.getString(cursor.getColumnIndex(KEY_GLOSSARY_CODE)));
+                glossary.setDescription(cursor.getString(cursor.getColumnIndex(KEY_GLOSSARY_DESCRIPTION)));
+
+                // Adding glossary to list
+                glossaryList.add(glossary);
+            } while (cursor.moveToNext());
+        }
+        return glossaryList;
+    }
+
+
+    //check if glossary exists
+    public boolean isGlossaryExist(Glossary glossary) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_OHKR_GLOSSARY, new String[]{KEY_GLOSSARY_ID,
+                        KEY_GLOSSARY_TITLE, KEY_GLOSSARY_CODE, KEY_DISEASE_DESCRIPTION}, KEY_GLOSSARY_ID + "=?",
+                new String[]{String.valueOf(glossary.getId())}, null, null, null, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+        return (count > 0) ? true : false;
+    }
+
+    public void updateGlossary(Glossary glossary) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(KEY_GLOSSARY_TITLE, glossary.getTitle());
+        values.put(KEY_GLOSSARY_CODE, glossary.getCode());
+        values.put(KEY_GLOSSARY_DESCRIPTION, glossary.getDescription());
+
+        db.update(TABLE_OHKR_GLOSSARY, values,
+                KEY_GLOSSARY_ID + " = " + glossary.getId(), null);
     }
 
 

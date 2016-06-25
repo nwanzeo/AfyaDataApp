@@ -7,6 +7,21 @@ import java.io.OutputStream;
  * Created by Renfrid-Sacids on 5/26/2016.
  */
 public class AfyaDataUtils {
+
+    private static final String MOBILE_PATTERN = "^[0-9]{12}$";
+
+
+    /**
+     * Regex to validate the mobile number
+     * mobile number should be of 12 digits length
+     *
+     * @param mobile
+     * @return
+     */
+    public static boolean isValidPhoneNumber(String mobile) {
+        return mobile.matches(MOBILE_PATTERN);
+    }
+
     public static void CopyStream(InputStream is, OutputStream os)
     {
         final int buffer_size=1024;

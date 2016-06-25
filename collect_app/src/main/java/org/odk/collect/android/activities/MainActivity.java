@@ -1,9 +1,11 @@
 package org.odk.collect.android.activities;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,10 +30,13 @@ import org.odk.collect.android.R;
 import org.odk.collect.android.adapters.NavDrawerListAdapter;
 import org.odk.collect.android.fragments.CampaignFragment;
 import org.odk.collect.android.fragments.FeedbackFragment;
+import org.odk.collect.android.fragments.GlossaryListFragment;
 import org.odk.collect.android.fragments.HealthTipsFragment;
 import org.odk.collect.android.models.NavDrawerItem;
+import org.odk.collect.android.preferences.PrefManager;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.prefs.Preferences;
+import org.odk.collect.android.receivers.FeedbackReceiver;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -58,15 +63,20 @@ public class MainActivity extends Activity {
     private Context context = this;
     SharedPreferences settings;
 
+    private PrefManager pref;
+
+    private PendingIntent pendingIntent;
+    private AlarmManager manager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         settings = getSharedPreferences(Preferences.AFYA_DATA,MODE_PRIVATE);
-        if (settings.getBoolean(Preferences.FIRST_TIME_APP_OPENED, true)) {
-            showChangeLanguageDialog();
-        }
+
+        pref = new PrefManager(this);
 
         //deal with Navigation drawer
         mTitle = mDrawerTitle = getTitle();
@@ -90,10 +100,14 @@ public class MainActivity extends Activity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
         // Health Tips
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
-        // Settings
+        // Symptoms List
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-        // Change language
+        // Settings
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
+        // Change language
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
+        // Log out
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
 
         // Recycle the typed array
         navMenuIcons.recycle();
@@ -131,6 +145,15 @@ public class MainActivity extends Activity {
             // on first time display view for first nav item
             displayView(0);
         }
+
+        // Retrieve a PendingIntent that will perform a broadcast
+        Intent feedbackIntent = new Intent(this, FeedbackReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, feedbackIntent, 0);
+
+        // Set the alarm here.
+        manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 6 * 6 * 100000; // 1Hours
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
     }
 
 
@@ -225,13 +248,28 @@ public class MainActivity extends Activity {
                 fragment = new HealthTipsFragment();
                 break;
             case 3:
+                //Glossary List
+                fragment = new GlossaryListFragment();
+                break;
+            case 4:
                 //General Settings
                 Intent mySettings = new Intent(getApplicationContext(), PreferencesActivity.class);
                 startActivity(mySettings);
                 break;
-            case 4:
+            case 5:
                 //General Settings
                 showChangeLanguageDialog();
+                break;
+            case 6:
+                //Log out
+                pref.clearSession();
+                //start new Intent
+                Intent signOut = new Intent(this, LoginActivity.class);
+                signOut.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(signOut);
+                finish();
                 break;
 
             default:

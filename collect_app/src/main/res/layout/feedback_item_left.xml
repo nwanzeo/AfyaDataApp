@@ -19,9 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:text="Sample message"
             android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:textSize="@dimen/text_large" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -34,7 +33,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
                 android:textColor="@color/color_text"
-                android:textSize="@dimen/text_small"/>
+                android:textSize="@dimen/text_medium"/>
 
             <!--<TextView
                 android:id="@+id/tvDateSent"
@@ -52,7 +51,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:textColor="@color/color_text"
-                android:textSize="@dimen/text_small"/>
+                android:textSize="@dimen/text_medium"/>
         </RelativeLayout>
     </LinearLayout>
 

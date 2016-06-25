@@ -25,12 +25,10 @@ public class CampaignListAdapter extends BaseAdapter {
     private Activity activity;
     private List<Campaign> campaignList;
     private LayoutInflater inflater;
-    private ImageLoader imageLoader;
 
     public CampaignListAdapter(Activity activity, List<Campaign> myCampaign) {
         this.activity = activity;
         this.campaignList = myCampaign;
-        imageLoader = new ImageLoader(activity.getApplicationContext());
     }
 
     @Override

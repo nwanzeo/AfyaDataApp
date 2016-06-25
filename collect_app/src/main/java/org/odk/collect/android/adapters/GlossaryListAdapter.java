@@ -9,26 +9,26 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import org.odk.collect.android.R;
-import org.odk.collect.android.models.Disease;
+import org.odk.collect.android.models.Glossary;
 
 import java.util.List;
 
 /**
- * Created by Renfrid-Sacids on 5/30/2016.
+ * Created by Renfrid-Sacids on 6/23/2016.
  */
-public class DiseaseListAdapter extends BaseAdapter {
+public class GlossaryListAdapter extends BaseAdapter {
     private Activity activity;
-    private List<Disease> diseaseList;
+    private List<Glossary> glossaryList;
     private LayoutInflater inflater;
 
-    public DiseaseListAdapter(Activity activity, List<Disease> diseases) {
+    public GlossaryListAdapter(Activity activity, List<Glossary> glossary) {
         this.activity = activity;
-        this.diseaseList = diseases;
+        this.glossaryList = glossary;
     }
 
     @Override
     public int getCount() {
-        return diseaseList.size();
+        return glossaryList.size();
     }
 
     @Override
@@ -48,18 +48,18 @@ public class DiseaseListAdapter extends BaseAdapter {
             inflater = (LayoutInflater) activity
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null)
-            convertView = inflater.inflate(R.layout.list_row_disease, null);
+            convertView = inflater.inflate(R.layout.list_row_glossary, null);
 
         //TextView
-        TextView name = (TextView) convertView.findViewById(R.id.disease_name);
+        TextView title = (TextView) convertView.findViewById(R.id.title);
 
-        //Disease Model
-        Disease disease = diseaseList.get(position);
+        //Glossary Model
+        Glossary glossary = glossaryList.get(position);
 
-        name.setText(disease.getTitle());
+        title.setText(glossary.getTitle());
+
 
         return convertView;
     }
 
 }
-

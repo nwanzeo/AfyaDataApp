@@ -1,17 +1,23 @@
 package org.odk.collect.android.activities;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.database.AfyaDataDB;
 import org.odk.collect.android.models.Campaign;
+import org.odk.collect.android.provider.FormsProviderAPI;
 import org.odk.collect.android.utilities.ImageLoader;
 
 import java.text.ParseException;
@@ -21,7 +27,8 @@ public class CampaignActivity extends Activity {
     private Campaign campaign = null;
     private AfyaDataDB db;
 
-    TextView title, form_id, description;
+    TextView title, form_id;
+    WebView description;
     private ImageView icon;
     private Button btnForm;
 
@@ -60,9 +67,24 @@ public class CampaignActivity extends Activity {
                         @Override
                         public void onClick(View v) {
                             //fill blank form
-                            Intent blankForms = new Intent(getApplicationContext(),
-                                    FormChooserList.class);
-                            startActivity(blankForms);
+                            //Intent blankForms = new Intent(getApplicationContext(),
+                                    //FormChooserList.class);
+                            //startActivity(blankForms);
+                            // get uri to form
+                            long idFormsTable = campaign.getId();
+                            Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, idFormsTable);
+
+                            Collect.getInstance().getActivityLogger().logAction(this, "onListItemClick", formUri.toString());
+
+                            String action = getIntent().getAction();
+                            if (Intent.ACTION_PICK.equals(action)) {
+                                // caller is waiting on a picked form
+                                setResult(RESULT_OK, new Intent().setData(formUri));
+                            } else {
+                                // caller wants to view/edit a form, so launch formentryactivity
+                                startActivity(new Intent(Intent.ACTION_EDIT, formUri));
+                            }
+
                         }
                     });
                 }
@@ -74,14 +96,14 @@ public class CampaignActivity extends Activity {
     public void initializeView() {
         title = (TextView) findViewById(R.id.title);
         form_id = (TextView) findViewById(R.id.form_id);
-        description = (TextView) findViewById(R.id.description);
+        description = (WebView) findViewById(R.id.description);
         icon = (ImageView) findViewById(R.id.icon);
         btnForm = (Button) findViewById(R.id.btn_fill_form);
     }
 
     private void refreshDisplay() throws ParseException {
         title.setText(campaign.getTitle());
-        description.setText(campaign.getDescription());
+        description.loadData(campaign.getDescription(), "text/html", null);
 
         String uri = "drawable/" + campaign.getIcon();
         int loader = getResources().getIdentifier(uri, "drawable", getPackageName());

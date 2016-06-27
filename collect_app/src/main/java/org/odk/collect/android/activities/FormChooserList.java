@@ -53,6 +53,8 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
 
     private AlertDialog mAlertDialog;
 
+    private static String TAG = "FormList";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,16 +73,30 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
         String sortOrder = FormsColumns.DISPLAY_NAME + " ASC, " + FormsColumns.JR_VERSION + " DESC";
         Cursor c = managedQuery(FormsColumns.CONTENT_URI, null, null, null, sortOrder);
 
-        String[] data = new String[] {
+        String[] data = new String[]{
                 FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_SUBTEXT, FormsColumns.JR_VERSION
         };
-        int[] view = new int[] {
+
+       while(c.moveToNext()){
+            Log.d(TAG,"Cursor content 1 "+c.getString(1));
+            Log.d(TAG,"Cursor content 2 "+c.getString(2));
+            Log.d(TAG,"Cursor content 3 "+c.getString(3));
+            Log.d(TAG,"Cursor content 4 "+c.getString(4));
+            Log.d(TAG,"Cursor content 5 "+c.getString(5));
+            Log.d(TAG,"Cursor content 6 "+c.getString(6));
+            Log.d(TAG,"Cursor content 7 "+c.getString(7));
+            Log.d(TAG,"Cursor content 8 "+c.getString(8));
+            Log.d(TAG,"Cursor content 9 "+c.getString(9));
+            Log.d(TAG,"Cursor content 10 "+c.getString(10));
+        }
+
+        int[] view = new int[]{
                 R.id.text1, R.id.text2, R.id.text3
         };
 
         // render total instance view
         SimpleCursorAdapter instances =
-            new VersionHidingCursorAdapter(FormsColumns.JR_VERSION, this, R.layout.two_item, c, data, view);
+                new VersionHidingCursorAdapter(FormsColumns.JR_VERSION, this, R.layout.two_item, c, data, view);
         setListAdapter(instances);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(syncMsgKey)) {
@@ -121,10 +137,12 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
     @Override
     protected void onListItemClick(ListView listView, View view, int position, long id) {
         // get uri to form
-    	long idFormsTable = ((SimpleCursorAdapter) getListAdapter()).getItemId(position);
+        long idFormsTable = ((SimpleCursorAdapter) getListAdapter()).getItemId(position);
         Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI, idFormsTable);
 
-		Collect.getInstance().getActivityLogger().logAction(this, "onListItemClick", formUri.toString());
+        Log.d(TAG, "Id Forms " + idFormsTable);
+
+        Collect.getInstance().getActivityLogger().logAction(this, "onListItemClick", formUri.toString());
 
         String action = getIntent().getAction();
         if (Intent.ACTION_PICK.equals(action)) {
@@ -145,7 +163,7 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
         super.onResume();
 
         if (mDiskSyncTask.getStatus() == AsyncTask.Status.FINISHED) {
-        	SyncComplete(mDiskSyncTask.getStatusMessage());
+            SyncComplete(mDiskSyncTask.getStatusMessage());
         }
     }
 
@@ -159,14 +177,14 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
 
     @Override
     protected void onStart() {
-    	super.onStart();
-		Collect.getInstance().getActivityLogger().logOnStart(this);
+        super.onStart();
+        Collect.getInstance().getActivityLogger().logOnStart(this);
     }
 
     @Override
     protected void onStop() {
-		Collect.getInstance().getActivityLogger().logOnStop(this);
-    	super.onStop();
+        Collect.getInstance().getActivityLogger().logOnStop(this);
+        super.onStop();
     }
 
 
@@ -190,7 +208,7 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
      */
     private void createErrorDialog(String errorMsg, final boolean shouldExit) {
 
-    	Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "show");
+        Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog", "show");
 
         mAlertDialog = new AlertDialog.Builder(this).create();
         mAlertDialog.setIcon(android.R.drawable.ic_dialog_info);
@@ -200,8 +218,8 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
             public void onClick(DialogInterface dialog, int i) {
                 switch (i) {
                     case DialogInterface.BUTTON_POSITIVE:
-                    	Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog",
-                    			shouldExit ? "exitApplication" : "OK");
+                        Collect.getInstance().getActivityLogger().logAction(this, "createErrorDialog",
+                                shouldExit ? "exitApplication" : "OK");
                         if (shouldExit) {
                             finish();
                         }

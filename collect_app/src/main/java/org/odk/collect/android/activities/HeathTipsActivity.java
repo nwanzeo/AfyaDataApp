@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +41,8 @@ public class HeathTipsActivity extends Activity {
     private Disease disease = null;
     private AfyaDataDB db;
 
-    TextView title, description, causes, symptoms, diagnosis, treatment;
+    TextView title;
+    WebView description, symptoms, causes, diagnosis, treatment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,20 +77,20 @@ public class HeathTipsActivity extends Activity {
 
     public void initializeView() {
         title = (TextView) findViewById(R.id.title);
-        description = (TextView) findViewById(R.id.description);
-        causes = (TextView) findViewById(R.id.causes);
-        symptoms = (TextView) findViewById(R.id.symptoms);
-        diagnosis = (TextView) findViewById(R.id.diagnosis);
-        treatment = (TextView) findViewById(R.id.treatment);
+        description = (WebView) findViewById(R.id.description);
+        causes = (WebView) findViewById(R.id.causes);
+        symptoms = (WebView) findViewById(R.id.symptoms);
+        diagnosis = (WebView) findViewById(R.id.diagnosis);
+        treatment = (WebView) findViewById(R.id.treatment);
     }
 
     private void refreshDisplay() throws ParseException {
         title.setText(disease.getTitle());
-        description.setText(Html.fromHtml(disease.getDescription()));
-        causes.setText(Html.fromHtml(disease.getCauses()));
-        symptoms.setText(Html.fromHtml(disease.getSymptoms()));
-        diagnosis.setText(Html.fromHtml(disease.getDiagnosis()));
-        treatment.setText(Html.fromHtml(disease.getTreatment()));
+        description.loadData(disease.getDescription(), "text/html", null);
+        causes.loadData(disease.getCauses(), "text/html", null);
+        symptoms.loadData(disease.getSymptoms(), "text/html", null);
+        diagnosis.loadData(disease.getDiagnosis(), "text/html", null);
+        treatment.loadData(disease.getTreatment(), "text/html", null);
     }
 
 }

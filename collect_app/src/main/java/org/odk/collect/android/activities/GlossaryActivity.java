@@ -3,6 +3,7 @@ package org.odk.collect.android.activities;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Html;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import org.odk.collect.android.R;
@@ -17,7 +18,8 @@ public class GlossaryActivity extends Activity {
     private Glossary glossary= null;
     private AfyaDataDB db;
 
-    TextView title, description;
+    TextView title;
+    WebView description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +53,11 @@ public class GlossaryActivity extends Activity {
 
     public void initializeView() {
         title = (TextView) findViewById(R.id.title);
-        description = (TextView) findViewById(R.id.description);
+        description = (WebView) findViewById(R.id.description);
     }
 
     private void refreshDisplay() throws ParseException {
         title.setText(glossary.getTitle());
-        description.setText(Html.fromHtml(glossary.getDescription()));
+        description.loadData(glossary.getDescription(), "text/html", null);
     }
 }

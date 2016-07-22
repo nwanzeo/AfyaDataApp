@@ -85,6 +85,7 @@ public class DownloadFeedback extends IntentService {
                 lastId = 0;
             }
 
+            //params
             RequestParams param = new RequestParams();
             param.add("username", username);
             param.add("lastId", String.valueOf(lastId));

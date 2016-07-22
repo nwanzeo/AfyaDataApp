@@ -86,11 +86,36 @@ public class HeathTipsActivity extends Activity {
 
     private void refreshDisplay() throws ParseException {
         title.setText(disease.getTitle());
-        description.loadData(disease.getDescription(), "text/html", null);
-        causes.loadData(disease.getCauses(), "text/html", null);
-        symptoms.loadData(disease.getSymptoms(), "text/html", null);
-        diagnosis.loadData(disease.getDiagnosis(), "text/html", null);
-        treatment.loadData(disease.getTreatment(), "text/html", null);
+
+        //check description
+        if (disease.getDescription() != "") {
+            description.setVisibility(View.VISIBLE);
+            description.loadData(disease.getDescription(), "text/html", null);
+        }
+
+        //check causes
+        if (disease.getCauses() != "") {
+            causes.setVisibility(View.VISIBLE);
+            causes.loadData(disease.getCauses(), "text/html", null);
+        }
+
+        //check symptoms
+        if (disease.getSymptoms() != "") {
+            symptoms.setVisibility(View.VISIBLE);
+            symptoms.loadData(disease.getSymptoms(), "text/html", null);
+        }
+
+        //check diagnosis
+        if (disease.getDiagnosis() != "") {
+            diagnosis.setVisibility(View.VISIBLE);
+            diagnosis.loadData(disease.getDiagnosis(), "text/html", null);
+        }
+
+        //check if treatment
+        if (disease.getTreatment() != "") {
+            treatment.setVisibility(View.VISIBLE);
+            treatment.loadData(disease.getTreatment(), "text/html", null);
+        }
     }
 
 }

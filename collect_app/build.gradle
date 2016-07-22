@@ -21,7 +21,7 @@ android {
     buildToolsVersion('23.0.1')
     useLibrary 'org.apache.http.legacy'
     defaultConfig {
-        applicationId("org.odk.collect.android")
+        applicationId("org.sacids.afyadata")
         minSdkVersion(11)
         targetSdkVersion(11)
         versionCode(1053)

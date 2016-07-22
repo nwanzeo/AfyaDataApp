@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@null"
     android:orientation="vertical"
-    tools:context=".activities.ChatListActivity">
+    tools:context="org.sacids.afyadata.activities.ChatListActivity">
 
     <ListView
         android:id="@+id/list_feedback"

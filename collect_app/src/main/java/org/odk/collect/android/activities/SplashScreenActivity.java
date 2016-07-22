@@ -16,20 +16,26 @@ package org.odk.collect.android.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.preferences.PrefManager;
+import org.odk.collect.android.prefs.Preferences;
+
+import java.util.Locale;
 
 
 public class SplashScreenActivity extends Activity {
 
     // Splash screen timer
     private static int SPLASH_TIME_OUT = 3000;
-
+    private SharedPreferences settings;
     private ProgressBar progressBar;
 
     private PrefManager prefManager;
@@ -39,6 +45,15 @@ public class SplashScreenActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
         getActionBar().hide();
+
+        settings = getSharedPreferences(Preferences.AFYA_DATA, MODE_PRIVATE);
+        String defaultLocale = settings.getString(Preferences.DEFAULT_LOCALE, "sw");
+
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.locale = new Locale(defaultLocale);
+        res.updateConfiguration(conf, dm);
 
         //pref Manager
         prefManager = new PrefManager(this);

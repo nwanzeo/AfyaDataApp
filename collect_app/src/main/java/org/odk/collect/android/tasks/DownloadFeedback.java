@@ -39,7 +39,6 @@ public class DownloadFeedback extends IntentService {
 
     private SharedPreferences mSharedPreferences;
     private String username;
-    private String lastId;
     private String serverUrl;
 
     private AfyaDataDB db;
@@ -75,8 +74,21 @@ public class DownloadFeedback extends IntentService {
 
             db = new AfyaDataDB(getApplicationContext());
 
+            Feedback lastFeedback = db.getLastFeedback(username);
+            String dateCreated;
+            long lastId;
+            if (lastFeedback != null) {
+                dateCreated = lastFeedback.getDateCreated();
+                lastId = lastFeedback.getId();
+            } else {
+                dateCreated = null;
+                lastId = 0;
+            }
+
             RequestParams param = new RequestParams();
             param.add("username", username);
+            param.add("lastId", String.valueOf(lastId));
+            param.add("date_created", dateCreated);
 
             String feedbackURL = serverUrl + "/api/v1/feedback/get_notification_feedback";
 
@@ -103,11 +115,11 @@ public class DownloadFeedback extends IntentService {
                                 fb.setDateCreated(obj.getString(TAG_DATE_CREATED));
                                 fb.setStatus(obj.getString(TAG_STATUS));
 
-                                if (!db.isFeedbackExist(fb)) {
+                                /*if (!db.isFeedbackExist(fb)) {
                                     db.addFeedback(fb);
                                 } else {
                                     db.updateFeedback(fb);
-                                }
+                                }*/
                             }
 
                             //Notification Message
@@ -125,7 +137,6 @@ public class DownloadFeedback extends IntentService {
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     super.onFailure(statusCode, headers, responseString, throwable);
                     Log.d(TAG, "on Failure " + responseString);
-                    Toast.makeText(getApplicationContext(), "Unauthorized", Toast.LENGTH_SHORT).show();
                 }
             });
 

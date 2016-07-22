@@ -77,19 +77,6 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
                 FormsColumns.DISPLAY_NAME, FormsColumns.DISPLAY_SUBTEXT, FormsColumns.JR_VERSION
         };
 
-       while(c.moveToNext()){
-            Log.d(TAG,"Cursor content 1 "+c.getString(1));
-            Log.d(TAG,"Cursor content 2 "+c.getString(2));
-            Log.d(TAG,"Cursor content 3 "+c.getString(3));
-            Log.d(TAG,"Cursor content 4 "+c.getString(4));
-            Log.d(TAG,"Cursor content 5 "+c.getString(5));
-            Log.d(TAG,"Cursor content 6 "+c.getString(6));
-            Log.d(TAG,"Cursor content 7 "+c.getString(7));
-            Log.d(TAG,"Cursor content 8 "+c.getString(8));
-            Log.d(TAG,"Cursor content 9 "+c.getString(9));
-            Log.d(TAG,"Cursor content 10 "+c.getString(10));
-        }
-
         int[] view = new int[]{
                 R.id.text1, R.id.text2, R.id.text3
         };
@@ -140,8 +127,6 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
         long idFormsTable = ((SimpleCursorAdapter) getListAdapter()).getItemId(position);
         Uri formUri = ContentUris.withAppendedId(FormsColumns.CONTENT_URI, idFormsTable);
 
-        Log.d(TAG, "Id Forms " + idFormsTable);
-
         Collect.getInstance().getActivityLogger().logAction(this, "onListItemClick", formUri.toString());
 
         String action = getIntent().getAction();
@@ -156,7 +141,6 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
         finish();
     }
 
-
     @Override
     protected void onResume() {
         mDiskSyncTask.setDiskSyncListener(this);
@@ -167,13 +151,11 @@ public class FormChooserList extends ListActivity implements DiskSyncListener {
         }
     }
 
-
     @Override
     protected void onPause() {
         mDiskSyncTask.setDiskSyncListener(null);
         super.onPause();
     }
-
 
     @Override
     protected void onStart() {

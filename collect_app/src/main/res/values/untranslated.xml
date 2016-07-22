@@ -42,7 +42,7 @@
 	<array name="nav_drawer_icons">
 		<item>@drawable/ic_home_white_48dp</item>
 		<item>@drawable/ic_feedback_white_48dp</item>
-		<item>@drawable/ic_note_add_white_48dp</item>
+		<item>@drawable/ic_add_box_white_48dp</item>
 		<item>@drawable/ic_note_add_white_48dp</item>
 		<item>@drawable/ic_action_settings</item>
 		<item>@drawable/ic_language_white_48dp</item>

@@ -105,8 +105,8 @@ public class LoginActivity extends Activity {
     public void checkLogin() {
         // Progress dialog
         pDialog = new ProgressDialog(this);
-        pDialog.setCancelable(false);
-        pDialog.setMessage("Please Wait while login.....");
+        pDialog.setCancelable(true);
+        pDialog.setMessage(getResources().getString(R.string.lbl_login_message));
         pDialog.show();
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);

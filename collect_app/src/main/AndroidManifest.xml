@@ -281,13 +281,14 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".activities.GlossaryActivity"
+        <activity
+            android:name=".activities.GlossaryActivity"
             android:parentActivityName=".activities.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
-
         </activity>
+        <activity android:name=".activities.FormDetailsActivity" />
     </application>
 
 </manifest>

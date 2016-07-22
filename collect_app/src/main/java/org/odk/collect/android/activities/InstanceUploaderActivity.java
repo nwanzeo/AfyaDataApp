@@ -394,7 +394,36 @@ public class InstanceUploaderActivity extends Activity implements InstanceUpload
         mInstancesToSend = updatedToSend;
 
         mUrl = url.toString();
-        showDialog(AUTH_DIALOG);
+        //showDialog(AUTH_DIALOG);
+        //TODO get_username, get_password and get_url
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String serverURL =
+                settings.getString(PreferencesActivity.KEY_SERVER_URL,
+                        getResources().getString(R.string.default_server_url));
+
+        // NOTE: /submission must not be translated! It is the well-known path on the server.
+        String submissionUrl = getString(R.string.default_odk_submission);
+
+        final String subURL =
+                serverURL + settings.getString(PreferencesActivity.KEY_SUBMISSION_URL, submissionUrl);
+
+        Uri u = Uri.parse(subURL);
+
+        //username and password
+        String username = settings.getString(PreferencesActivity.KEY_USERNAME, null);
+
+        String password = settings.getString(PreferencesActivity.KEY_PASSWORD, null);
+
+        WebUtils.addCredentials(username, password, u.getHost());
+
+        showDialog(PROGRESS_DIALOG);
+        mInstanceUploaderTask = new InstanceUploaderTask();
+
+        // register this activity with the new uploader task
+        mInstanceUploaderTask.setUploaderListener(InstanceUploaderActivity.this);
+
+        mInstanceUploaderTask.execute(mInstancesToSend);
     }
 
 

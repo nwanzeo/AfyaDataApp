@@ -3,6 +3,7 @@ package org.odk.collect.android.activities;
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -67,24 +68,46 @@ public class CampaignActivity extends Activity {
                         @Override
                         public void onClick(View v) {
                             //fill blank form
-                            //Intent blankForms = new Intent(getApplicationContext(),
-                                    //FormChooserList.class);
-                            //startActivity(blankForms);
-                            // get uri to form
-                            long idFormsTable = campaign.getId();
-                            Uri formUri = ContentUris.withAppendedId(FormsProviderAPI.FormsColumns.CONTENT_URI, idFormsTable);
+                            String formId = campaign.getFormId();
+                            String[] selectionArgs = {formId};
+                            String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
+                            String[] fields = {FormsProviderAPI.FormsColumns._ID};
 
-                            Collect.getInstance().getActivityLogger().logAction(this, "onListItemClick", formUri.toString());
+                            Cursor formCursor = null;
+                            try {
+                                formCursor = Collect.getInstance().getContentResolver().query(FormsProviderAPI.FormsColumns.CONTENT_URI, fields, selection, selectionArgs, null);
+                                if (formCursor.getCount() == 0) {
+                                    // form does not already exist locally
+                                    //Download form from server
+                                    Intent downloadForms = new Intent(getApplicationContext(),
+                                            FormDownloadList.class);
+                                    startActivity(downloadForms);
+                                } else {
+                                    formCursor.moveToFirst();
+                                    long idFormsTable = Long.parseLong(formCursor.getString(
+                                            formCursor.getColumnIndex(FormsProviderAPI.FormsColumns._ID)));
+                                    Uri formUri = ContentUris.withAppendedId(
+                                            FormsProviderAPI.FormsColumns.CONTENT_URI, idFormsTable);
 
-                            String action = getIntent().getAction();
-                            if (Intent.ACTION_PICK.equals(action)) {
-                                // caller is waiting on a picked form
-                                setResult(RESULT_OK, new Intent().setData(formUri));
-                            } else {
-                                // caller wants to view/edit a form, so launch formentryactivity
-                                startActivity(new Intent(Intent.ACTION_EDIT, formUri));
+                                    Collect.getInstance().getActivityLogger()
+                                            .logAction(this, "onListItemClick: ", formUri.toString());
+
+                                    String action = getIntent().getAction();
+                                    if (Intent.ACTION_PICK.equals(action)) {
+                                        // caller is waiting on a picked form
+                                        setResult(RESULT_OK, new Intent().setData(formUri));
+                                    } else {
+                                        // caller wants to view/edit a form, so launch formentryactivity
+                                        startActivity(new Intent(Intent.ACTION_EDIT, formUri));
+                                    }//end of function
+                                }
+
+
+                            } finally {
+                                if (formCursor != null) {
+                                    formCursor.close();
+                                }
                             }
-
                         }
                     });
                 }
@@ -109,6 +132,5 @@ public class CampaignActivity extends Activity {
         int loader = getResources().getIdentifier(uri, "drawable", getPackageName());
         //set icon
         icon.setImageResource(loader);
-
     }
 }

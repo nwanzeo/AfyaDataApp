@@ -32,6 +32,7 @@ import org.odk.collect.android.adapters.DiseaseListAdapter;
 import org.odk.collect.android.database.AfyaDataDB;
 import org.odk.collect.android.models.Disease;
 import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.prefs.Preferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +48,10 @@ public class HealthTipsFragment extends Fragment {
     private List<Disease> diseaseList = new ArrayList<Disease>();
     private ListView listView;
     private DiseaseListAdapter diseaseAdapter;
-    private String serverUrl;
 
     private SharedPreferences mSharedPreferences;
-
-    private ProgressBar progressBar;
+    private String serverUrl;
+    private String language;
 
     //AfyaData database
     private AfyaDataDB db;
@@ -64,6 +64,8 @@ public class HealthTipsFragment extends Fragment {
     private static final String TAG_SYMPTOMS = "symptoms";
     private static final String TAG_DIAGNOSIS = "diagnosis";
     private static final String TAG_TREATMENT = "treatment";
+
+    private ProgressDialog pDialog;
 
 
     public HealthTipsFragment() {
@@ -84,11 +86,10 @@ public class HealthTipsFragment extends Fragment {
         serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL,
                 getString(R.string.default_server_url));
 
-        listView = (ListView) rootView.findViewById(R.id.list_tips);
+        //TODO language request
+        language = mSharedPreferences.getString(Preferences.DEFAULT_LOCALE, null);
 
-        //show progress bar
-        progressBar = new ProgressBar(getActivity());
-        progressBar.setVisibility(View.VISIBLE);
+        listView = (ListView) rootView.findViewById(R.id.list_tips);
 
         db = new AfyaDataDB(getActivity());
 
@@ -96,8 +97,6 @@ public class HealthTipsFragment extends Fragment {
 
         if (diseaseList.size() > 0) {
             refreshDisplay();
-        } else {
-            Toast.makeText(getActivity(), R.string.no_content, Toast.LENGTH_LONG).show();
         }
 
         //check network connectivity
@@ -123,8 +122,7 @@ public class HealthTipsFragment extends Fragment {
     private void refreshDisplay() {
         diseaseAdapter = new DiseaseListAdapter(getActivity(), diseaseList);
         listView.setAdapter(diseaseAdapter);
-        diseaseAdapter.notifyDataSetChanged(); //TODO: check this issue
-        progressBar.setVisibility(View.GONE);
+        diseaseAdapter.notifyDataSetChanged();
     }
 
 
@@ -132,6 +130,12 @@ public class HealthTipsFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
+            // Progress dialog
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setCancelable(true);
+            pDialog.setMessage(getResources().getString(R.string.lbl_login_message));
+            pDialog.show();
+
             super.onPreExecute();
         }
 
@@ -139,6 +143,7 @@ public class HealthTipsFragment extends Fragment {
         protected Void doInBackground(Void... params) {
 
             RequestParams param = new RequestParams();
+            param.add("language", language);
 
             String tipsURL = serverUrl + "/api/v1/ohkr/get_diseases";
 
@@ -179,7 +184,6 @@ public class HealthTipsFragment extends Fragment {
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     super.onFailure(statusCode, headers, responseString, throwable);
                     Log.d(TAG, "on Failure " + responseString);
-                    Toast.makeText(getActivity(), "Unauthorized", Toast.LENGTH_SHORT).show();
                 }
             });
             return null;
@@ -193,6 +197,7 @@ public class HealthTipsFragment extends Fragment {
             if (diseaseList.size() > 0) {
                 refreshDisplay();
             }
+            pDialog.dismiss();
         }
     }
 }

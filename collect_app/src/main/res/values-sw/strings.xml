@@ -248,7 +248,7 @@
 
      <!-- NEW STRING -->
   <string name="nav_item_forms">Mwanzo</string>
-  <string name="nav_item_feedback">Maoni</string>
+  <string name="nav_item_feedback">Fomu Mrejesho</string>
   <string name="nav_item_tips">Afya Taarifa</string>
   <string name="nav_item_glossary">Orodha ya Dalili</string>
   <string name="nav_item_settings">Mpangilio</string>
@@ -257,20 +257,27 @@
 
   <string name="edit_feedback">Weka maoni yako</string>
   <string name="submit_feedback">Tuma</string>
-  <string name="new_feedback">Mrejesho mpya umepokea</string>
+  <string name="new_feedback">mirejesho umepokea</string>
+  <string name="required_feedback">Mrejesho wako unahitajika</string>
+  <string name="success_feedback">Mrejesho umehifadhiwa, tutakujibu muda si mrefu</string>
+  <string name="error_feedback">Haujafanikiwa kutuma mrejesho, jaribu tena.</string>
 
   <!--Login issues -->
   <string name="full_name">Jina Kamili</string>
   <string name="email">Barua Pepe</string>
-  <string name="phone">Namba ya Simu  e.g 255717705746</string>
-  <string name="password_confirm">Password Confirm</string>
-  <string name="name_required">Full name required</string>
-  <string name="username_required">Username required</string>
-  <string name="password_required">Password required</string>
-  <string name="sign_in">SIGN IN</string>
-  <string name="sign_up">SIGN UP</string>
-  <string name="btn_link_to_register">New to AfyaData? Register Now.</string>
-  <string name="btn_link_to_login">Already have account! Log in .</string>
+  <string name="phone">Namba ya Simu  e.g 0717705746</string>
+  <string name="password_confirm">Hakiki neno siri</string>
+  <string name="name_required">Jina linahitajika</string>
+  <string name="username_required">Jina la utambulisho linahitajika</string>
+  <string name="password_required">Neno siri linahitajika</string>
+  <string name="sign_in">INGIA</string>
+  <string name="sign_up">JISAJILI</string>
+  <string name="btn_link_to_register">Mgeni kwenye AfyaData? Jisajili sasa.</string>
+  <string name="btn_link_to_login">Mwenyeji kwenye AfyaData? Ingia sasa.</string>
+  <string name="lbl_login_message">Tafadhari subiri.....</string>
   <string name="no_content">Hakuna cha kuonesha</string>
+  <string name="exit_status">Unataka kutoka sasa?</string>
+  <string name="yes">NDIO</string>
+  <string name="no">HAPANA</string>
 
 </resources>

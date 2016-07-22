@@ -35,6 +35,7 @@ import org.odk.collect.android.adapters.CampaignListAdapter;
 import org.odk.collect.android.database.AfyaDataDB;
 import org.odk.collect.android.models.Campaign;
 import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.prefs.Preferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,11 +57,12 @@ public class CampaignFragment extends Fragment {
 
     private SharedPreferences mSharedPreferences;
     private String serverUrl;
+    private String language;
 
     //AfyaData database
     private AfyaDataDB db;
 
-    private ProgressBar progressBar;
+    private ProgressDialog pDialog;
 
     //variable Tag
     private static final String TAG_ID = "id";
@@ -91,12 +93,10 @@ public class CampaignFragment extends Fragment {
         serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL,
                 getString(R.string.default_server_url));
 
+        //TODO language request
+        language = mSharedPreferences.getString(Preferences.DEFAULT_LOCALE, null);
+
         gridView = (GridView) rootView.findViewById(R.id.gridView);
-
-        //show progress bar
-        progressBar = new ProgressBar(getActivity());
-        progressBar.setVisibility(View.VISIBLE);
-
 
         db = new AfyaDataDB(getActivity());
 
@@ -104,8 +104,6 @@ public class CampaignFragment extends Fragment {
 
         if (campaignList.size() > 0) {
             refreshDisplay();
-        } else {
-            Toast.makeText(getActivity(), R.string.no_content, Toast.LENGTH_LONG).show();
         }
 
         //check network connectivity
@@ -134,7 +132,6 @@ public class CampaignFragment extends Fragment {
         campaignAdapter = new CampaignListAdapter(getActivity(), campaignList);
         gridView.setAdapter(campaignAdapter);
         campaignAdapter.notifyDataSetChanged(); //TODO: check this issue
-        progressBar.setVisibility(View.GONE);
     }
 
 
@@ -142,6 +139,11 @@ public class CampaignFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
+            // Progress dialog
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setCancelable(true);
+            pDialog.setMessage(getResources().getString(R.string.lbl_login_message));
+            pDialog.show();
             super.onPreExecute();
         }
 
@@ -149,6 +151,7 @@ public class CampaignFragment extends Fragment {
         protected Void doInBackground(Void... params) {
 
             RequestParams param = new RequestParams();
+            param.add("language", language);
 
             String campaignURL = serverUrl + "/api/v1/campaign/get_campaign";
 
@@ -188,7 +191,6 @@ public class CampaignFragment extends Fragment {
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     super.onFailure(statusCode, headers, responseString, throwable);
                     Log.d(TAG, "on Failure " + responseString);
-                    Toast.makeText(getActivity(), "Unauthorized", Toast.LENGTH_SHORT).show();
                 }
             });
             return null;
@@ -202,6 +204,7 @@ public class CampaignFragment extends Fragment {
             if (campaignList.size() > 0) {
                 refreshDisplay();
             }
+            pDialog.dismiss();
         }
     }
 

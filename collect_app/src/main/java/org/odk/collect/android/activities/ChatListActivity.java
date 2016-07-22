@@ -31,6 +31,7 @@ import org.odk.collect.android.adapters.ChatListAdapter;
 import org.odk.collect.android.database.AfyaDataDB;
 import org.odk.collect.android.models.Feedback;
 import org.odk.collect.android.preferences.PreferencesActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +62,6 @@ public class ChatListActivity extends Activity {
     private Button btnFeeedback;
     private EditText editFeedback;
 
-    private AlertDialog.Builder alertDialog;
     private ProgressDialog progressDialog;
 
 
@@ -100,7 +100,7 @@ public class ChatListActivity extends Activity {
                 message = editFeedback.getText().toString();
 
                 if (editFeedback.getText().length() < 1) {
-                    editFeedback.setError("Your feedback is required");
+                    editFeedback.setError(getResources().getString(R.string.required_feedback));
                 } else {
                     //post to the server
                     postFeedbackToServer();
@@ -135,7 +135,7 @@ public class ChatListActivity extends Activity {
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("Posting feedback...");
+        progressDialog.setMessage(getResources().getString(R.string.lbl_login_message));
         progressDialog.show();
 
         final RequestParams params = new RequestParams();
@@ -168,17 +168,18 @@ public class ChatListActivity extends Activity {
                 chatList.add(feedback);
                 chatAdapter.notifyDataSetChanged();
                 editFeedback.setText("");//clear feedback posted
-
                 Log.d(TAG, "Saving feedback success");
-                Toast.makeText(ChatListActivity.this, "Chat saved, will get back to you soon", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(ChatListActivity.this, getResources().getString(R.string.success_feedback),
+                        Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 progressDialog.dismiss();
-
-                Toast.makeText(ChatListActivity.this, "Failed to send chat " + responseString, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChatListActivity.this, getResources().getString(R.string.success_feedback),
+                        Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -204,7 +205,7 @@ public class ChatListActivity extends Activity {
         switch (item.getItemId()) {
 
             case R.id.action_form_details:
-                showFormDialog();
+                showFormDetails();
                 break;
         }
 
@@ -212,29 +213,12 @@ public class ChatListActivity extends Activity {
     }
 
     //show form details
-    private void showFormDialog() {
-
-        String messageInfo = "<strong>Form Name</strong>: " + formTitle;
-
-        alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setTitle(" Form Details");
-        alertDialog.setMessage(Html.fromHtml(messageInfo));
-        alertDialog.setPositiveButton("Continue",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dInterface, int arg1) {
-                        dInterface.dismiss();
-                    }
-                });
-        alertDialog.setNegativeButton("Cancel",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int arg1) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.create().show();
-
+    private void showFormDetails() {
+        Intent feedbackIntent = new Intent(ChatListActivity.this, FormDetailsActivity.class);
+        feedbackIntent.putExtra("title", formTitle);
+        feedbackIntent.putExtra("form_id", formId);
+        feedbackIntent.putExtra("instance_id", instanceId);
+        startActivity(feedbackIntent);
     }
 
 

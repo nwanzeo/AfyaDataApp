@@ -58,14 +58,8 @@ public class ChatListAdapter extends BaseAdapter {
         TextView tvMessage = (TextView) convertView.findViewById(R.id.tvMessage);
         tvMessage.setText(feedback.getMessage());
 
-        //TextView tvDateSent = (TextView) convertView.findViewById(R.id.tvDateSent);
-        //tvDateSent.setText(feedback.getDateCreated());
-
         TextView tvUser = (TextView) convertView.findViewById(R.id.tvUser);
         tvUser.setText(feedback.getReplyBy());
-
-        TextView tvReadStatus = (TextView) convertView.findViewById(R.id.tvReadStatus);
-        tvReadStatus.setText(feedback.getStatus());
 
         return convertView;
     }

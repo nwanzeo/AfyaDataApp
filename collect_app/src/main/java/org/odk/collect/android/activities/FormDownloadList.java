@@ -302,8 +302,6 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
      */
     private void downloadFormList() {
 
-        //WebUtils.addCredentials("admin", "sacidsdemo", "http://afyadata.sacids.org/formList");
-
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = connectivityManager.getActiveNetworkInfo();

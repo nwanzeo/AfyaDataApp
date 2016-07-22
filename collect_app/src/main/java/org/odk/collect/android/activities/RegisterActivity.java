@@ -69,13 +69,13 @@ public class RegisterActivity extends Activity {
                 passwordConfirm = inputPasswordConfirm.getText().toString();
 
                 if (full_name == null || full_name.length() == 0) {
-                    inputName.setError("Full name is required");
+                    inputName.setError(getResources().getString(R.string.name_required));
                 } else if (username == null || username.length() == 0) {
-                    inputUsername.setError("Username is required");
+                    inputUsername.setError(getResources().getString(R.string.username_required));
                 } else if (password == null || password.length() == 0) {
-                    inputPassword.setError("Password is required");
+                    inputPassword.setError(getResources().getString(R.string.password_required));
                 } else if (passwordConfirm == null || passwordConfirm.length() == 0) {
-                    inputPassword.setError("Password Confirmation is required");
+                    inputPassword.setError(getResources().getString(R.string.password_required));
                 } else {
                     //Register now if condition accepts
                     registerUser();
@@ -108,8 +108,8 @@ public class RegisterActivity extends Activity {
     private void registerUser() {
         // Progress dialog
         pDialog = new ProgressDialog(this);
-        pDialog.setCancelable(false);
-        pDialog.setMessage("Please Wait while registering ....");
+        pDialog.setCancelable(true);
+        pDialog.setMessage(getResources().getString(R.string.lbl_login_message));
         pDialog.show();
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -158,7 +158,7 @@ public class RegisterActivity extends Activity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 pDialog.dismiss();
-                Toast.makeText(RegisterActivity.this, "Failed to create account ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "Failed to create account", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -39,6 +39,7 @@ import org.odk.collect.android.adapters.FeedbackListAdapter;
 import org.odk.collect.android.database.AfyaDataDB;
 import org.odk.collect.android.models.Feedback;
 import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.prefs.Preferences;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -54,6 +55,7 @@ import web.RestClient;
 public class FeedbackFragment extends Fragment {
 
     private static String TAG = "Feedback Fragment";
+    private View rootView;
 
     private List<Feedback> feedbackList = new ArrayList<Feedback>();
     private ListView listFeedback;
@@ -62,11 +64,10 @@ public class FeedbackFragment extends Fragment {
     private SharedPreferences mSharedPreferences;
     private String username;
     private String serverUrl;
+    private String language;
 
     //AfyaData database
     private AfyaDataDB db;
-
-    private ProgressBar progressBar;
 
     //variable Tag
     private static final String TAG_ID = "id";
@@ -80,8 +81,7 @@ public class FeedbackFragment extends Fragment {
     private static final String TAG_STATUS = "status";
     private static final String TAG_REPLY_BY = "reply_by";
 
-    private View rootView;
-
+    private ProgressDialog pDialog;
 
     public FeedbackFragment() {
         // Required empty public constructor
@@ -104,20 +104,17 @@ public class FeedbackFragment extends Fragment {
         serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL,
                 getString(R.string.default_server_url));
 
-        listFeedback = (ListView) rootView.findViewById(R.id.list_feedback);
+        //TODO language request
+        language = mSharedPreferences.getString(Preferences.DEFAULT_LOCALE, null);
 
-        //show progress bar
-        progressBar = new ProgressBar(getActivity());
-        progressBar.setVisibility(View.VISIBLE);
+        listFeedback = (ListView) rootView.findViewById(R.id.list_feedback);
 
         db = new AfyaDataDB(getActivity());
 
-        feedbackList = db.getAllFeedback(username);
+        feedbackList = db.getAllFeedback();
 
         if (feedbackList.size() > 0) {
             refreshDisplay();
-        } else {
-            Toast.makeText(getActivity(), R.string.no_content, Toast.LENGTH_LONG).show();
         }
 
         //check network connectivity
@@ -155,22 +152,37 @@ public class FeedbackFragment extends Fragment {
     private void refreshDisplay() {
         feedbackAdapter = new FeedbackListAdapter(getActivity(), feedbackList);
         listFeedback.setAdapter(feedbackAdapter);
-        feedbackAdapter.notifyDataSetChanged(); //TODO: check this issue
-        progressBar.setVisibility(View.GONE);
+        feedbackAdapter.notifyDataSetChanged();
     }
 
     class FetchFeedbackTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
+            // Progress dialog
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setCancelable(true);
+            pDialog.setMessage(getResources().getString(R.string.lbl_login_message));
+            pDialog.show();
             super.onPreExecute();
         }
 
         @Override
         protected Void doInBackground(Void... params) {
 
+            Feedback lastFeedback = db.getLastFeedback(username);
+            String dateCreated;
+
+            if (lastFeedback != null) {
+                dateCreated = lastFeedback.getDateCreated();
+            } else {
+                dateCreated = null;
+            }
+
             RequestParams param = new RequestParams();
             param.add("username", username);
+            param.add("date_created", dateCreated);
+            param.add("language", language);
 
             String feedbackURL = serverUrl + "/api/v1/feedback/get_feedback";
 
@@ -213,7 +225,6 @@ public class FeedbackFragment extends Fragment {
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     super.onFailure(statusCode, headers, responseString, throwable);
                     Log.d(TAG, "on Failure " + responseString);
-                    Toast.makeText(getActivity(), "Unauthorized", Toast.LENGTH_SHORT).show();
                 }
             });
             return null;
@@ -222,11 +233,12 @@ public class FeedbackFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            feedbackList = db.getAllFeedback(username);
+            feedbackList = db.getAllFeedback();
 
             if (feedbackList.size() > 0) {
                 refreshDisplay();
             }
+            pDialog.dismiss();
         }
     }
 }

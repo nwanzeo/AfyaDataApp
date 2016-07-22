@@ -2,6 +2,7 @@ package org.odk.collect.android.fragments;
 
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +33,7 @@ import org.odk.collect.android.adapters.GlossaryListAdapter;
 import org.odk.collect.android.database.AfyaDataDB;
 import org.odk.collect.android.models.Glossary;
 import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.prefs.Preferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +51,10 @@ public class GlossaryListFragment extends Fragment {
     private List<Glossary> glossaryList = new ArrayList<Glossary>();
     private ListView listView;
     private GlossaryListAdapter glossaryListAdapter;
-    private String serverUrl;
 
     private SharedPreferences mSharedPreferences;
-
-    private ProgressBar progressBar;
+    private String serverUrl;
+    private String language;
 
     //AfyaData database
     private AfyaDataDB db;
@@ -62,6 +63,8 @@ public class GlossaryListFragment extends Fragment {
     private static final String TAG_TITLE = "title";
     private static final String TAG_CODE = "code";
     private static final String TAG_DESCRIPTION = "description";
+
+    private ProgressDialog pDialog;
 
 
     public GlossaryListFragment() {
@@ -83,11 +86,10 @@ public class GlossaryListFragment extends Fragment {
         serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL,
                 getString(R.string.default_server_url));
 
-        listView = (ListView) rootView.findViewById(R.id.list_glossary);
+        //TODO language request
+        language = mSharedPreferences.getString(Preferences.DEFAULT_LOCALE, null);
 
-        //show progress bar
-        progressBar = new ProgressBar(getActivity());
-        progressBar.setVisibility(View.VISIBLE);
+        listView = (ListView) rootView.findViewById(R.id.list_glossary);
 
         db = new AfyaDataDB(getActivity());
 
@@ -95,8 +97,6 @@ public class GlossaryListFragment extends Fragment {
 
         if (glossaryList.size() > 0) {
             refreshDisplay();
-        } else {
-            Toast.makeText(getActivity(), R.string.no_content, Toast.LENGTH_LONG).show();
         }
 
         //check network connectivity
@@ -123,8 +123,7 @@ public class GlossaryListFragment extends Fragment {
     private void refreshDisplay() {
         glossaryListAdapter = new GlossaryListAdapter(getActivity(), glossaryList);
         listView.setAdapter(glossaryListAdapter);
-        glossaryListAdapter.notifyDataSetChanged(); //TODO: check this issue
-        progressBar.setVisibility(View.GONE);
+        glossaryListAdapter.notifyDataSetChanged();
     }
 
 
@@ -132,6 +131,12 @@ public class GlossaryListFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
+            // Progress dialog
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setCancelable(true);
+            pDialog.setMessage(getResources().getString(R.string.lbl_login_message));
+            pDialog.show();
+
             super.onPreExecute();
         }
 
@@ -139,6 +144,7 @@ public class GlossaryListFragment extends Fragment {
         protected Void doInBackground(Void... params) {
 
             RequestParams param = new RequestParams();
+            param.add("language", language);
 
             String tipsURL = serverUrl + "/api/v1/ohkr/get_symptoms";
 
@@ -175,7 +181,6 @@ public class GlossaryListFragment extends Fragment {
                 public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                     super.onFailure(statusCode, headers, responseString, throwable);
                     Log.d(TAG, "on Failure " + responseString);
-                    Toast.makeText(getActivity(), "Unauthorized", Toast.LENGTH_SHORT).show();
                 }
             });
             return null;
@@ -189,6 +194,7 @@ public class GlossaryListFragment extends Fragment {
             if (glossaryList.size() > 0) {
                 refreshDisplay();
             }
+            pDialog.dismiss();
         }
     }
 

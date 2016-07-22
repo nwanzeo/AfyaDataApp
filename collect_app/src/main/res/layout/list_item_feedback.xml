@@ -29,6 +29,15 @@
             android:textSize="@dimen/text_medium"/>
 
         <TextView
+            android:id="@+id/chr_name"
+            android:layout_below="@id/last_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_text"
+            android:textStyle="italic"
+            android:textSize="@dimen/text_medium"/>
+
+        <TextView
             android:id="@+id/instance_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

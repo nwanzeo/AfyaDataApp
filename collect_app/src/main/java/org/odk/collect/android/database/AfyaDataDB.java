@@ -18,8 +18,10 @@ import android.util.Log;
 import org.odk.collect.android.models.Campaign;
 import org.odk.collect.android.models.Disease;
 import org.odk.collect.android.models.Feedback;
+import org.odk.collect.android.models.FormDetails;
 import org.odk.collect.android.models.Glossary;
 import org.odk.collect.android.picasa.Feed;
+import org.odk.collect.android.provider.FormsProviderAPI;
 
 public class AfyaDataDB extends SQLiteOpenHelper {
 
@@ -27,7 +29,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 9;
 
     // Database Name
     private static final String DATABASE_NAME = "afyadata.db";
@@ -44,7 +46,6 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     public static final String KEY_DATE_CREATED = "date_created";
     public static final String KEY_FEEDBACK_STATUS = "status";
     public static final String KEY_FEEDBACK_REPLY_BY = "reply_by";
-
 
     private Feedback feedback = null;
 
@@ -76,6 +77,13 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     public static final String KEY_GLOSSARY_DESCRIPTION = "description";
     public static final String KEY_GLOSSARY_CODE = "code";
 
+    //Form details
+    public static final String TABLE_FORM_DETAILS = "form_details";
+    public static final String KEY_FORM_DETAILS_ID = "id";
+    public static final String KEY_FORM_DETAILS_LABEL = "label";
+    public static final String KEY_FORM_DETAILS_TYPE = "type";
+    public static final String KEY_FORM_DETAILS_VALUE = "value";
+    public static final String KEY_FORM_DETAILS_INSTANCE_ID = "instance_id";
 
     public AfyaDataDB(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -125,10 +133,19 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 + KEY_GLOSSARY_CODE + " TEXT,"
                 + KEY_DISEASE_DESCRIPTION + " TEXT" + ")";
 
+        String CREATE_FORM_DETAILS_TABLE = "CREATE TABLE "
+                + TABLE_FORM_DETAILS + "("
+                + KEY_FORM_DETAILS_ID + " INTEGER PRIMARY KEY," // and auto increment will be handled with
+                + KEY_FORM_DETAILS_LABEL + " TEXT,"
+                + KEY_FORM_DETAILS_TYPE + " TEXT,"
+                + KEY_FORM_DETAILS_VALUE + " TEXT,"
+                + KEY_FORM_DETAILS_INSTANCE_ID + " TEXT" + ")";
+
         db.execSQL(CREATE_FEEDBACK_TABLE);
         db.execSQL(CREATE_CAMPAIGN_TABLE);
         db.execSQL(CREATE_DISEASE_TABLE);
         db.execSQL(CREATE_GLOSSARY_TABLE);
+        db.execSQL(CREATE_FORM_DETAILS_TABLE);
 
         Log.d(TAG, "Database tables created");
     }
@@ -141,6 +158,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CAMPAIGN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_OHKR_DISEASE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_OHKR_GLOSSARY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FORM_DETAILS);
 
         // Create tables again
         onCreate(db);
@@ -172,15 +190,15 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     }
 
     // Getting All Feedback
-    public List<Feedback> getAllFeedback(String username) {
+    public List<Feedback> getAllFeedback() {
 
         List<Feedback> feedbackList = new ArrayList<Feedback>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_FEEDBACK + " WHERE " + KEY_USER + " = ?"
-                + " GROUP BY " + KEY_INSTANCE_ID;
+        String selectQuery = "SELECT  * FROM " + TABLE_FEEDBACK
+                + " GROUP BY " + KEY_INSTANCE_ID + " ORDER BY " + KEY_FEEDBACK_ID + " DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, new String[]{username});
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -303,11 +321,12 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
 
     //get Last Feedback
-    public Feedback getLastFeedback() {
-        String selectQuery = "SELECT  * FROM " + TABLE_FEEDBACK + " ORDER BY " + KEY_FEEDBACK_ID + " DESC LIMIT 1";
+    public Feedback getLastFeedback(String username) {
+        String selectQuery = "SELECT  * FROM " + TABLE_FEEDBACK + " WHERE " + KEY_USER + " = ? " +
+                "ORDER BY " + KEY_FEEDBACK_ID + " DESC LIMIT 1";
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{username});
 
         //check if cursor not null
         if (cursor != null && cursor.moveToFirst()) {
@@ -324,6 +343,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_STATUS)),
                     cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_REPLY_BY)));
         }
+
         // return feedback
         return feedback;
     }
@@ -636,6 +656,84 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 KEY_GLOSSARY_ID + " = " + glossary.getId(), null);
     }
 
+
+    /**
+     * All CRUD(Create, Read, Update, Delete) Operations for Form Details
+     */
+
+    // Adding new form details
+    public void addFormDetails(FormDetails forms) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_FORM_DETAILS_ID, forms.getId());
+        values.put(KEY_FORM_DETAILS_LABEL, forms.getLabel());
+        values.put(KEY_FORM_DETAILS_TYPE, forms.getType());
+        values.put(KEY_FORM_DETAILS_VALUE, forms.getValue());
+        values.put(KEY_FORM_DETAILS_INSTANCE_ID, forms.getInstanceId());
+
+        // Inserting Row
+        db.insert(TABLE_FORM_DETAILS, null, values);
+        db.close();
+    }
+
+
+    //check if form details
+    public boolean isFormDetailsExist(FormDetails forms) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_FORM_DETAILS, new String[]{KEY_FORM_DETAILS_ID,
+                        KEY_FORM_DETAILS_LABEL, KEY_FORM_DETAILS_TYPE, KEY_FORM_DETAILS_VALUE, KEY_FORM_DETAILS_INSTANCE_ID},
+                KEY_FORM_DETAILS_ID + "=?", new String[]{String.valueOf(forms.getId())}, null, null, null, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+        return (count > 0) ? true : false;
+    }
+
+
+    //Update form details
+    public void updateFormDetails(FormDetails forms) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(KEY_FORM_DETAILS_ID, forms.getId());
+        values.put(KEY_FORM_DETAILS_LABEL, forms.getLabel());
+        values.put(KEY_FORM_DETAILS_TYPE, forms.getType());
+        values.put(KEY_FORM_DETAILS_VALUE, forms.getValue());
+        values.put(KEY_FORM_DETAILS_INSTANCE_ID, forms.getInstanceId());
+
+        db.update(TABLE_FORM_DETAILS, values, KEY_FORM_DETAILS_ID + " =" + forms.getId(), null);
+    }
+
+    // Getting Form Details
+    public List<FormDetails> getFormDetails(String instanceId) {
+
+        List<FormDetails> formList = new ArrayList<FormDetails>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_FORM_DETAILS + " WHERE "
+                + KEY_FORM_DETAILS_INSTANCE_ID + " = ?";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{instanceId});
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                FormDetails formDetails = new FormDetails();
+                formDetails.setId(Long.parseLong(cursor.getString(cursor.getColumnIndex(KEY_FORM_DETAILS_ID))));
+                formDetails.setLabel(cursor.getString(cursor.getColumnIndex(KEY_FORM_DETAILS_LABEL)));
+                formDetails.setType(cursor.getString(cursor.getColumnIndex(KEY_FORM_DETAILS_TYPE)));
+                formDetails.setValue(cursor.getString(cursor.getColumnIndex(KEY_FORM_DETAILS_VALUE)));
+                formDetails.setInstanceId(cursor.getString(cursor.getColumnIndex(KEY_FORM_DETAILS_INSTANCE_ID)));
+                // Adding formDetails to list
+                formList.add(formDetails);
+            } while (cursor.moveToNext());
+        }
+
+        // return formDetails list
+        return formList;
+    }
 
 }
 

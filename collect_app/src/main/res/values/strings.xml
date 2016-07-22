@@ -362,20 +362,27 @@
     <string name="edit_feedback">Type feedback</string>
     <string name="submit_feedback">Send</string>
     <string name="new_feedback">New feedback received</string>
+    <string name="required_feedback">Your feedback is required</string>
+    <string name="success_feedback">Feedback saved, will get back to you soon</string>
+    <string name="error_feedback">Failed to send feedback, try again.</string>
 
 
     <!--Login issues -->
     <string name="full_name">Full name</string>
     <string name="email">Email</string>
-    <string name="phone">Mobile  e.g 255717705746</string>
+    <string name="phone">Mobile  e.g 0717705746</string>
     <string name="password_confirm">Password Confirm</string>
     <string name="name_required">Full name required</string>
     <string name="username_required">Username required</string>
     <string name="password_required">Password required</string>
-    <string name="sign_in">SIGN IN</string>
-    <string name="sign_up">SIGN UP</string>
+    <string name="sign_in">LOGIN</string>
+    <string name="sign_up">REGISTER</string>
     <string name="btn_link_to_register">New to AfyaData? Register Now.</string>
     <string name="btn_link_to_login">Already have account! Log in .</string>
+    <string name="lbl_login_message">Please wait.....</string>
     <string name="no_content">Nothing to display</string>
+    <string name="exit_status">Are you sure you want to exit?</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
 
 </resources>

@@ -273,11 +273,12 @@
   <string name="sign_in">INGIA</string>
   <string name="sign_up">JISAJILI</string>
   <string name="btn_link_to_register">Mgeni kwenye AfyaData? Jisajili sasa.</string>
-  <string name="btn_link_to_login">Mwenyeji kwenye AfyaData? Ingia sasa.</string>
+  <string name="btn_link_to_login">Mwenyeji kwenye AfyaData, Ingia sasa.</string>
   <string name="lbl_login_message">Tafadhari subiri.....</string>
   <string name="no_content">Hakuna cha kuonesha</string>
   <string name="exit_status">Unataka kutoka sasa?</string>
   <string name="delete_status">Unataka kufuta mrejesho?</string>
+  <string name="update_status">Kuna mabadiliko kwenye afyadata, Unahitaji mabadiliko?</string>
   <string name="yes">NDIO</string>
   <string name="no">HAPANA</string>
 

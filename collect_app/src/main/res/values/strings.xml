@@ -377,12 +377,13 @@
     <string name="password_required">Password required</string>
     <string name="sign_in">LOGIN</string>
     <string name="sign_up">REGISTER</string>
-    <string name="btn_link_to_register">New to AfyaData? Register Now.</string>
-    <string name="btn_link_to_login">Already have account! Log in .</string>
+    <string name="btn_link_to_register">New member to AfyaData? Register Now.</string>
+    <string name="btn_link_to_login">Already have account, LogIn .</string>
     <string name="lbl_login_message">Please wait.....</string>
     <string name="no_content">Nothing to display</string>
     <string name="exit_status">Are you sure you want to exit?</string>
     <string name="delete_status">Are you sure you want to delete?</string>
+    <string name="update_status">There new features in app, Do you want to update?</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
 

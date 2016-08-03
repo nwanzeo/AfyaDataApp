@@ -14,7 +14,7 @@
         </intent>
     </Preference>
 
-    <org.odk.collect.android.preferences.PasswordDialogPreference
+    <org.sacids.afyadata.preferences.PasswordDialogPreference
         android:id="@+id/admin_pw"
         android:defaultValue=""
         android:dialogTitle="Change Admin Password"

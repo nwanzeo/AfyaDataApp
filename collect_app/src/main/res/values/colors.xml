@@ -52,6 +52,7 @@ the License.
     <color name="black">#000000</color>
     <color name="Orange">#FFA500</color>
     <color name="grey">#EEEEEE</color>
+    <color name="light_grey">#F4F4F4</color>
     <color name="lightGrey">#FCFCFC</color>
     <color name="LightSalmon">#FFA07A</color>
     <color name="DarkOrange">#FF8C00</color>

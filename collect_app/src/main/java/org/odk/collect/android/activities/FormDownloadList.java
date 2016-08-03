@@ -25,6 +25,7 @@ import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.listeners.FormDownloaderListener;
 import org.odk.collect.android.listeners.FormListDownloaderListener;
 import org.odk.collect.android.logic.FormDetails;
+import org.odk.collect.android.preferences.PrefManager;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.tasks.DownloadFormListTask;
@@ -80,7 +81,9 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
 
     private static final int PROGRESS_DIALOG = 1;
     private static final int AUTH_DIALOG = 2;
-    private static final int MENU_PREFERENCES = Menu.FIRST;
+    private static final int MENU_PREFERENCES = 1;
+    private static final int MENU_LOGOUT = 2;
+    private PrefManager pref;
 
     private static final String BUNDLE_TOGGLED_KEY = "toggled";
     private static final String BUNDLE_SELECTED_COUNT = "selectedcount";
@@ -375,6 +378,11 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
                 menu.add(0, MENU_PREFERENCES, 0, R.string.general_preferences)
                         .setIcon(R.drawable.ic_menu_preferences),
                 MenuItem.SHOW_AS_ACTION_NEVER);
+
+        CompatibilityUtils.setShowAsAction(
+                menu.add(0, MENU_LOGOUT, 0, R.string.nav_item_logout)
+                        .setIcon(R.drawable.ic_lock_white_48dp),
+                MenuItem.SHOW_AS_ACTION_NEVER);
         return true;
     }
 
@@ -386,6 +394,21 @@ public class FormDownloadList extends ListActivity implements FormListDownloader
                 Collect.getInstance().getActivityLogger().logAction(this, "onMenuItemSelected", "MENU_PREFERENCES");
                 Intent i = new Intent(this, PreferencesActivity.class);
                 startActivity(i);
+                return true;
+
+            case MENU_LOGOUT:
+                //pref Manager
+                pref = new PrefManager(this);
+
+                //clear session
+                pref.clearSession();
+                //start new Intent
+                Intent signOut = new Intent(this, LoginActivity.class);
+                signOut.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
+                        Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(signOut);
+                finish();
                 return true;
         }
         return super.onMenuItemSelected(featureId, item);

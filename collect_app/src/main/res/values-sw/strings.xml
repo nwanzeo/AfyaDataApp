@@ -255,17 +255,17 @@
   <string name="nav_item_language">Badili Lugha</string>
   <string name="nav_item_logout">Toka Nje</string>
 
-  <string name="edit_feedback">Weka maoni yako</string>
+  <string name="edit_feedback">Tuma mrejesho</string>
   <string name="submit_feedback">Tuma</string>
   <string name="new_feedback">mirejesho umepokea</string>
   <string name="required_feedback">Mrejesho wako unahitajika</string>
-  <string name="success_feedback">Mrejesho umehifadhiwa, tutakujibu muda si mrefu</string>
+  <string name="success_feedback">Mrejesho wako umefanikiwa kutumwa.</string>
   <string name="error_feedback">Haujafanikiwa kutuma mrejesho, jaribu tena.</string>
 
   <!--Login issues -->
   <string name="full_name">Jina Kamili</string>
   <string name="email">Barua Pepe</string>
-  <string name="phone">Namba ya Simu  e.g 0717705746</string>
+  <string name="phone">Namba ya Simu</string>
   <string name="password_confirm">Hakiki neno siri</string>
   <string name="name_required">Jina linahitajika</string>
   <string name="username_required">Jina la utambulisho linahitajika</string>
@@ -277,6 +277,7 @@
   <string name="lbl_login_message">Tafadhari subiri.....</string>
   <string name="no_content">Hakuna cha kuonesha</string>
   <string name="exit_status">Unataka kutoka sasa?</string>
+  <string name="delete_status">Unataka kufuta mrejesho?</string>
   <string name="yes">NDIO</string>
   <string name="no">HAPANA</string>
 

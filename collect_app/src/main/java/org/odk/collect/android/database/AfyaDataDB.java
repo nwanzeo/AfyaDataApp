@@ -29,7 +29,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
 
     // Database Name
     private static final String DATABASE_NAME = "afyadata.db";
@@ -43,6 +43,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_SENDER = "sender";
     public static final String KEY_USER = "user";
+    public static final String KEY_CHR_NAME = "chr_name";
     public static final String KEY_DATE_CREATED = "date_created";
     public static final String KEY_FEEDBACK_STATUS = "status";
     public static final String KEY_FEEDBACK_REPLY_BY = "reply_by";
@@ -101,6 +102,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 + KEY_MESSAGE + " TEXT,"
                 + KEY_SENDER + " TEXT,"
                 + KEY_USER + " TEXT,"
+                + KEY_CHR_NAME + " TEXT,"
                 + KEY_DATE_CREATED + " TEXT,"
                 + KEY_FEEDBACK_STATUS + " TEXT,"
                 + KEY_FEEDBACK_REPLY_BY + " TEXT" + ")";
@@ -180,6 +182,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         values.put(KEY_MESSAGE, feedback.getMessage());
         values.put(KEY_SENDER, feedback.getSender());
         values.put(KEY_USER, feedback.getUserName());
+        values.put(KEY_CHR_NAME, feedback.getChrName());
         values.put(KEY_DATE_CREATED, feedback.getDateCreated());
         values.put(KEY_FEEDBACK_STATUS, feedback.getStatus());
         values.put(KEY_FEEDBACK_REPLY_BY, feedback.getReplyBy());
@@ -211,6 +214,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 feedback.setMessage(cursor.getString(cursor.getColumnIndex(KEY_MESSAGE)));
                 feedback.setSender(cursor.getString(cursor.getColumnIndex(KEY_SENDER)));
                 feedback.setUserName(cursor.getString(cursor.getColumnIndex(KEY_USER)));
+                feedback.setChrName(cursor.getString(cursor.getColumnIndex(KEY_CHR_NAME)));
                 feedback.setDateCreated(cursor.getString(cursor.getColumnIndex(KEY_DATE_CREATED)));
                 feedback.setStatus(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_STATUS)));
                 feedback.setReplyBy(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_REPLY_BY)));
@@ -246,6 +250,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 feedback.setMessage(cursor.getString(cursor.getColumnIndex(KEY_MESSAGE)));
                 feedback.setSender(cursor.getString(cursor.getColumnIndex(KEY_SENDER)));
                 feedback.setUserName(cursor.getString(cursor.getColumnIndex(KEY_USER)));
+                feedback.setChrName(cursor.getString(cursor.getColumnIndex(KEY_CHR_NAME)));
                 feedback.setDateCreated(cursor.getString(cursor.getColumnIndex(KEY_DATE_CREATED)));
                 feedback.setStatus(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_STATUS)));
                 feedback.setReplyBy(cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_REPLY_BY)));
@@ -265,7 +270,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
         Cursor cursor = db.query(TABLE_FEEDBACK, new String[]{KEY_FEEDBACK_ID,
                         KEY_FEEDBACK_FORM_ID, KEY_INSTANCE_ID, KEY_FORM_TITLE, KEY_MESSAGE, KEY_SENDER, KEY_USER,
-                        KEY_DATE_CREATED, KEY_FEEDBACK_STATUS, KEY_FEEDBACK_REPLY_BY},
+                        KEY_CHR_NAME, KEY_DATE_CREATED, KEY_FEEDBACK_STATUS, KEY_FEEDBACK_REPLY_BY},
                 KEY_FEEDBACK_ID + "=?", new String[]{String.valueOf(feedback.getId())}, null, null, null, null);
 
         int count = cursor.getCount();
@@ -286,6 +291,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         values.put(KEY_MESSAGE, feedback.getMessage());
         values.put(KEY_SENDER, feedback.getSender());
         values.put(KEY_USER, feedback.getUserName());
+        values.put(KEY_CHR_NAME, feedback.getChrName());
         values.put(KEY_DATE_CREATED, feedback.getDateCreated());
         values.put(KEY_FEEDBACK_STATUS, feedback.getStatus());
         values.put(KEY_FEEDBACK_REPLY_BY, feedback.getReplyBy());
@@ -295,11 +301,11 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 new String[]{String.valueOf(feedback.getId())});
     }
 
-    // Deleting single feedback
-    public void deleteFeedback(Feedback feedback) {
+    // Deleting feedback
+    public void deleteFeedback(String instanceId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_FEEDBACK, KEY_FEEDBACK_ID + " = ?",
-                new String[]{String.valueOf(feedback.getId())});
+        db.delete(TABLE_FEEDBACK, KEY_INSTANCE_ID + " = ?",
+                new String[]{instanceId});
         db.close();
     }
 
@@ -321,12 +327,11 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
 
     //get Last Feedback
-    public Feedback getLastFeedback(String username) {
-        String selectQuery = "SELECT  * FROM " + TABLE_FEEDBACK + " WHERE " + KEY_USER + " = ? " +
-                "ORDER BY " + KEY_FEEDBACK_ID + " DESC LIMIT 1";
+    public Feedback getLastFeedback() {
+        String selectQuery = "SELECT  * FROM " + TABLE_FEEDBACK + " ORDER BY " + KEY_FEEDBACK_ID + " DESC LIMIT 1";
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, new String[]{username});
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
         //check if cursor not null
         if (cursor != null && cursor.moveToFirst()) {
@@ -339,6 +344,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                     cursor.getString(cursor.getColumnIndex(KEY_MESSAGE)),
                     cursor.getString(cursor.getColumnIndex(KEY_SENDER)),
                     cursor.getString(cursor.getColumnIndex(KEY_USER)),
+                    cursor.getString(cursor.getColumnIndex(KEY_CHR_NAME)),
                     cursor.getString(cursor.getColumnIndex(KEY_DATE_CREATED)),
                     cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_STATUS)),
                     cursor.getString(cursor.getColumnIndex(KEY_FEEDBACK_REPLY_BY)));

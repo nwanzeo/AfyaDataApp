@@ -94,7 +94,7 @@ public class MainActivity extends Activity {
         navDrawerItems = new ArrayList<NavDrawerItem>();
 
         // adding nav drawer items to array
-        // Home
+        // Campaign
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
         // Form Feedback
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
@@ -102,12 +102,8 @@ public class MainActivity extends Activity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
         // Symptoms List
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-        // Settings
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
         // Change language
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
-        // Log out
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
 
         // Recycle the typed array
         navMenuIcons.recycle();
@@ -253,25 +249,8 @@ public class MainActivity extends Activity {
                 break;
             case 4:
                 //General Settings
-                Intent mySettings = new Intent(getApplicationContext(), PreferencesActivity.class);
-                startActivity(mySettings);
-                break;
-            case 5:
-                //General Settings
                 showChangeLanguageDialog();
                 break;
-            case 6:
-                //Log out
-                pref.clearSession();
-                //start new Intent
-                Intent signOut = new Intent(this, LoginActivity.class);
-                signOut.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP |
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                        Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(signOut);
-                finish();
-                break;
-
             default:
                 break;
         }

@@ -148,6 +148,8 @@ public class FormDetailsActivity extends Activity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     // If the response is JSONObject instead of expected JSONArray
+                    Log.d(TAG, "Response: " + response.toString());
+
                     try {
                         if (response.getString("status").equalsIgnoreCase("success")) {
                             JSONArray feedbackArray = response.getJSONArray("form_details");

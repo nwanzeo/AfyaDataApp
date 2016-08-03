@@ -54,7 +54,7 @@ public class FeedbackListAdapter extends BaseAdapter {
         last_message.setText(feedback.getMessage());
 
         TextView chr_name = (TextView) convertView.findViewById(R.id.chr_name);
-        chr_name.setText(feedback.getUserName());
+        chr_name.setText(feedback.getChrName());
 
         TextView instance_id = (TextView) convertView.findViewById(R.id.instance_id);
         instance_id.setText(feedback.getInstanceId());

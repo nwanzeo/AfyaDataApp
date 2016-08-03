@@ -1,10 +1,13 @@
 package org.odk.collect.android.fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -77,6 +80,7 @@ public class FeedbackFragment extends Fragment {
     private static final String TAG_MESSAGE = "message";
     private static final String TAG_SENDER = "sender";
     private static final String TAG_USER = "user";
+    private static final String TAG_CHR_NAME = "chr_name";
     private static final String TAG_DATE_CREATED = "date_created";
     private static final String TAG_STATUS = "status";
     private static final String TAG_REPLY_BY = "reply_by";
@@ -123,11 +127,47 @@ public class FeedbackFragment extends Fragment {
         else
             new FetchFeedbackTask().execute();
 
+        //OnLong Press
+        listFeedback.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                           final int position, long arg) {
+                //set background color
+                view.setBackgroundColor(Color.parseColor("#F4F4F4"));
 
+                //instanceId
+                final String instanceId = ((TextView) view.findViewById(R.id.instance_id))
+                        .getText().toString();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(getResources().getString(R.string.delete_status))
+                        .setCancelable(false)
+                        .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                db.deleteFeedback(instanceId);
+                                feedbackList.remove(position);
+                                feedbackAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+                return true;
+            }
+
+        });
+
+        //Onclick Listener
         listFeedback.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Feedback fb = feedbackList.get(position);
+                //set background color
+                view.setBackgroundColor(Color.parseColor("#F4F4F4"));
+
                 String formTitle = ((TextView) view.findViewById(R.id.form_name))
                         .getText().toString();
 
@@ -138,13 +178,13 @@ public class FeedbackFragment extends Fragment {
                         .getText().toString();
 
                 Intent feedbackIntent = new Intent(getActivity(), ChatListActivity.class);
-                //feedbackIntent.putExtra(".models.Feedback", fb);
                 feedbackIntent.putExtra("title", formTitle);
                 feedbackIntent.putExtra("form_id", formId);
                 feedbackIntent.putExtra("instance_id", instanceId);
                 startActivity(feedbackIntent);
             }
         });
+
         return rootView;
     }
 
@@ -170,17 +210,21 @@ public class FeedbackFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... params) {
 
-            Feedback lastFeedback = db.getLastFeedback(username);
+            Feedback lastFeedback = db.getLastFeedback();
             String dateCreated;
+            long lastId;
 
             if (lastFeedback != null) {
                 dateCreated = lastFeedback.getDateCreated();
+                lastId = lastFeedback.getId();
             } else {
                 dateCreated = null;
+                lastId = 0;
             }
 
             RequestParams param = new RequestParams();
             param.add("username", username);
+            param.add("lastId", String.valueOf(lastId));
             param.add("date_created", dateCreated);
             param.add("language", language);
 
@@ -204,6 +248,7 @@ public class FeedbackFragment extends Fragment {
                                 fb.setMessage(obj.getString(TAG_MESSAGE));
                                 fb.setSender(obj.getString(TAG_SENDER));
                                 fb.setUserName(obj.getString(TAG_USER));
+                                fb.setChrName(obj.getString(TAG_CHR_NAME));
                                 fb.setDateCreated(obj.getString(TAG_DATE_CREATED));
                                 fb.setStatus(obj.getString(TAG_STATUS));
                                 fb.setReplyBy(obj.getString(TAG_REPLY_BY));

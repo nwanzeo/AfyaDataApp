@@ -113,6 +113,7 @@ public class ChatListActivity extends Activity {
     private void refreshDisplay() {
         chatAdapter = new ChatListAdapter(this, chatList);
         listFeedback.setAdapter(chatAdapter);
+        chatAdapter.notifyDataSetChanged();
     }
 
 
@@ -128,8 +129,7 @@ public class ChatListActivity extends Activity {
         }
 
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        username = mSharedPreferences.getString(PreferencesActivity.KEY_USERNAME,
-                getResources().getString(R.string.default_sacids_username));
+        username = mSharedPreferences.getString(PreferencesActivity.KEY_USERNAME, null);
         serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL,
                 getString(R.string.default_server_url));
 
@@ -152,6 +152,7 @@ public class ChatListActivity extends Activity {
         feedback.setMessage(message);
         feedback.setSender("user");
         feedback.setInstanceId(instanceId);
+        feedback.setReplyBy(String.valueOf(0));
         feedback.setStatus("pending");
 
         String postFeedbackURL = serverUrl + "/api/v1/feedback/post_feedback";
@@ -178,7 +179,7 @@ public class ChatListActivity extends Activity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 progressDialog.dismiss();
-                Toast.makeText(ChatListActivity.this, getResources().getString(R.string.success_feedback),
+                Toast.makeText(ChatListActivity.this, getResources().getString(R.string.error_feedback),
                         Toast.LENGTH_SHORT).show();
 
             }

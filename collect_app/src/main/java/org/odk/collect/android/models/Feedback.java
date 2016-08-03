@@ -17,6 +17,7 @@ public class Feedback implements Parcelable{
     private String message;
     public String sender;
     private String userName;
+    private String chrName;
     private String dateCreated;
     private String status;
     private String replyBy;
@@ -24,7 +25,7 @@ public class Feedback implements Parcelable{
     public Feedback() {
     }
 
-    public Feedback(long id, String formId, String instanceId, String title, String message, String sender, String userName, String dateCreated, String status, String replyBy) {
+    public Feedback(long id, String formId, String instanceId, String title, String message, String sender, String userName, String chrName, String dateCreated, String status, String replyBy) {
         this.id = id;
         this.formId = formId;
         this.instanceId = instanceId;
@@ -32,6 +33,7 @@ public class Feedback implements Parcelable{
         this.message = message;
         this.sender = sender;
         this.userName = userName;
+        this.chrName = chrName;
         this.dateCreated = dateCreated;
         this.status = status;
         this.replyBy = replyBy;
@@ -45,6 +47,7 @@ public class Feedback implements Parcelable{
         message = in.readString();
         sender = in.readString();
         userName = in.readString();
+        chrName = in.readString();
         dateCreated = in.readString();
         status = in.readString();
         replyBy = in.readString();
@@ -107,6 +110,14 @@ public class Feedback implements Parcelable{
         this.userName = userName;
     }
 
+    public String getChrName() {
+        return chrName;
+    }
+
+    public void setChrName(String chrName) {
+        this.chrName = chrName;
+    }
+
     public String getDateCreated() {
         return dateCreated;
     }
@@ -145,6 +156,7 @@ public class Feedback implements Parcelable{
         dest.writeString(message);
         dest.writeString(sender);
         dest.writeString(userName);
+        dest.writeString(chrName);
         dest.writeString(dateCreated);
         dest.writeString(status);
         dest.writeString(replyBy);

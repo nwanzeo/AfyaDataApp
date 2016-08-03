@@ -3,6 +3,7 @@ package org.odk.collect.android.tasks;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
@@ -23,6 +24,7 @@ import org.odk.collect.android.activities.MainActivity;
 import org.odk.collect.android.database.AfyaDataDB;
 import org.odk.collect.android.models.Feedback;
 import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.prefs.Preferences;
 
 import web.BackgroundClient;
 
@@ -40,6 +42,7 @@ public class DownloadFeedback extends IntentService {
     private SharedPreferences mSharedPreferences;
     private String username;
     private String serverUrl;
+    private String language;
 
     private AfyaDataDB db;
 
@@ -54,8 +57,10 @@ public class DownloadFeedback extends IntentService {
     private static final String TAG_MESSAGE = "message";
     private static final String TAG_SENDER = "sender";
     private static final String TAG_USER = "user";
+    private static final String TAG_CHR_NAME = "chr_name";
     private static final String TAG_DATE_CREATED = "date_created";
     private static final String TAG_STATUS = "status";
+    private static final String TAG_REPLY_BY = "reply_by";
 
 
     public DownloadFeedback() {
@@ -72,9 +77,13 @@ public class DownloadFeedback extends IntentService {
             serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL,
                     getString(R.string.default_server_url));
 
+            //TODO language request
+            language = mSharedPreferences.getString(Preferences.DEFAULT_LOCALE, null);
+
             db = new AfyaDataDB(getApplicationContext());
 
-            Feedback lastFeedback = db.getLastFeedback(username);
+            Feedback lastFeedback = db.getLastFeedback();
+
             String dateCreated;
             long lastId;
             if (lastFeedback != null) {
@@ -90,6 +99,7 @@ public class DownloadFeedback extends IntentService {
             param.add("username", username);
             param.add("lastId", String.valueOf(lastId));
             param.add("date_created", dateCreated);
+            param.add("language", language);
 
             String feedbackURL = serverUrl + "/api/v1/feedback/get_notification_feedback";
 

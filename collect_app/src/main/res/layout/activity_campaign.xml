@@ -1,0 +1,71 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <!-- Logo Image -->
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:adjustViewBounds="true"
+            android:background="@color/white" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/icon"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:textAllCaps="true"
+            android:textColor="@color/primary"
+            android:textSize="@dimen/title_large" />
+
+        <TextView
+            android:id="@+id/form_id"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:paddingTop="2dp"
+            android:textAllCaps="true"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/text_medium" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/form_id"
+            android:layout_marginTop="2dp"
+            android:background="@color/grey" />
+
+        <WebView
+            android:id="@+id/description"
+            android:layout_below="@id/divider"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_fill_form"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@id/description"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/primary_dark"
+            android:padding="10dp"
+            android:text="@string/enter_data"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_large"
+             android:visibility="gone" />
+
+    </RelativeLayout>
+
+</ScrollView>

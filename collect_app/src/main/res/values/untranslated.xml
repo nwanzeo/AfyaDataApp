@@ -8,13 +8,44 @@
 	the specific language governing permissions and limitations under the License. -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- strings that should not be translated -->
-	<string translatable="false" name="app_name">ODK Collect</string>
+	<string translatable="false" name="app_name">AfyaData</string>
+	<string name="app_slogan">Addressing one health security at community level through technology.</string>
 	<string translatable="false" name="protocol_odk_default">odk_default</string>
 	<string translatable="false" name="protocol_google_maps_engine">google_maps_engine</string>
     <string translatable="false" name="default_form_processing_logic">-1</string>
     <string translatable="false" name="protocol_other">other_protocol</string>
-	<string translatable="false" name="default_server_url">https://opendatakit.appspot.com</string>
+	<string name="default_server_url" translatable="false">http://afyadata.sacids.org</string>
+	<string name="default_sacids_username" translatable="false">admin</string>
+	<string name="default_sacids_password" translatable="false">sacidsdemo</string>
 	<string translatable="false" name="default_odk_formlist">/formList</string>
 	<string translatable="false" name="default_odk_submission">/submission</string>
     <item name="mapview" type="id"/>
+
+	<!-- Navigation Drawer -->
+	<string name="drawer_open">Open</string>
+	<string name="drawer_close">Close</string>
+
+
+	<!-- Nav Drawer Menu Items -->
+	<string-array name="nav_drawer_items">
+		<item>@string/nav_item_forms</item>
+		<item>@string/nav_item_feedback</item>
+		<item>@string/nav_item_tips</item>
+		<item>@string/nav_item_glossary</item>
+		<item>@string/nav_item_settings</item>
+		<item>@string/nav_item_language</item>
+		<item>@string/nav_item_logout</item>
+	</string-array>
+
+	<!-- Nav Drawer List Item Icons -->
+	<!-- Keep them in order as the titles are in -->
+	<array name="nav_drawer_icons">
+		<item>@drawable/ic_home_white_48dp</item>
+		<item>@drawable/ic_feedback_white_48dp</item>
+		<item>@drawable/ic_add_box_white_48dp</item>
+		<item>@drawable/ic_note_add_white_48dp</item>
+		<item>@drawable/ic_action_settings</item>
+		<item>@drawable/ic_language_white_48dp</item>
+		<item>@drawable/ic_lock_white_48dp</item>
+	</array>
 </resources>

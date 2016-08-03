@@ -260,4 +260,8 @@
   <string name="survey_saving_encrypting_message">usimbaji fiche wa takwimu...</string>
   <string name="high_resolution_summary">Ezesha kurekodi video za mwonekano wa hali ya juu</string>
   <string name="high_resolution">Ezesha video za mwonekano wa hali ya juu...</string>
+  <string name="lang_swahili">Swahili</string>
+  <string name="lang_english">Kiingereza</string>
+  <string name="btn_change_language">Badilisha lugha</string>
+  <string name="title_choose_language">Chagua lugha</string>
 </resources>

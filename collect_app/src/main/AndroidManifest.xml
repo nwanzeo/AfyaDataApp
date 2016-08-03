@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
      Copyright (C) 2009 University of Washington Licensed under the Apache
 	License, Version 2.0 (the "License"); you may not use this file except in
 	compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -9,16 +8,29 @@
 	the specific language governing permissions and limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.odk.collect.android"
+    package="org.sacids.afyadata"
     android:versionCode="1050"
-    android:versionName="1.4.6" >
+    android:versionName="1.4.6">
 
-    <uses-feature android:name="android.hardware.location" android:required="false" />
-    <uses-feature android:name="android.hardware.location.network" android:required="false" />
-    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+    <uses-sdk
+        android:minSdkVersion="7"
+        android:targetSdkVersion="8" />
 
-    <uses-feature android:name="android.hardware.telephony" android:required="false" />
-    <uses-feature android:name="android.hardware.wifi" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.network"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false" />
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -31,55 +43,53 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!--  for Maps v2 functionality, want:
+    <!--
+          for Maps v2 functionality, want:
     	uses-feature android:glEsVersion="0x00020000" android:required="false"
     	BUT, the gl setting is not modified by the required parameter, so
     	do not declare anything here - detect capabilities at runtime.
     -->
 
     <permission
-          android:name="org.odk.collect.android.permission.MAPS_RECEIVE"
-          android:protectionLevel="signature" />
+        android:name="org.odk.collect.android.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
     <uses-permission android:name="org.odk.collect.android.permission.MAPS_RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
-    <uses-sdk android:minSdkVersion="7" android:targetSdkVersion="8" />
-
     <supports-screens
         android:anyDensity="true"
-        android:xlargeScreens="true"
         android:largeScreens="true"
         android:normalScreens="true"
         android:resizeable="true"
-        android:smallScreens="true" />
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
 
     <application
-        android:name="org.odk.collect.android.application.Collect"
-        android:largeHeap="true"
+        android:name="org.sacids.afyadata.application.Collect"
+        android:icon="@drawable/ic_launcher"
         android:installLocation="auto"
-        android:icon="@drawable/notes"
         android:label="@string/app_name"
-        android:theme="@style/Collect" >
-
+        android:largeHeap="true"
+        android:theme="@style/Collect">
         <provider
-            android:exported="true"
-            android:name="org.odk.collect.android.provider.FormsProvider"
-            android:authorities="org.odk.collect.android.provider.odk.forms" />
+            android:name="org.sacids.afyadata.provider.FormsProvider"
+            android:authorities="org.sacids.afyadata.provider.odk.forms"
+            android:exported="true" />
         <provider
-            android:exported="true"
-            android:name="org.odk.collect.android.provider.InstanceProvider"
-            android:authorities="org.odk.collect.android.provider.odk.instances" />
+            android:name="org.sacids.afyadata.provider.InstanceProvider"
+            android:authorities="org.sacids.afyadata.provider.odk.instances"
+            android:exported="true" />
 
         <activity
-            android:name=".activities.MainMenuActivity"
+            android:name="org.sacids.afyadata.activities.MainMenuActivity"
             android:configChanges="orientation"
-            android:label="@string/app_name" >
-        </activity>
+            android:label="@string/app_name" />
         <activity
-            android:name=".activities.FormEntryActivity"
+            android:name="org.sacids.afyadata.activities.FormEntryActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -90,23 +100,21 @@
                 <data android:mimeType="vnd.android.cursor.item/vnd.odk.instance" />
             </intent-filter>
         </activity>
-        <activity 
-            android:name=".activities.NotificationActivity"
-            android:label="@string/app_name"
-            android:taskAffinity=""
-            android:launchMode="singleTask"
-            android:excludeFromRecents="true"
-            />
         <activity
-            android:name=".activities.DrawActivity"
+            android:name="org.sacids.afyadata.activities.NotificationActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+            android:taskAffinity="" />
+        <activity
+            android:name="org.sacids.afyadata.activities.DrawActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.GoogleDriveActivity"
-            android:label="@string/app_name" 
-            android:windowSoftInputMode="stateHidden"
-            />
+            android:name="org.sacids.afyadata.activities.GoogleDriveActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activities.InstanceChooserList"
+            android:name="org.sacids.afyadata.activities.InstanceChooserList"
             android:label="@string/app_name" />
 
         <intent-filter>
@@ -119,11 +127,11 @@
         </intent-filter>
 
         <activity
-            android:name=".activities.InstanceChooserTabs"
+            android:name="org.sacids.afyadata.activities.InstanceChooserTabs"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.FormChooserList"
-            android:label="@string/app_name" >
+            android:name="org.sacids.afyadata.activities.FormChooserList"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.EDIT" />
@@ -135,67 +143,66 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.FormManagerList"
+            android:name="org.sacids.afyadata.activities.FormManagerList"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.FormDownloadList"
+            android:name="org.sacids.afyadata.activities.FormDownloadList"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.DataManagerList"
+            android:name="org.sacids.afyadata.activities.DataManagerList"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.FileManagerTabs"
+            android:name="org.sacids.afyadata.activities.FileManagerTabs"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.GoogleMapsEngineUploaderActivity"
+            android:name="org.sacids.afyadata.activities.GoogleMapsEngineUploaderActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.InstanceUploaderList"
+            android:name="org.sacids.afyadata.activities.InstanceUploaderList"
             android:label="@string/app_name">
-	        <intent-filter>
-	            <action android:name="android.intent.action.VIEW" />
-	            <action android:name="android.intent.action.EDIT" />
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
 
-	            <category android:name="android.intent.category.DEFAULT" />
-	        </intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
-            android:name=".activities.InstanceUploaderActivity"
+            android:name="org.sacids.afyadata.activities.InstanceUploaderActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".preferences.PreferencesActivity"
+            android:name="org.sacids.afyadata.preferences.PreferencesActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".preferences.GMEPreferencesActivity"
+            android:name="org.sacids.afyadata.preferences.GMEPreferencesActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".preferences.OtherPreferencesActivity"
+            android:name="org.sacids.afyadata.preferences.OtherPreferencesActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".preferences.AggregatePreferencesActivity"
+            android:name="org.sacids.afyadata.preferences.AggregatePreferencesActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".preferences.AdminPreferencesActivity"
+            android:name="org.sacids.afyadata.preferences.AdminPreferencesActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.FormHierarchyActivity"
+            android:name="org.sacids.afyadata.activities.FormHierarchyActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.GeoPointActivity"
+            android:name="org.sacids.afyadata.activities.GeoPointActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.GeoPointMapActivity"
+            android:name="org.sacids.afyadata.activities.GeoPointMapActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.GeoPointMapActivitySdk7"
+            android:name="org.sacids.afyadata.activities.GeoPointMapActivitySdk7"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.BearingActivity"
+            android:name="org.sacids.afyadata.activities.BearingActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".activities.SplashScreenActivity"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Dialog" >
+            android:name="org.sacids.afyadata.activities.SplashScreenActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -205,18 +212,19 @@
         </activity>
         <!-- Enable Shortcuts for Command Actions -->
         <activity
-            android:name=".activities.AndroidShortcuts"
+            android:name="org.sacids.afyadata.activities.AndroidShortcuts"
             android:label="ODK Form"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <receiver
-            android:name=".receivers.NetworkReceiver"
-            android:enabled="true" >
+            android:name="org.sacids.afyadata.receivers.NetworkReceiver"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -226,14 +234,61 @@
         </receiver>
 
         <meta-data
-                android:name="com.google.android.geo.API_KEY"
-                android:value="AIzaSyBS-JQ-dnaZ_8qsbvSyr_I3rTPFd5fJsYI"/>
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBS-JQ-dnaZ_8qsbvSyr_I3rTPFd5fJsYI" />
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="7571000" />  <!-- integer/google_play_services_version -->
+            android:value="7571000" />
+        <!-- integer/google_play_services_version -->
 
-        <uses-library android:name="com.google.android.maps"/>
+        <uses-library android:name="com.google.android.maps" />
 
-        </application>
+        <activity android:name="org.sacids.afyadata.activities.MainActivity" />
+        <activity
+            android:name="org.sacids.afyadata.activities.ChatListActivity"
+            android:parentActivityName="org.sacids.afyadata.activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.sacids.afyadata.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="org.sacids.afyadata.activities.CampaignActivity"
+            android:parentActivityName="org.sacids.afyadata.activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.sacids.afyadata.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="org.sacids.afyadata.activities.HeathTipsActivity"
+            android:parentActivityName="org.sacids.afyadata.activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.sacids.afyadata.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="org.sacids.afyadata.activities.LoginActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="org.sacids.afyadata.activities.RegisterActivity"
+            android:windowSoftInputMode="stateHidden" />
+
+        <service
+            android:name="org.sacids.afyadata.tasks.DownloadFeedback"
+            android:exported="false" />
+
+        <receiver
+            android:name="org.sacids.afyadata.receivers.FeedbackReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name="org.sacids.afyadata.activities.GlossaryActivity"
+            android:parentActivityName="org.sacids.afyadata.activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.sacids.afyadata.activities.MainActivity" />
+        </activity>
+        <activity android:name="org.sacids.afyadata.activities.FormDetailsActivity" />
+    </application>
 
 </manifest>

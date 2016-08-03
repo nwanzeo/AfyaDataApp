@@ -240,4 +240,44 @@
   <string name="constraint_behavior_on_finalize">airisha uthibitisho hadi kukamilika</string>
   <string name="view_change_location">tazama au badilisha eneo</string>
   <string name="change_server_url">URL ya Seva</string>
+  <string name="lang_swahili">Swahili</string>
+  <string name="lang_english">Kiingereza</string>
+  <string name="btn_change_language">Badilisha lugha</string>
+  <string name="title_choose_language">Chagua lugha</string>
+
+
+     <!-- NEW STRING -->
+  <string name="nav_item_forms">Mwanzo</string>
+  <string name="nav_item_feedback">Fomu Mrejesho</string>
+  <string name="nav_item_tips">Afya Taarifa</string>
+  <string name="nav_item_glossary">Orodha ya Dalili</string>
+  <string name="nav_item_settings">Mpangilio</string>
+  <string name="nav_item_language">Badili Lugha</string>
+  <string name="nav_item_logout">Toka Nje</string>
+
+  <string name="edit_feedback">Weka maoni yako</string>
+  <string name="submit_feedback">Tuma</string>
+  <string name="new_feedback">mirejesho umepokea</string>
+  <string name="required_feedback">Mrejesho wako unahitajika</string>
+  <string name="success_feedback">Mrejesho umehifadhiwa, tutakujibu muda si mrefu</string>
+  <string name="error_feedback">Haujafanikiwa kutuma mrejesho, jaribu tena.</string>
+
+  <!--Login issues -->
+  <string name="full_name">Jina Kamili</string>
+  <string name="email">Barua Pepe</string>
+  <string name="phone">Namba ya Simu  e.g 0717705746</string>
+  <string name="password_confirm">Hakiki neno siri</string>
+  <string name="name_required">Jina linahitajika</string>
+  <string name="username_required">Jina la utambulisho linahitajika</string>
+  <string name="password_required">Neno siri linahitajika</string>
+  <string name="sign_in">INGIA</string>
+  <string name="sign_up">JISAJILI</string>
+  <string name="btn_link_to_register">Mgeni kwenye AfyaData? Jisajili sasa.</string>
+  <string name="btn_link_to_login">Mwenyeji kwenye AfyaData? Ingia sasa.</string>
+  <string name="lbl_login_message">Tafadhari subiri.....</string>
+  <string name="no_content">Hakuna cha kuonesha</string>
+  <string name="exit_status">Unataka kutoka sasa?</string>
+  <string name="yes">NDIO</string>
+  <string name="no">HAPANA</string>
+
 </resources>

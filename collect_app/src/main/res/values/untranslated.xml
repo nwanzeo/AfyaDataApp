@@ -9,7 +9,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- strings that should not be translated -->
 	<string translatable="false" name="app_name">AfyaData</string>
-	<string name="app_slogan">Addressing one health security at community level through technology.</string>
+	<string translatable="false" name="app_slogan">Taarifa kwa wakati</string>
 	<string translatable="false" name="protocol_odk_default">odk_default</string>
 	<string translatable="false" name="protocol_google_maps_engine">google_maps_engine</string>
     <string translatable="false" name="default_form_processing_logic">-1</string>
@@ -20,10 +20,6 @@
 	<string translatable="false" name="default_odk_formlist">/formList</string>
 	<string translatable="false" name="default_odk_submission">/submission</string>
     <item name="mapview" type="id"/>
-
-	<!-- Navigation Drawer -->
-	<string name="drawer_open">Open</string>
-	<string name="drawer_close">Close</string>
 
 
 	<!-- Nav Drawer Menu Items -->

@@ -24,8 +24,8 @@ android {
         applicationId("org.sacids.afyadata")
         minSdkVersion(11)
         targetSdkVersion(11)
-        versionCode(1053)
-        versionName("1.4.7")
+        versionCode(1)
+        versionName('1.0')
         // Enabling multidex support.
         multiDexEnabled true
     }

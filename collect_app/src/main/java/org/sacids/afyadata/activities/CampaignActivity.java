@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import org.sacids.afyadata.application.Collect;
 import org.sacids.afyadata.database.AfyaDataDB;
 import org.sacids.afyadata.models.Campaign;
 import org.sacids.afyadata.provider.FormsProviderAPI;
+import org.sacids.afyadata.utilities.ImageLoader;
 
 import java.text.ParseException;
 
@@ -25,8 +27,8 @@ public class CampaignActivity extends Activity {
     private Campaign campaign = null;
     private AfyaDataDB db;
 
-    TextView title, form_id;
-    WebView description;
+    TextView title;
+    TextView description;
     private ImageView icon;
     private Button btnForm;
 
@@ -118,8 +120,7 @@ public class CampaignActivity extends Activity {
      */
     public void initializeView() {
         title = (TextView) findViewById(R.id.title);
-        form_id = (TextView) findViewById(R.id.form_id);
-        description = (WebView) findViewById(R.id.description);
+        description = (TextView) findViewById(R.id.description);
         icon = (ImageView) findViewById(R.id.icon);
         btnForm = (Button) findViewById(R.id.btn_fill_form);
     }
@@ -130,11 +131,15 @@ public class CampaignActivity extends Activity {
      */
     private void refreshDisplay() throws ParseException {
         title.setText(campaign.getTitle());
-        description.loadData(campaign.getDescription(), "text/html", null);
+        description.setText(Html.fromHtml(campaign.getDescription()));
 
-        String uri = "drawable/" + campaign.getIcon();
-        int loader = getResources().getIdentifier(uri, "drawable", getPackageName());
-        //set icon
-        icon.setImageResource(loader);
+        // Loader image - will be shown before loading image
+        int loader = R.drawable.ic_afyadata_one;
+
+        // ImageLoader class instance
+        ImageLoader imgLoader = new ImageLoader(this);
+
+        //load image
+        imgLoader.displayImage(campaign.getIcon(), loader, icon);
     }
 }

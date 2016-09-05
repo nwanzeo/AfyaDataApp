@@ -4,19 +4,12 @@
     android:layout_height="wrap_content"
     android:background="@color/white">
 
-    <!-- Campaign id (mid) - will be HIDDEN - used to pass to other activity -->
-    <TextView
-        android:id="@+id/id"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
     <!-- Thumbnail Image-->
     <ImageView
         android:id="@+id/icon"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        android:layout_centerHorizontal="true" />
+        android:scaleType="centerCrop" />
 
     <!-- Campaign Title -->
     <TextView
@@ -24,9 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/icon"
-        android:textColor="@color/primary"
-        android:textAllCaps="true"
         android:padding="3dp"
-        android:textSize="@dimen/title_large" />
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/text_medium" />
 
 </RelativeLayout>

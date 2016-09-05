@@ -2,6 +2,7 @@ package org.sacids.afyadata.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import org.sacids.afyadata.R;
 import org.sacids.afyadata.models.Campaign;
+import org.sacids.afyadata.utilities.ImageLoader;
 
 import java.util.List;
 
@@ -52,22 +54,23 @@ public class CampaignListAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.grid_row_campaign, null);
 
-
         //TextView
-        ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
         TextView title = (TextView) convertView.findViewById(R.id.title);
-        TextView id = (TextView) convertView.findViewById(R.id.id);
+        ImageView icon = (ImageView) convertView.findViewById(R.id.icon);
+
+        // Loader image - will be shown before loading image
+        int loader = R.drawable.ic_afyadata_one;
 
         //Campaign Model
         Campaign cmp = campaignList.get(position);
 
-        String uri = "drawable/" + cmp.getIcon();
-        int loader = activity.getResources().getIdentifier(uri, "drawable", activity.getPackageName());
-
         title.setText(cmp.getTitle());
-        id.setText(String.valueOf(cmp.getId()));
-        //display image
-        icon.setImageResource(loader);
+
+        // ImageLoader class instance
+        ImageLoader imgLoader = new ImageLoader(activity);
+
+        //load image
+        imgLoader.displayImage(cmp.getIcon(), loader, icon);
 
         return convertView;
     }

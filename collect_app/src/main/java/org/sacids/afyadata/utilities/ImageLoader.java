@@ -35,7 +35,7 @@ public class ImageLoader {
         executorService=Executors.newFixedThreadPool(5);
     }
 
-    int stub_id = R.drawable.ic_launcher;
+    int stub_id = R.drawable.ic_afyadata_one;
 
     public void displayImage(String url, int loader, ImageView imageView)
     {

@@ -52,6 +52,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     public static final String KEY_CAMPAIGN_ID = "id";
     public static final String KEY_TITLE = "title";
     public static final String KEY_TYPE = "type";
+    public static final String KEY_FEATURED = "featured";
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_ICON = "icon";
     public static final String KEY_CAMPAIGN_FORM_ID = "form_id";
@@ -379,7 +380,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
         List<Campaign> campaignList = new ArrayList<Campaign>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_CAMPAIGN;
+        String selectQuery = "SELECT  * FROM " + TABLE_CAMPAIGN + " ORDER BY " + KEY_CAMPAIGN_ID + " DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);

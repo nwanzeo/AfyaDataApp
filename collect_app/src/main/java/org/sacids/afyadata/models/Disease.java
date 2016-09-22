@@ -1,12 +1,13 @@
 package org.sacids.afyadata.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+
+import org.parceler.Parcel;
 
 /**
  * Created by Renfrid-Sacids on 5/30/2016.
  */
-public class Disease implements Parcelable {
+@Parcel
+public class Disease {
     private long id;
     private String title;
     private String specie_title;
@@ -30,16 +31,6 @@ public class Disease implements Parcelable {
         this.treatment = treatment;
     }
 
-    public Disease(Parcel in){
-        id = in.readLong();
-        title = in.readString();
-        specie_title = in.readString();
-        description = in.readString();
-        causes = in.readString();
-        symptoms = in.readString();
-        diagnosis = in.readString();
-        treatment = in.readString();
-    }
 
     public long getId() {
         return id;
@@ -105,35 +96,4 @@ public class Disease implements Parcelable {
         this.description = description;
     }
 
-
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
-        dest.writeString(title);
-        dest.writeString(specie_title);
-        dest.writeString(description);
-        dest.writeString(causes);
-        dest.writeString(symptoms);
-        dest.writeString(diagnosis);
-        dest.writeString(treatment);
-    }
-
-    public static final Parcelable.Creator<Disease> CREATOR = new Parcelable.Creator<Disease>() {
-
-        @Override
-        public Disease createFromParcel(Parcel source) {
-            return new Disease(source);
-        }
-
-        @Override
-        public Disease[] newArray(int size) {
-            return new Disease[size];
-        }
-    };
 }

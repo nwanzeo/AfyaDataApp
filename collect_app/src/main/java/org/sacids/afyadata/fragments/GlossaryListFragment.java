@@ -26,6 +26,7 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 import org.sacids.afyadata.R;
 import org.sacids.afyadata.activities.GlossaryActivity;
 import org.sacids.afyadata.adapters.GlossaryListAdapter;
@@ -108,8 +109,9 @@ public class GlossaryListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Glossary glossary = glossaryList.get(position);
+
                 Intent intent = new Intent(getActivity(), GlossaryActivity.class);
-                intent.putExtra(".models.Glossary", glossary);
+                intent.putExtra("symptom", Parcels.wrap(glossary));
                 startActivity(intent);
             }
         });

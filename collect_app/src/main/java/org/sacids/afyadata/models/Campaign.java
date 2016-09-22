@@ -1,17 +1,19 @@
 package org.sacids.afyadata.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+
+import org.parceler.Parcel;
 
 /**
  * Created by Renfrid-Sacids on 5/25/2016.
  */
-public class Campaign implements Parcelable {
+@Parcel
+public class Campaign {
 
     private int id;
     private String title;
     private String type;
-    private String formId;
+    private String featured;
+    private String jrFormId;
     private String description;
     private String icon;
     private String dateCreated;
@@ -19,24 +21,15 @@ public class Campaign implements Parcelable {
     public Campaign() {
     }
 
-    public Campaign(int id, String title, String type, String formId, String description, String icon, String dateCreated) {
+    public Campaign(int id, String title, String type, String featured, String jrFormId, String description, String icon, String dateCreated) {
         this.id = id;
         this.title = title;
         this.type = type;
-        this.formId = formId;
+        this.featured = featured;
+        this.jrFormId = jrFormId;
         this.description = description;
         this.icon = icon;
         this.dateCreated = dateCreated;
-    }
-
-    public Campaign(Parcel in){
-        id = in.readInt();
-        title = in.readString();
-        type = in.readString();
-        formId = in.readString();
-        description = in.readString();
-        icon = in.readString();
-        dateCreated = in.readString();
     }
 
     public int getId() {
@@ -63,12 +56,20 @@ public class Campaign implements Parcelable {
         this.type = type;
     }
 
-    public String getFormId() {
-        return formId;
+    public String getFeatured() {
+        return featured;
     }
 
-    public void setFormId(String formId) {
-        this.formId = formId;
+    public void setFeatured(String featured) {
+        this.featured = featured;
+    }
+
+    public String getJrFormId() {
+        return jrFormId;
+    }
+
+    public void setJrFormId(String jrFormId) {
+        this.jrFormId = jrFormId;
     }
 
     public String getDescription() {
@@ -94,33 +95,4 @@ public class Campaign implements Parcelable {
     public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(title);
-        dest.writeString(type);
-        dest.writeString(formId);
-        dest.writeString(description);
-        dest.writeString(icon);
-        dest.writeString(dateCreated);
-    }
-
-    public static final Parcelable.Creator<Campaign> CREATOR = new Parcelable.Creator<Campaign>() {
-
-        @Override
-        public Campaign createFromParcel(Parcel source) {
-            return new Campaign(source);
-        }
-
-        @Override
-        public Campaign[] newArray(int size) {
-            return new Campaign[size];
-        }
-    };
 }

@@ -1,12 +1,13 @@
 package org.sacids.afyadata.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+
+import org.parceler.Parcel;
 
 /**
  * Created by Renfrid-Sacids on 3/15/2016.
  */
-public class Feedback implements Parcelable{
+@Parcel
+public class Feedback{
 
     private long id;
     private String formId;
@@ -35,20 +36,6 @@ public class Feedback implements Parcelable{
         this.dateCreated = dateCreated;
         this.status = status;
         this.replyBy = replyBy;
-    }
-
-    public Feedback(Parcel in){
-        id = in.readInt();
-        formId = in.readString();
-        instanceId = in.readString();
-        title = in.readString();
-        message = in.readString();
-        sender = in.readString();
-        userName = in.readString();
-        chrName = in.readString();
-        dateCreated = in.readString();
-        status = in.readString();
-        replyBy = in.readString();
     }
 
 
@@ -139,39 +126,6 @@ public class Feedback implements Parcelable{
     public void setReplyBy(String replyBy) {
         this.replyBy = replyBy;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
-        dest.writeString(formId);
-        dest.writeString(instanceId);
-        dest.writeString(title);
-        dest.writeString(message);
-        dest.writeString(sender);
-        dest.writeString(userName);
-        dest.writeString(chrName);
-        dest.writeString(dateCreated);
-        dest.writeString(status);
-        dest.writeString(replyBy);
-    }
-
-    public static final Parcelable.Creator<Feedback> CREATOR = new Parcelable.Creator<Feedback>() {
-
-        @Override
-        public Feedback createFromParcel(Parcel source) {
-            return new Feedback(source);
-        }
-
-        @Override
-        public Feedback[] newArray(int size) {
-            return new Feedback[size];
-        }
-    };
 }
 
 

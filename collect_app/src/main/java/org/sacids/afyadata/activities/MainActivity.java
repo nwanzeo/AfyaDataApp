@@ -97,7 +97,7 @@ public class MainActivity extends Activity {
         serverUrl = mSharedPreferences.getString(PreferencesActivity.KEY_SERVER_URL,
                 getString(R.string.default_server_url));
 
-        settings = getSharedPreferences(Preferences.AFYA_DATA,MODE_PRIVATE);
+        settings = getSharedPreferences(Preferences.AFYA_DATA, MODE_PRIVATE);
 
         pref = new PrefManager(this);
 
@@ -171,7 +171,7 @@ public class MainActivity extends Activity {
         packageName = getPackageName();
         updateAppVersion();
 
-        // Retrieve a PendingIntent that will perform a broadcast
+        /*// Retrieve a PendingIntent that will perform a broadcast
         Intent feedbackIntent = new Intent(this, FeedbackReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, 0, feedbackIntent, 0);
 
@@ -179,6 +179,7 @@ public class MainActivity extends Activity {
         manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         int interval = 1800000; // 30 minutes
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+        */
     }
 
 

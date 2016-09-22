@@ -26,7 +26,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
 
     // Database Name
     private static final String DATABASE_NAME = "afyadata.db";
@@ -55,7 +55,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     public static final String KEY_FEATURED = "featured";
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_ICON = "icon";
-    public static final String KEY_CAMPAIGN_FORM_ID = "form_id";
+    public static final String KEY_CAMPAIGN_JR_FORM_ID = "jr_form_id";
     public static final String KEY_CAMPAIGN_DATE_CREATED = "date_created";
 
     //OHKR disease table
@@ -110,9 +110,10 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 + KEY_CAMPAIGN_ID + " INTEGER PRIMARY KEY," // and auto increment will be handled with
                 + KEY_TITLE + " TEXT,"
                 + KEY_TYPE + " TEXT,"
+                + KEY_FEATURED + " TEXT,"
                 + KEY_DESCRIPTION + " TEXT,"
                 + KEY_ICON + " TEXT,"
-                + KEY_CAMPAIGN_FORM_ID + " TEXT,"
+                + KEY_CAMPAIGN_JR_FORM_ID + " TEXT,"
                 + KEY_CAMPAIGN_DATE_CREATED + " TEXT" + ")";
 
         String CREATE_DISEASE_TABLE = "CREATE TABLE "
@@ -364,7 +365,8 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         values.put(KEY_CAMPAIGN_ID, campaign.getId());
         values.put(KEY_TITLE, campaign.getTitle());
         values.put(KEY_TYPE, campaign.getType());
-        values.put(KEY_CAMPAIGN_FORM_ID, campaign.getFormId());
+        values.put(KEY_FEATURED, campaign.getFeatured());
+        values.put(KEY_CAMPAIGN_JR_FORM_ID, campaign.getJrFormId());
         values.put(KEY_ICON, campaign.getIcon());
         values.put(KEY_DESCRIPTION, campaign.getDescription());
         values.put(KEY_CAMPAIGN_DATE_CREATED, campaign.getDateCreated());
@@ -374,6 +376,30 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Getting single Campaign
+    public Campaign getFeaturedCampaign() {
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_CAMPAIGN + " WHERE " + KEY_FEATURED + " = yes";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        Campaign campaign = new Campaign(
+                Integer.parseInt(cursor.getString(cursor.getColumnIndex(KEY_CAMPAIGN_ID))),
+                cursor.getString(cursor.getColumnIndex(KEY_TITLE)),
+                cursor.getString(cursor.getColumnIndex(KEY_TYPE)),
+                cursor.getString(cursor.getColumnIndex(KEY_FEATURED)),
+                cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)),
+                cursor.getString(cursor.getColumnIndex(KEY_CAMPAIGN_JR_FORM_ID)),
+                cursor.getString(cursor.getColumnIndex(KEY_ICON)),
+                cursor.getString(cursor.getColumnIndex(KEY_CAMPAIGN_DATE_CREATED)));
+
+        return campaign;
+    }
 
     // Getting All Campaign
     public List<Campaign> getAllCampaign() {
@@ -392,7 +418,8 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 campaign.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex(KEY_CAMPAIGN_ID))));
                 campaign.setTitle(cursor.getString(cursor.getColumnIndex(KEY_TITLE)));
                 campaign.setType(cursor.getString(cursor.getColumnIndex(KEY_TYPE)));
-                campaign.setFormId(cursor.getString(cursor.getColumnIndex(KEY_CAMPAIGN_FORM_ID)));
+                campaign.setFeatured(cursor.getString(cursor.getColumnIndex(KEY_FEATURED)));
+                campaign.setJrFormId(cursor.getString(cursor.getColumnIndex(KEY_CAMPAIGN_JR_FORM_ID)));
                 campaign.setIcon(cursor.getString(cursor.getColumnIndex(KEY_ICON)));
                 campaign.setDescription(cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)));
                 campaign.setDateCreated(cursor.getString(cursor.getColumnIndex(KEY_CAMPAIGN_DATE_CREATED)));
@@ -410,7 +437,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_CAMPAIGN, new String[]{KEY_CAMPAIGN_ID,
-                        KEY_TITLE, KEY_TYPE, KEY_CAMPAIGN_FORM_ID, KEY_DESCRIPTION, KEY_ICON,
+                        KEY_TITLE, KEY_TYPE, KEY_FEATURED, KEY_CAMPAIGN_JR_FORM_ID, KEY_DESCRIPTION, KEY_ICON,
                         KEY_CAMPAIGN_DATE_CREATED}, KEY_CAMPAIGN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
@@ -421,8 +448,9 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 Integer.parseInt(cursor.getString(cursor.getColumnIndex(KEY_CAMPAIGN_ID))),
                 cursor.getString(cursor.getColumnIndex(KEY_TITLE)),
                 cursor.getString(cursor.getColumnIndex(KEY_TYPE)),
+                cursor.getString(cursor.getColumnIndex(KEY_FEATURED)),
                 cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)),
-                cursor.getString(cursor.getColumnIndex(KEY_CAMPAIGN_FORM_ID)),
+                cursor.getString(cursor.getColumnIndex(KEY_CAMPAIGN_JR_FORM_ID)),
                 cursor.getString(cursor.getColumnIndex(KEY_ICON)),
                 cursor.getString(cursor.getColumnIndex(KEY_CAMPAIGN_DATE_CREATED)));
 
@@ -434,7 +462,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_CAMPAIGN, new String[]{KEY_CAMPAIGN_ID,
-                        KEY_TITLE, KEY_TYPE, KEY_CAMPAIGN_FORM_ID, KEY_DESCRIPTION, KEY_ICON,
+                        KEY_TITLE, KEY_TYPE, KEY_FEATURED, KEY_CAMPAIGN_JR_FORM_ID, KEY_DESCRIPTION, KEY_ICON,
                         KEY_CAMPAIGN_DATE_CREATED}, KEY_CAMPAIGN_ID + "=?",
                 new String[]{String.valueOf(campaign.getId())}, null, null, null, null);
 
@@ -451,7 +479,8 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
         values.put(KEY_TITLE, campaign.getTitle());
         values.put(KEY_TYPE, campaign.getType());
-        values.put(KEY_CAMPAIGN_FORM_ID, campaign.getFormId());
+        values.put(KEY_FEATURED, campaign.getFeatured());
+        values.put(KEY_CAMPAIGN_JR_FORM_ID, campaign.getJrFormId());
         values.put(KEY_ICON, campaign.getIcon());
         values.put(KEY_DESCRIPTION, campaign.getDescription());
         values.put(KEY_CAMPAIGN_DATE_CREATED, campaign.getDateCreated());

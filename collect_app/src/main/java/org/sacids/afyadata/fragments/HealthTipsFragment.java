@@ -25,6 +25,7 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 import org.sacids.afyadata.R;
 import org.sacids.afyadata.activities.HeathTipsActivity;
 import org.sacids.afyadata.adapters.DiseaseListAdapter;
@@ -59,10 +60,6 @@ public class HealthTipsFragment extends Fragment {
     private static final String TAG_TITLE = "disease_title";
     private static final String TAG_SPECIE_TITLE = "specie_title";
     private static final String TAG_DESCRIPTION = "description";
-    private static final String TAG_CAUSES = "cause";
-    private static final String TAG_SYMPTOMS = "symptoms";
-    private static final String TAG_DIAGNOSIS = "diagnosis";
-    private static final String TAG_TREATMENT = "treatment";
 
     private ProgressDialog pDialog;
 
@@ -108,8 +105,9 @@ public class HealthTipsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Disease disease = diseaseList.get(position);
+
                 Intent intent = new Intent(getActivity(), HeathTipsActivity.class);
-                intent.putExtra(".models.Disease", disease);
+                intent.putExtra("disease", Parcels.wrap(disease));
                 startActivity(intent);
             }
         });
@@ -161,10 +159,6 @@ public class HealthTipsFragment extends Fragment {
                                 ds.setTitle(obj.getString(TAG_TITLE));
                                 ds.setSpecie_title(obj.getString(TAG_SPECIE_TITLE));
                                 ds.setDescription(obj.getString(TAG_DESCRIPTION));
-                                ds.setCauses(obj.getString(TAG_CAUSES));
-                                ds.setSymptoms(obj.getString(TAG_SYMPTOMS));
-                                ds.setDiagnosis(obj.getString(TAG_DIAGNOSIS));
-                                ds.setTreatment(obj.getString(TAG_TREATMENT));
 
                                 if (!db.isDiseaseExist(ds)) {
                                     db.addDisease(ds);

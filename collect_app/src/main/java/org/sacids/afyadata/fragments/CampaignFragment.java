@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -27,6 +27,7 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 import org.sacids.afyadata.R;
 import org.sacids.afyadata.activities.CampaignActivity;
 import org.sacids.afyadata.adapters.CampaignListAdapter;
@@ -38,7 +39,10 @@ import org.sacids.afyadata.prefs.Preferences;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sacids.afyadata.utilities.ImageLoader;
 import org.sacids.afyadata.web.BackgroundClient;
+
+import in.srain.cube.views.GridViewWithHeaderAndFooter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,7 +53,7 @@ public class CampaignFragment extends Fragment {
     private View rootView;
 
     private List<Campaign> campaignList = new ArrayList<Campaign>();
-    private GridView gridView;
+    private GridViewWithHeaderAndFooter gridView;
     private CampaignListAdapter campaignAdapter;
 
     private SharedPreferences mSharedPreferences;
@@ -65,8 +69,9 @@ public class CampaignFragment extends Fragment {
     private static final String TAG_ID = "id";
     private static final String TAG_TITLE = "title";
     private static final String TAG_TYPE = "type";
+    private static final String TAG_FEATURED = "featured";
     private static final String TAG_ICON = "icon";
-    private static final String TAG_FORM_ID = "form_id";
+    private static final String TAG_JR_FORM_ID = "jr_form_id";
     private static final String TAG_DESCRIPTION = "description";
     private static final String TAG_DATE_CREATED = "date_created";
 
@@ -93,15 +98,26 @@ public class CampaignFragment extends Fragment {
         //TODO language request
         language = mSharedPreferences.getString(Preferences.DEFAULT_LOCALE, null);
 
-        gridView = (GridView) rootView.findViewById(R.id.gridView);
-
         db = new AfyaDataDB(getActivity());
 
-        campaignList = db.getAllCampaign();
+        View layoutBanner = getActivity().getLayoutInflater().inflate(R.layout.campaign_header, null);
+        gridView = (GridViewWithHeaderAndFooter) rootView.findViewById(R.id.gridView);
+        gridView.addHeaderView(layoutBanner);
 
-        if (campaignList.size() > 0) {
-            refreshDisplay();
-        }
+        //fetchFeaturedCampaign();
+        fetchCampaign();
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Campaign campaign = campaignList.get(position);
+
+                Intent intent = new Intent(getActivity(), CampaignActivity.class);
+                intent.putExtra("campaign", Parcels.wrap(campaign));
+                startActivity(intent);
+            }
+        });
 
         //check network connectivity
         if (ni == null || !ni.isConnected())
@@ -109,26 +125,31 @@ public class CampaignFragment extends Fragment {
         else
             new FetchCampaignTask().execute();
 
-
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Campaign campaign = campaignList.get(position);
-                Intent intent = new Intent(getActivity(), CampaignActivity.class);
-                intent.putExtra(".models.Campaign", campaign);
-                startActivity(intent);
-            }
-        });
-
         return rootView;
     }
 
-    //refresh display
-    private void refreshDisplay() {
-        campaignAdapter = new CampaignListAdapter(getActivity(), campaignList);
-        gridView.setAdapter(campaignAdapter);
-        campaignAdapter.notifyDataSetChanged(); //TODO: check this issue
+    //Fetch Featured Campaign
+    private void fetchFeaturedCampaign() {
+        Campaign campaign = db.getFeaturedCampaign();
+
+        ImageView mThumbnail = (ImageView) getActivity().findViewById(R.id.mThumbnail);
+
+        // Loader image - will be shown before loading image
+        int loader = R.drawable.ic_afyadata_one;
+
+        ImageLoader imgLoader = new ImageLoader(getActivity());
+        imgLoader.displayImage(campaign.getIcon(), loader, mThumbnail);
+    }
+
+    //Fetch All Campaign
+    private void fetchCampaign() {
+        campaignList = db.getAllCampaign();
+
+        if (campaignList.size() > 0) {
+            campaignAdapter = new CampaignListAdapter(getActivity(), campaignList);
+            gridView.setAdapter(campaignAdapter);
+            campaignAdapter.notifyDataSetChanged();
+        }
     }
 
 
@@ -166,8 +187,9 @@ public class CampaignFragment extends Fragment {
                                 cmp.setId(obj.getInt(TAG_ID));
                                 cmp.setTitle(obj.getString(TAG_TITLE));
                                 cmp.setType(obj.getString(TAG_TYPE));
+                                cmp.setFeatured(obj.getString(TAG_FEATURED));
                                 cmp.setIcon(obj.getString(TAG_ICON));
-                                cmp.setFormId(obj.getString(TAG_FORM_ID));
+                                cmp.setJrFormId(obj.getString(TAG_JR_FORM_ID));
                                 cmp.setDescription(obj.getString(TAG_DESCRIPTION));
                                 cmp.setDateCreated(obj.getString(TAG_DATE_CREATED));
 
@@ -199,7 +221,8 @@ public class CampaignFragment extends Fragment {
             campaignList = db.getAllCampaign();
 
             if (campaignList.size() > 0) {
-                refreshDisplay();
+                //fetchFeaturedCampaign();
+                fetchCampaign();
             }
             pDialog.dismiss();
         }

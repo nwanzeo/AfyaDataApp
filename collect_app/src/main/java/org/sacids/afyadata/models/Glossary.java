@@ -6,7 +6,8 @@ import android.os.Parcelable;
 /**
  * Created by Renfrid-Sacids on 6/23/2016.
  */
-public class Glossary implements Parcelable {
+@org.parceler.Parcel
+public class Glossary {
     private int id;
     private String title;
     private String code;
@@ -22,12 +23,6 @@ public class Glossary implements Parcelable {
         this.description = description;
     }
 
-    public Glossary(Parcel in) {
-        id = in.readInt();
-        title = in.readString();
-        code = in.readString();
-        description = in.readString();
-    }
 
     public int getId() {
         return id;
@@ -60,30 +55,4 @@ public class Glossary implements Parcelable {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(title);
-        dest.writeString(code);
-        dest.writeString(description);
-    }
-
-    public static final Parcelable.Creator<Glossary> CREATOR = new Parcelable.Creator<Glossary>() {
-
-        @Override
-        public Glossary createFromParcel(Parcel source) {
-            return new Glossary(source);
-        }
-
-        @Override
-        public Glossary[] newArray(int size) {
-            return new Glossary[size];
-        }
-    };
 }

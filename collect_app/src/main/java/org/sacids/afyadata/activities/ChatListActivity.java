@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Parcel;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import com.loopj.android.http.RequestParams;
 
 import org.apache.http.Header;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 import org.sacids.afyadata.R;
 import org.sacids.afyadata.adapters.ChatListAdapter;
 import org.sacids.afyadata.database.AfyaDataDB;
@@ -34,12 +36,13 @@ import java.util.List;
 
 import org.sacids.afyadata.web.RestClient;
 
+import javax.sql.StatementEvent;
+
 
 public class ChatListActivity extends Activity {
 
     private static String TAG = "Survey Feedback";
 
-    //private Bundle bundle;
     private Feedback feedback = null;
     private AfyaDataDB db;
 
@@ -47,16 +50,12 @@ public class ChatListActivity extends Activity {
     private ChatListAdapter chatAdapter;
     private ListView listFeedback;
 
-    private String instanceId;
-    private String formTitle;
-    private String formId;
-    private String message;
-
     private SharedPreferences mSharedPreferences;
     private String username;
     private String serverUrl;
+    private String message;
 
-    private Button btnFeeedback;
+    private Button btnFeedback;
     private EditText editFeedback;
 
     private ProgressDialog progressDialog;
@@ -67,20 +66,15 @@ public class ChatListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_survey_feedback);
 
-        // Get the message from the intent
-        Intent intent = getIntent();
-        instanceId = intent.getStringExtra("instance_id");
-        formTitle = intent.getStringExtra("title");
-        formId = intent.getStringExtra("form_id");
+        feedback = (Feedback) Parcels.unwrap(getIntent().getParcelableExtra("feedback"));
 
         //set Title
-        setTitle(getString(R.string.app_name) + " > " + formTitle);
+        setTitle(getString(R.string.app_name) + " > " + feedback.getTitle());
 
-        feedback = new Feedback();
         db = new AfyaDataDB(this);
 
         listFeedback = (ListView) findViewById(R.id.list_feedback);
-        chatList = db.getFeedbackByInstance(instanceId);
+        chatList = db.getFeedbackByInstance(feedback.getInstanceId());
 
         if (chatList.size() > 0) {
             refreshDisplay();
@@ -88,10 +82,10 @@ public class ChatListActivity extends Activity {
 
         //For submitting feedback to server
         editFeedback = (EditText) findViewById(R.id.edit_feedback);
-        btnFeeedback = (Button) findViewById(R.id.btn_submit_feedback);
+        btnFeedback = (Button) findViewById(R.id.btn_submit_feedback);
 
         //if submit feedback
-        btnFeeedback.setOnClickListener(new View.OnClickListener() {
+        btnFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 message = editFeedback.getText().toString();
@@ -136,19 +130,19 @@ public class ChatListActivity extends Activity {
         progressDialog.show();
 
         final RequestParams params = new RequestParams();
-        params.add("form_id", formId);
+        params.add("form_id", feedback.getFormId());
         params.add("username", username);
         params.add("message", message);
-        params.add("instance_id", instanceId);
+        params.add("instance_id", feedback.getInstanceId());
         params.add("sender", "user");
         params.add("status", "pending");
 
         //append chat at last
-        feedback.setFormId(formId);
+        feedback.setFormId(feedback.getFormId());
         feedback.setUserName(username);
         feedback.setMessage(message);
         feedback.setSender("user");
-        feedback.setInstanceId(instanceId);
+        feedback.setInstanceId(feedback.getInstanceId());
         feedback.setReplyBy(String.valueOf(0));
         feedback.setStatus("pending");
 
@@ -213,9 +207,7 @@ public class ChatListActivity extends Activity {
     //show form details
     private void showFormDetails() {
         Intent feedbackIntent = new Intent(ChatListActivity.this, FormDetailsActivity.class);
-        feedbackIntent.putExtra("title", formTitle);
-        feedbackIntent.putExtra("form_id", formId);
-        feedbackIntent.putExtra("instance_id", instanceId);
+        feedbackIntent.putExtra("feedback", Parcels.wrap(feedback));
         startActivity(feedbackIntent);
     }
 

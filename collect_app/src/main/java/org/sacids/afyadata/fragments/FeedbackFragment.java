@@ -29,6 +29,7 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 import org.sacids.afyadata.R;
 import org.sacids.afyadata.activities.ChatListActivity;
 import org.sacids.afyadata.adapters.FeedbackListAdapter;
@@ -125,16 +126,14 @@ public class FeedbackFragment extends Fragment {
                 //set background color
                 view.setBackgroundColor(Color.parseColor("#F4F4F4"));
 
-                //instanceId
-                final String instanceId = ((TextView) view.findViewById(R.id.instance_id))
-                        .getText().toString();
+                final Feedback feedback = feedbackList.get(position);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getResources().getString(R.string.delete_status))
                         .setCancelable(false)
                         .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                db.deleteFeedback(instanceId);
+                                db.deleteFeedback(feedback.getInstanceId());
                                 feedbackList.remove(position);
                                 feedbackAdapter.notifyDataSetChanged();
                             }
@@ -158,19 +157,10 @@ public class FeedbackFragment extends Fragment {
                 //set background color
                 view.setBackgroundColor(Color.parseColor("#F4F4F4"));
 
-                String formTitle = ((TextView) view.findViewById(R.id.form_name))
-                        .getText().toString();
-
-                String formId = ((TextView) view.findViewById(R.id.form_id))
-                        .getText().toString();
-
-                String instanceId = ((TextView) view.findViewById(R.id.instance_id))
-                        .getText().toString();
+                Feedback feedback = feedbackList.get(position);
 
                 Intent feedbackIntent = new Intent(getActivity(), ChatListActivity.class);
-                feedbackIntent.putExtra("title", formTitle);
-                feedbackIntent.putExtra("form_id", formId);
-                feedbackIntent.putExtra("instance_id", instanceId);
+                feedbackIntent.putExtra("feedback", Parcels.wrap(feedback));
                 startActivity(feedbackIntent);
             }
         });

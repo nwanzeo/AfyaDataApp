@@ -21,9 +21,11 @@ import org.apache.http.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 import org.sacids.afyadata.R;
 import org.sacids.afyadata.adapters.FormDetailsAdapter;
 import org.sacids.afyadata.database.AfyaDataDB;
+import org.sacids.afyadata.models.Feedback;
 import org.sacids.afyadata.models.FormDetails;
 import org.sacids.afyadata.preferences.PreferencesActivity;
 import org.sacids.afyadata.prefs.Preferences;
@@ -37,6 +39,9 @@ public class FormDetailsActivity extends Activity {
 
     private static String TAG = "Form Details";
 
+    private Feedback feedback = null;
+    private AfyaDataDB db;
+
     private List<FormDetails> formList = new ArrayList<FormDetails>();
     private ListView listView;
     private FormDetailsAdapter formAdapter;
@@ -44,13 +49,6 @@ public class FormDetailsActivity extends Activity {
     private SharedPreferences mSharedPreferences;
     private String serverUrl;
     private String language;
-
-    private String instanceId;
-    private String formTitle;
-    private String formId;
-
-    //AfyaData database
-    private AfyaDataDB db;
 
     private static final String TAG_ID = "id";
     private static final String TAG_LABEL = "label";
@@ -76,21 +74,17 @@ public class FormDetailsActivity extends Activity {
         //TODO language request
         language = mSharedPreferences.getString(Preferences.DEFAULT_LOCALE, null);
 
-        // Get the message from the intent
-        Intent intent = getIntent();
-        instanceId = intent.getStringExtra("instance_id");
-        formTitle = intent.getStringExtra("title");
-        formId = intent.getStringExtra("form_id");
+        feedback = (Feedback) Parcels.unwrap(getIntent().getParcelableExtra("feedback"));
 
         //set Title
-        setTitle(getString(R.string.app_name) + " > " + formTitle);
+        setTitle(getString(R.string.app_name) + " > " + feedback.getTitle());
 
         listView = (ListView) findViewById(R.id.list_forms);
 
         //initialize database
         db = new AfyaDataDB(this);
 
-        formList = db.getFormDetails(instanceId);
+        formList = db.getFormDetails(feedback.getInstanceId());
 
         if (formList.size() > 0) {
             refreshDisplay();
@@ -126,8 +120,8 @@ public class FormDetailsActivity extends Activity {
         protected Void doInBackground(Void... params) {
 
             final RequestParams param = new RequestParams();
-            param.add("table_name", formId);
-            param.add("instance_id", instanceId);
+            param.add("table_name", feedback.getFormId());
+            param.add("instance_id", feedback.getInstanceId());
             param.add("language", language);
 
             String formURL = serverUrl + "/api/v1/feedback/get_form_details";
@@ -150,7 +144,7 @@ public class FormDetailsActivity extends Activity {
                                 formDetails.setLabel(obj.getString(TAG_LABEL));
                                 formDetails.setType(obj.getString(TAG_TYPE));
                                 formDetails.setValue(obj.getString(TAG_VALUE));
-                                formDetails.setInstanceId(instanceId);
+                                formDetails.setInstanceId(feedback.getInstanceId());
 
                                 //check if form details exists
                                 if (!db.isFormDetailsExist(formDetails)) {
@@ -178,7 +172,7 @@ public class FormDetailsActivity extends Activity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            formList = db.getFormDetails(instanceId);
+            formList = db.getFormDetails(feedback.getInstanceId());
 
             if (formList != null) {
                 refreshDisplay();

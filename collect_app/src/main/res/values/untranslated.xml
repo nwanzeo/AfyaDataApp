@@ -14,7 +14,7 @@
 	<string translatable="false" name="protocol_google_maps_engine">google_maps_engine</string>
     <string translatable="false" name="default_form_processing_logic">-1</string>
     <string translatable="false" name="protocol_other">other_protocol</string>
-	<string name="default_server_url" translatable="false">http://10.0.2.2/afyadata</string>
+	<string name="default_server_url" translatable="false">http://afyadata.sacids.org</string>
 	<string name="default_sacids_username" translatable="false">admin</string>
 	<string name="default_sacids_password" translatable="false">sacidsdemo</string>
 	<string translatable="false" name="default_odk_formlist">/formList</string>

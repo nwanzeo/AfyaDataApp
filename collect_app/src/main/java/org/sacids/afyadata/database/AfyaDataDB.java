@@ -377,13 +377,13 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     }
 
     // Getting single Campaign
-    public Campaign getFeaturedCampaign() {
+    public Campaign getFeaturedCampaign(String featured) {
+        SQLiteDatabase db = this.getReadableDatabase();
 
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_CAMPAIGN + " WHERE " + KEY_FEATURED + " = yes";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.query(TABLE_CAMPAIGN, new String[]{KEY_CAMPAIGN_ID,
+                        KEY_TITLE, KEY_TYPE, KEY_FEATURED, KEY_CAMPAIGN_JR_FORM_ID, KEY_DESCRIPTION, KEY_ICON,
+                        KEY_CAMPAIGN_DATE_CREATED}, KEY_FEATURED + "=?",
+                new String[]{featured}, null, null, null, null);
 
         if (cursor != null)
             cursor.moveToFirst();

@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -43,6 +42,7 @@ import org.sacids.afyadata.utilities.ImageLoader;
 import org.sacids.afyadata.web.BackgroundClient;
 
 import in.srain.cube.views.GridViewWithHeaderAndFooter;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -100,11 +100,10 @@ public class CampaignFragment extends Fragment {
 
         db = new AfyaDataDB(getActivity());
 
-        View layoutBanner = getActivity().getLayoutInflater().inflate(R.layout.campaign_header, null);
+        //View layoutBanner = getActivity().getLayoutInflater().inflate(R.layout.campaign_header, null);
+        //gridView.addHeaderView(layoutBanner);
         gridView = (GridViewWithHeaderAndFooter) rootView.findViewById(R.id.gridView);
-        gridView.addHeaderView(layoutBanner);
 
-        //fetchFeaturedCampaign();
         fetchCampaign();
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -128,19 +127,6 @@ public class CampaignFragment extends Fragment {
         return rootView;
     }
 
-    //Fetch Featured Campaign
-    private void fetchFeaturedCampaign() {
-        Campaign campaign = db.getFeaturedCampaign();
-
-        ImageView mThumbnail = (ImageView) getActivity().findViewById(R.id.mThumbnail);
-
-        // Loader image - will be shown before loading image
-        int loader = R.drawable.ic_afyadata_one;
-
-        ImageLoader imgLoader = new ImageLoader(getActivity());
-        imgLoader.displayImage(campaign.getIcon(), loader, mThumbnail);
-    }
-
     //Fetch All Campaign
     private void fetchCampaign() {
         campaignList = db.getAllCampaign();
@@ -149,6 +135,23 @@ public class CampaignFragment extends Fragment {
             campaignAdapter = new CampaignListAdapter(getActivity(), campaignList);
             gridView.setAdapter(campaignAdapter);
             campaignAdapter.notifyDataSetChanged();
+        }
+    }
+
+    //Fetch Featured Campaign
+    private void fetchFeaturedCampaign() {
+        Campaign campaign = db.getFeaturedCampaign("yes");
+
+        if (campaign.getFeatured().equalsIgnoreCase("yes")) {
+            //Log.d(TAG, "message:" + campaign.getTitle() + ", " + campaign.getIcon());
+
+            ImageView mThumbnail = (ImageView) getActivity().findViewById(R.id.mThumbnail);
+
+            // Loader image - will be shown before loading image
+            int loader = R.drawable.ic_afyadata_one;
+
+            ImageLoader imgLoader = new ImageLoader(getActivity());
+            //imgLoader.displayImage(campaign.getIcon(), loader, mThumbnail);
         }
     }
 
@@ -221,7 +224,6 @@ public class CampaignFragment extends Fragment {
             campaignList = db.getAllCampaign();
 
             if (campaignList.size() > 0) {
-                //fetchFeaturedCampaign();
                 fetchCampaign();
             }
             pDialog.dismiss();

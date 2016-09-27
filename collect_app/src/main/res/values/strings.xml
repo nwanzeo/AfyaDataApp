@@ -351,7 +351,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- NEW STRING -->
-    <string name="nav_item_forms">Home</string>
+    <string name="nav_item_forms">Campaign</string>
     <string name="nav_item_feedback">Form Feedback</string>
     <string name="nav_item_tips">Health A-Z</string>
     <string name="nav_item_glossary">Symptoms List</string>

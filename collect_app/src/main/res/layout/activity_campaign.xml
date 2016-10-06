@@ -1,9 +1,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
         android:background="@color/white">
@@ -12,8 +12,7 @@
         <ImageView
             android:id="@+id/icon"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:adjustViewBounds="true"
+            android:layout_height="240dp"
             android:background="@color/white" />
 
         <View
@@ -43,7 +42,6 @@
             android:layout_marginRight="5dp"
             android:background="@color/white"
             android:gravity="center_vertical|left"
-            android:padding="5dp"
             android:textColor="@color/secondary_text"
             android:textSize="@dimen/text_medium" />
 

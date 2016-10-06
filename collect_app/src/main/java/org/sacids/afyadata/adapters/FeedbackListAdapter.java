@@ -1,6 +1,7 @@
 package org.sacids.afyadata.adapters;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +52,7 @@ public class FeedbackListAdapter extends BaseAdapter {
         form_name.setText(feedback.getTitle());
 
         TextView last_message = (TextView) convertView.findViewById(R.id.last_message);
-        last_message.setText(feedback.getMessage());
+        last_message.setText(Html.fromHtml(feedback.getMessage()));
 
         TextView chr_name = (TextView) convertView.findViewById(R.id.chr_name);
         chr_name.setText(feedback.getChrName());

@@ -118,7 +118,7 @@ public class RegisterActivity extends Activity {
         params.add("password_confirm", passwordConfirm);
 
 
-        String registerURL = serverUrl + "/api/v1/auth/register";
+        String registerURL = serverUrl + "/api/v2/auth/register";
 
         RestClient.post(registerURL, params, new JsonHttpResponseHandler() {
 

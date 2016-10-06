@@ -93,6 +93,8 @@ public class HealthTipsFragment extends Fragment {
 
         if (diseaseList.size() > 0) {
             refreshDisplay();
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.no_content), Toast.LENGTH_LONG).show();
         }
 
         //check network connectivity
@@ -142,7 +144,7 @@ public class HealthTipsFragment extends Fragment {
             RequestParams param = new RequestParams();
             param.add("language", language);
 
-            String tipsURL = serverUrl + "/api/v1/ohkr/get_diseases";
+            String tipsURL = serverUrl + "/api/v2/ohkr/get_diseases";
 
             BackgroundClient.get(tipsURL, param, new JsonHttpResponseHandler() {
                 @Override

@@ -110,6 +110,8 @@ public class FeedbackFragment extends Fragment {
 
         if (feedbackList.size() > 0) {
             refreshDisplay();
+        } else {
+            Toast.makeText(getActivity(), getString(R.string.no_feedback), Toast.LENGTH_LONG).show();
         }
 
         //check network connectivity
@@ -208,7 +210,7 @@ public class FeedbackFragment extends Fragment {
             param.add("date_created", dateCreated);
             param.add("language", language);
 
-            String feedbackURL = serverUrl + "/api/v1/feedback/get_feedback";
+            String feedbackURL = serverUrl + "/api/v2/feedback/get_feedback";
 
             BackgroundClient.get(feedbackURL, param, new JsonHttpResponseHandler() {
                 @Override

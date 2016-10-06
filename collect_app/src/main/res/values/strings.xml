@@ -355,6 +355,7 @@
     <string name="nav_item_feedback">Form Feedback</string>
     <string name="nav_item_tips">Health A-Z</string>
     <string name="nav_item_glossary">Symptoms List</string>
+    <string name="nav_item_lab">Lab</string>
     <string name="nav_item_settings">Settings</string>
     <string name="nav_item_language">Change Language</string>
     <string name="nav_item_logout">Log out</string>
@@ -365,6 +366,14 @@
     <string name="required_feedback">Your feedback is required</string>
     <string name="success_feedback">Your feedback successfully sent.</string>
     <string name="error_feedback">Failed to send feedback, try again.</string>
+
+    <!--Laboratory issues-->
+    <string name="lbl_lab">Laboratory</string>
+    <string name="lbl_fill_results">Fill Results Form</string>
+    <string name="lab_details">Request lab test or provide lab results</string>
+    <string name="lab_request">Lab Request</string>
+    <string name="lab_results">Lab Results</string>
+    <string name="required_admission">Admission Number is required</string>
 
 
     <!--Login issues -->
@@ -381,6 +390,8 @@
     <string name="btn_link_to_login">Already have account, LogIn .</string>
     <string name="lbl_login_message">Please wait.....</string>
     <string name="no_content">Nothing to display</string>
+    <string name="no_feedback">No feedback at the moment</string>
+    <string name="no_campaign">No campaign at the moment</string>
     <string name="exit_status">Are you sure you want to exit?</string>
     <string name="delete_status">Are you sure you want to delete?</string>
     <string name="update_status">There new features in app, Do you want to update?</string>

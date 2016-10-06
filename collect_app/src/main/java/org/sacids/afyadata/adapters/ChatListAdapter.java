@@ -3,6 +3,7 @@ package org.sacids.afyadata.adapters;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,7 @@ public class ChatListAdapter extends BaseAdapter {
         }
 
         TextView tvMessage = (TextView) convertView.findViewById(R.id.tvMessage);
-        tvMessage.setText(feedback.getMessage());
+        tvMessage.setText(Html.fromHtml(feedback.getMessage()));
 
         return convertView;
     }

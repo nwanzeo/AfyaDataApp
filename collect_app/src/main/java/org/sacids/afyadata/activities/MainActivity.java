@@ -41,6 +41,7 @@ import org.sacids.afyadata.fragments.CampaignFragment;
 import org.sacids.afyadata.fragments.FeedbackFragment;
 import org.sacids.afyadata.fragments.GlossaryListFragment;
 import org.sacids.afyadata.fragments.HealthTipsFragment;
+import org.sacids.afyadata.fragments.LaboratoryFragment;
 import org.sacids.afyadata.models.NavDrawerItem;
 import org.sacids.afyadata.preferences.PrefManager;
 import org.sacids.afyadata.preferences.PreferencesActivity;
@@ -125,10 +126,12 @@ public class MainActivity extends Activity {
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
         // Symptoms List
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-        // Change language
+        //Lab
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
-        //logout
+        // Change language
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
+        //logout
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
 
         // Recycle the typed array
         navMenuIcons.recycle();
@@ -171,7 +174,7 @@ public class MainActivity extends Activity {
         packageName = getPackageName();
         updateAppVersion();
 
-        /*// Retrieve a PendingIntent that will perform a broadcast
+        // Retrieve a PendingIntent that will perform a broadcast
         Intent feedbackIntent = new Intent(this, FeedbackReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, 0, feedbackIntent, 0);
 
@@ -179,7 +182,17 @@ public class MainActivity extends Activity {
         manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         int interval = 1800000; // 30 minutes
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
-        */
+
+        // Get the message from the intent
+        Intent intent = getIntent();
+        // Get the extras (if there are any)
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            String formFeedback = extras.getString("feedback");
+            if (formFeedback.equalsIgnoreCase("formFeedback")) {
+                displayView(1);
+            }
+        }
     }
 
 
@@ -278,10 +291,14 @@ public class MainActivity extends Activity {
                 fragment = new GlossaryListFragment();
                 break;
             case 4:
-                //General Settings
-                showChangeLanguageDialog();
+                //Lab
+                fragment = new LaboratoryFragment();
                 break;
             case 5:
+                //change Language
+                showChangeLanguageDialog();
+                break;
+            case 6:
                 //clear session
                 pref.clearSession();
                 //start new Intent
@@ -341,7 +358,7 @@ public class MainActivity extends Activity {
      * check app version
      */
     public void updateAppVersion() {
-        String versionURL = serverUrl + "/api/v1/auth/version";
+        String versionURL = serverUrl + "/api/v2/auth/version";
         RestClient.get(versionURL, new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers,

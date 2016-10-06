@@ -100,7 +100,7 @@ public class DownloadFeedback extends IntentService {
             param.add("date_created", dateCreated);
             param.add("language", language);
 
-            String feedbackURL = serverUrl + "/api/v1/feedback/get_notification_feedback";
+            String feedbackURL = serverUrl + "/api/v2/feedback/get_notification_feedback";
 
             BackgroundClient.get(feedbackURL, param, new JsonHttpResponseHandler() {
                 @Override
@@ -157,7 +157,7 @@ public class DownloadFeedback extends IntentService {
     private void sendNotification(String title, String message) {
         // notification is selected
         Intent notifyIntent = new Intent(this, MainActivity.class);
-        //notifyIntent.putExtra("form_id", form_id);
+        notifyIntent.putExtra("feedback", "formFeedback");
         PendingIntent pendIntent = PendingIntent.getActivity(this, 0, notifyIntent, 0);
 
         // Use NotificationCompat.Builder to set up our notification.

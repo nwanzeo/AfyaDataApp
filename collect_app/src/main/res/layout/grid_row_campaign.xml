@@ -16,9 +16,10 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/icon"
+        android:layout_below="@id/icon"
         android:padding="3dp"
         android:textColor="@color/secondary_text"
+        android:textStyle="bold"
         android:textSize="@dimen/text_medium" />
 
 </RelativeLayout>

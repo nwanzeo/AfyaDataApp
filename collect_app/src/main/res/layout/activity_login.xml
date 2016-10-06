@@ -36,11 +36,8 @@
                 android:singleLine="true"
                 android:textColor="@color/primary_text"
                 android:textColorHint="@color/color_text"
-                android:textSize="@dimen/title_large">
-
-                <requestFocus />
-
-            </EditText>
+                android:background="@color/white"
+                android:textSize="@dimen/title_large" />
 
             <EditText
                 android:id="@+id/password"
@@ -53,13 +50,10 @@
                 android:singleLine="true"
                 android:textColor="@color/primary_text"
                 android:textColorHint="@color/color_text"
-                android:textSize="@dimen/title_large">
-
-                <requestFocus />
-            </EditText>
+                android:background="@color/white"
+                android:textSize="@dimen/title_large" />
 
             <!-- Login Button -->
-
             <Button
                 android:id="@+id/button_login"
                 android:layout_width="fill_parent"

@@ -116,7 +116,7 @@ public class LoginActivity extends Activity {
         params.add("username", username);
         params.add("password", password);
 
-        String loginURL = serverUrl + "/api/v1/auth/login";
+        String loginURL = serverUrl + "/api/v2/auth/login";
 
         RestClient.post(loginURL, params, new JsonHttpResponseHandler() {
             @Override

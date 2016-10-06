@@ -146,7 +146,7 @@ public class ChatListActivity extends Activity {
         feedback.setReplyBy(String.valueOf(0));
         feedback.setStatus("pending");
 
-        String postFeedbackURL = serverUrl + "/api/v1/feedback/post_feedback";
+        String postFeedbackURL = serverUrl + "/api/v2/feedback/post_feedback";
 
         RestClient.post(postFeedbackURL, params, new JsonHttpResponseHandler() {
 

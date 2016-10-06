@@ -251,6 +251,7 @@
   <string name="nav_item_feedback">Fomu Mrejesho</string>
   <string name="nav_item_tips">Afya Taarifa</string>
   <string name="nav_item_glossary">Orodha ya Dalili</string>
+  <string name="nav_item_lab">Maabara</string>
   <string name="nav_item_settings">Mpangilio</string>
   <string name="nav_item_language">Badili Lugha</string>
   <string name="nav_item_logout">Toka Nje</string>
@@ -261,6 +262,14 @@
   <string name="required_feedback">Mrejesho wako unahitajika</string>
   <string name="success_feedback">Mrejesho wako umefanikiwa kutumwa.</string>
   <string name="error_feedback">Haujafanikiwa kutuma mrejesho, jaribu tena.</string>
+
+  <!--Laboratory issues-->
+  <string name="lbl_lab">Maabara</string>
+  <string name="lbl_fill_results">Jaza majibu</string>
+  <string name="lab_details">Request lab test or provide lab results</string>
+  <string name="lab_request">Lab Request</string>
+  <string name="lab_results">Majibu ya Maabara</string>
+  <string name="required_admission">Namba ya usajili inaitajika</string>
 
   <!--Login issues -->
   <string name="full_name">Jina Kamili</string>
@@ -276,6 +285,8 @@
   <string name="btn_link_to_login">Mwenyeji kwenye AfyaData, Ingia sasa.</string>
   <string name="lbl_login_message">Tafadhari subiri.....</string>
   <string name="no_content">Hakuna cha kuonesha</string>
+  <string name="no_feedback">Hakuna mrejesho kwa sasa</string>
+  <string name="no_campaign">No kampeni kwa sasa</string>
   <string name="exit_status">Unataka kutoka sasa?</string>
   <string name="delete_status">Unataka kufuta mrejesho?</string>
   <string name="update_status">Kuna mabadiliko kwenye afyadata, Unahitaji mabadiliko?</string>

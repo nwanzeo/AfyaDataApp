@@ -135,6 +135,8 @@ public class CampaignFragment extends Fragment {
             campaignAdapter = new CampaignListAdapter(getActivity(), campaignList);
             gridView.setAdapter(campaignAdapter);
             campaignAdapter.notifyDataSetChanged();
+        }else {
+            Toast.makeText(getActivity(), getString(R.string.no_feedback), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -174,7 +176,7 @@ public class CampaignFragment extends Fragment {
             RequestParams param = new RequestParams();
             param.add("language", language);
 
-            String campaignURL = serverUrl + "/api/v1/campaign/get_campaign";
+            String campaignURL = serverUrl + "/api/v2/campaign/get_campaign";
 
             BackgroundClient.get(campaignURL, param, new JsonHttpResponseHandler() {
                 @Override

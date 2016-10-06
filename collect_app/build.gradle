@@ -63,8 +63,8 @@ dependencies {
     }
     testCompile 'junit:junit:4.12'
     compile files('libs/android-smart-image-view-1.0.0.jar')
+    apt 'org.parceler:parceler:1.1.1'
     compile 'com.loopj.android:android-async-http:1.4.8'
     compile 'in.srain.cube:grid-view-with-header-footer:1.0.12'
     compile 'org.parceler:parceler-api:1.1.1'
-    apt 'org.parceler:parceler:1.1.1'
 }

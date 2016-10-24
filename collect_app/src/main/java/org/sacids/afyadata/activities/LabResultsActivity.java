@@ -1,3 +1,17 @@
+/*
+ * Copyright (C) 2016 Sacids Tanzania
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package org.sacids.afyadata.activities;
 
 import android.app.Activity;
@@ -39,9 +53,17 @@ import org.sacids.afyadata.web.RestClient;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Responsible for lab results issues
+ * directory.
+ *
+ * @author Renfrid Ngolongolo (renfrid.ngolongolo@sacids.org)
+ * @author Godluck Akyoo (godluck.akyoo@sacids.org)
+ */
+
 public class LabResultsActivity extends Activity {
 
-    private static String TAG = "Form Details";
+    private static String TAG = "Lab Results";
     private Context context = this;
 
     private List<LabRequest> labRequestList = new ArrayList<LabRequest>();
@@ -97,7 +119,7 @@ public class LabResultsActivity extends Activity {
         btnFillResult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String jrFormId = "build_Lab-Results_1475596606";
+                String jrFormId = "build_Lab-Results_27";
                 String[] selectionArgs = {jrFormId};
                 String selection = FormsProviderAPI.FormsColumns.JR_FORM_ID + "=?";
                 String[] fields = {FormsProviderAPI.FormsColumns._ID};
@@ -167,7 +189,7 @@ public class LabResultsActivity extends Activity {
         RequestParams params = new RequestParams();
         params.add("v", admissionNumber);
 
-        String labRequestURL = serverUrl + "/api/v2/lab/requests";
+        String labRequestURL = serverUrl + "/api/v2/feedback/requests";
 
         RestClient.get(labRequestURL, params, new JsonHttpResponseHandler() {
             @Override
@@ -177,6 +199,8 @@ public class LabResultsActivity extends Activity {
                 try {
                     if (response.getString("status").equalsIgnoreCase("success")) {
                         JSONArray labArray = response.getJSONArray("details");
+
+                        Log.d(TAG, "Message: " + labArray);
 
                         for (int i = 0; i < labArray.length(); i++) {
                             JSONObject obj = labArray.getJSONObject(i);

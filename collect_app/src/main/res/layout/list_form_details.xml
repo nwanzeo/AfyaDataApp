@@ -18,7 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/label"
         android:padding="5dp"
-        android:textStyle="italic"
         android:textColor="@color/primary_text"
         android:textSize="@dimen/title_medium" />
 

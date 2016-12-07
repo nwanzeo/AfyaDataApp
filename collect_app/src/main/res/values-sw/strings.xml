@@ -247,10 +247,12 @@
 
 
      <!-- NEW STRING -->
+  <string name="on_back_pressed">Bonyeza tena kutoka.</string>
   <string name="nav_item_forms">Kampeni</string>
   <string name="nav_item_feedback">Fomu Mrejesho</string>
   <string name="nav_item_tips">Afya Taarifa</string>
   <string name="nav_item_glossary">Orodha ya Dalili</string>
+  <string name="nav_item_search">Tafuta</string>
   <string name="nav_item_lab">Maabara</string>
   <string name="nav_item_settings">Mpangilio</string>
   <string name="nav_item_language">Badili Lugha</string>
@@ -270,6 +272,13 @@
   <string name="lab_request">Lab Request</string>
   <string name="lab_results">Majibu ya Maabara</string>
   <string name="required_admission">Namba ya usajili inaitajika</string>
+
+  <string name="lbl_search_details">Tafuta maelezo ya fomu</string>
+  <string name="lbl_search">Tafuta</string>
+  <string name="lbl_choose_form">Chagua fomu</string>
+  <string name="lbl_choose_field">Chagua kitafuta</string>
+  <string name="lbl_enter_value">Ingiza kitafuta</string>
+  <string name="required_search_value">Kitafuta kinahitajika</string>
 
   <!--Login issues -->
   <string name="full_name">Jina Kamili</string>

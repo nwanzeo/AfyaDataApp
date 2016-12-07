@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/grey"
+    android:background="@color/white"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
@@ -15,8 +15,8 @@
         <ImageView
             android:id="@+id/imgLogo"
             android:layout_width="wrap_content"
-            android:layout_height="250dp"
-            android:src="@drawable/logo" />
+            android:layout_height="wrap_content"
+            android:src="@drawable/inline_logo" />
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -36,7 +36,7 @@
                 android:singleLine="true"
                 android:textColor="@color/primary_text"
                 android:textColorHint="@color/color_text"
-                android:background="@color/white"
+                android:background="@color/grey"
                 android:textSize="@dimen/title_large" />
 
             <EditText
@@ -50,7 +50,7 @@
                 android:singleLine="true"
                 android:textColor="@color/primary_text"
                 android:textColorHint="@color/color_text"
-                android:background="@color/white"
+                android:background="@color/grey"
                 android:textSize="@dimen/title_large" />
 
             <EditText
@@ -64,7 +64,7 @@
                 android:singleLine="true"
                 android:textColor="@color/primary_text"
                 android:textColorHint="@color/color_text"
-                android:background="@color/white"
+                android:background="@color/grey"
                 android:textSize="@dimen/title_large" />
 
             <EditText
@@ -78,7 +78,7 @@
                 android:singleLine="true"
                 android:textColor="@color/primary_text"
                 android:textColorHint="@color/color_text"
-                android:background="@color/white"
+                android:background="@color/grey"
                 android:textSize="@dimen/title_large" />
 
 

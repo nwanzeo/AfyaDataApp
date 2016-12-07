@@ -33,6 +33,8 @@ import org.sacids.afyadata.models.Disease;
 import org.sacids.afyadata.models.Feedback;
 import org.sacids.afyadata.models.FormDetails;
 import org.sacids.afyadata.models.Glossary;
+import org.sacids.afyadata.models.SearchableData;
+import org.sacids.afyadata.models.SearchableForm;
 
 public class AfyaDataDB extends SQLiteOpenHelper {
 
@@ -40,10 +42,23 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
     // All Static variables
     // Database Version
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
 
     // Database Name
     private static final String DATABASE_NAME = "afyadata.db";
+
+    //searchable form
+    public static final String TABLE_SEARCHABLE_FORM = "searchable_form";
+    public static final String KEY_SEARCHABLE_FORM_ID = "id";
+    public static final String KEY_SEARCHABLE_JR_FORM_ID = "jr_form_id";
+    public static final String KEY_SEARCHABLE_FORM_TITLE = "title";
+
+    //searchable form data
+    public static final String TABLE_SEARCHABLE_DATA = "searchable_data";
+    public static final String KEY_SEARCHABLE_DATA_ID = "id";
+    public static final String KEY_SEARCHABLE_DATA_FORM_ID = "form_id";
+    public static final String KEY_SEARCHABLE_DATA_LABEL = "label";
+    public static final String KEY_SEARCHABLE_DATA_VALUE = "value";
 
     // Feedback table
     public static final String TABLE_FEEDBACK = "feedback";
@@ -105,6 +120,19 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
+        String CREATE_SEARCHABLE_FORM_TABLE = "CREATE TABLE "
+                + TABLE_SEARCHABLE_FORM + "("
+                + KEY_SEARCHABLE_FORM_ID + " INTEGER PRIMARY KEY,"
+                + KEY_SEARCHABLE_JR_FORM_ID + " TEXT,"
+                + KEY_SEARCHABLE_FORM_TITLE + " TEXT" + ")";
+
+        String CREATE_SEARCHABLE_DATA_TABLE = "CREATE TABLE "
+                + TABLE_SEARCHABLE_DATA + "("
+                + KEY_SEARCHABLE_DATA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + KEY_SEARCHABLE_DATA_FORM_ID + " TEXT,"
+                + KEY_SEARCHABLE_DATA_LABEL + " TEXT,"
+                + KEY_SEARCHABLE_DATA_VALUE + " TEXT" + ")";
+
         String CREATE_FEEDBACK_TABLE = "CREATE TABLE "
                 + TABLE_FEEDBACK + "("
                 + KEY_FEEDBACK_ID + " INTEGER PRIMARY KEY,"
@@ -156,6 +184,8 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 + KEY_FORM_DETAILS_VALUE + " TEXT,"
                 + KEY_FORM_DETAILS_INSTANCE_ID + " TEXT" + ")";
 
+        db.execSQL(CREATE_SEARCHABLE_FORM_TABLE);
+        db.execSQL(CREATE_SEARCHABLE_DATA_TABLE);
         db.execSQL(CREATE_FEEDBACK_TABLE);
         db.execSQL(CREATE_CAMPAIGN_TABLE);
         db.execSQL(CREATE_DISEASE_TABLE);
@@ -169,6 +199,8 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SEARCHABLE_FORM);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SEARCHABLE_DATA);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FEEDBACK);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CAMPAIGN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_OHKR_DISEASE);
@@ -177,6 +209,159 @@ public class AfyaDataDB extends SQLiteOpenHelper {
 
         // Create tables again
         onCreate(db);
+    }
+
+    /**
+     * All CRUD(Create, Read, Update, Delete) Operations for Searchable form
+     */
+    //add searchable form
+    public void addSearchableForm(SearchableForm form) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_SEARCHABLE_FORM_ID, form.getId());
+        values.put(KEY_SEARCHABLE_FORM_TITLE, form.getTitle());
+        values.put(KEY_SEARCHABLE_JR_FORM_ID, form.getJrFormId());
+
+        // Inserting Row
+        db.insert(TABLE_SEARCHABLE_FORM, null, values);
+        db.close(); // Closing database connection
+    }
+
+    //getAllSearchable Form
+    public List<SearchableForm> getSearchableForms() {
+
+        List<SearchableForm> formList = new ArrayList<SearchableForm>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_SEARCHABLE_FORM + " ORDER BY " + KEY_SEARCHABLE_FORM_TITLE + " ASC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                SearchableForm form = new SearchableForm();
+                form.setId(cursor.getLong(cursor.getColumnIndex(KEY_SEARCHABLE_FORM_ID)));
+                form.setJrFormId(cursor.getString(cursor.getColumnIndex(KEY_SEARCHABLE_JR_FORM_ID)));
+                form.setTitle(cursor.getString(cursor.getColumnIndex(KEY_SEARCHABLE_FORM_TITLE)));
+
+                // Adding form to list
+                formList.add(form);
+            } while (cursor.moveToNext());
+        }
+        // closing connection
+        cursor.close();
+        db.close();
+
+        // return formList
+        return formList;
+    }
+
+    //check if searchable exists
+    public boolean isSearchableExist(SearchableForm form) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_SEARCHABLE_FORM, new String[]{KEY_SEARCHABLE_FORM_ID,
+                        KEY_SEARCHABLE_FORM_TITLE, KEY_SEARCHABLE_JR_FORM_ID},
+                KEY_SEARCHABLE_FORM_ID + "=?", new String[]{String.valueOf(form.getId())}, null, null, null, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+        return (count > 0) ? true : false;
+    }
+
+
+    // Updating Searchable Form
+    public int updateSearchableForm(SearchableForm form) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_SEARCHABLE_FORM_ID, form.getId());
+        values.put(KEY_SEARCHABLE_FORM_TITLE, form.getTitle());
+        values.put(KEY_SEARCHABLE_JR_FORM_ID, form.getJrFormId());
+
+        // updating row
+        return db.update(TABLE_SEARCHABLE_FORM, values, KEY_SEARCHABLE_FORM_ID + " = ?",
+                new String[]{String.valueOf(form.getId())});
+    }
+
+
+    /**
+     * All CRUD(Create, Read, Update, Delete) Operations for Searchable data
+     */
+    public void addSearchableData(SearchableData data) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_SEARCHABLE_DATA_FORM_ID, data.getFormId());
+        values.put(KEY_SEARCHABLE_DATA_LABEL, data.getLabel());
+        values.put(KEY_SEARCHABLE_DATA_VALUE, data.getValue());
+
+        // Inserting Row
+        db.insert(TABLE_SEARCHABLE_DATA, null, values);
+        db.close(); // Closing database connection
+    }
+
+    //getAllSearchable Form
+    public List<SearchableData> getSearchableData() {
+
+        List<SearchableData> dataList = new ArrayList<SearchableData>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_SEARCHABLE_DATA
+                + " ORDER BY " + KEY_SEARCHABLE_DATA_VALUE + " ASC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                SearchableData data = new SearchableData();
+                data.setLabel(cursor.getString(cursor.getColumnIndex(KEY_SEARCHABLE_DATA_LABEL)));
+                data.setValue(cursor.getString(cursor.getColumnIndex(KEY_SEARCHABLE_DATA_VALUE)));
+                data.setFormId(cursor.getString(cursor.getColumnIndex(KEY_SEARCHABLE_FORM_ID)));
+
+                // Adding form data to list
+                dataList.add(data);
+            } while (cursor.moveToNext());
+        }
+        // closing connection
+        cursor.close();
+        db.close();
+
+        // return dataList
+        return dataList;
+    }
+
+    //check if searchable data exists
+    public boolean isSearchableDataExist(SearchableData data) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_SEARCHABLE_DATA, new String[]{KEY_SEARCHABLE_DATA_ID,
+                        KEY_SEARCHABLE_FORM_ID, KEY_SEARCHABLE_DATA_LABEL, KEY_SEARCHABLE_DATA_VALUE},
+                KEY_SEARCHABLE_DATA_FORM_ID + "=? AND " + KEY_SEARCHABLE_DATA_LABEL + "=?",
+                new String[]{data.getFormId(), data.getLabel()}, null, null, null, null);
+
+        int count = cursor.getCount();
+        cursor.close();
+        return (count > 0) ? true : false;
+    }
+
+
+    // Updating Searchable data
+    public int updateSearchableData(SearchableData data) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_SEARCHABLE_DATA_FORM_ID, data.getFormId());
+        values.put(KEY_SEARCHABLE_DATA_LABEL, data.getLabel());
+        values.put(KEY_SEARCHABLE_DATA_VALUE, data.getValue());
+
+        // updating row
+        return db.update(TABLE_SEARCHABLE_DATA, values, KEY_SEARCHABLE_DATA_FORM_ID + " = ? AND " +
+                        KEY_SEARCHABLE_DATA_LABEL + " = ?",
+                new String[]{data.getFormId(), data.getValue()});
     }
 
     /**

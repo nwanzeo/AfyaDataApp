@@ -289,7 +289,13 @@
                 android:value="org.sacids.afyadata.activities.MainActivity" />
         </activity>
         <activity android:name=".activities.FormDetailsActivity" />
-        <activity android:name=".activities.LabResultsActivity"></activity>
+        <activity android:name=".activities.LabResultsActivity" />
+
+        <service
+            android:name=".tasks.DownloadSearchableForm"
+            android:exported="false" />
+
+        <activity android:name=".activities.SearchResultActivity"></activity>
     </application>
 
 </manifest>

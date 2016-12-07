@@ -351,10 +351,12 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- NEW STRING -->
+    <string name="on_back_pressed">Press back again to exit</string>
     <string name="nav_item_forms">Campaign</string>
     <string name="nav_item_feedback">Form Feedback</string>
     <string name="nav_item_tips">Health A-Z</string>
     <string name="nav_item_glossary">Symptoms List</string>
+    <string name="nav_item_search">Search</string>
     <string name="nav_item_lab">Lab</string>
     <string name="nav_item_settings">Settings</string>
     <string name="nav_item_language">Change Language</string>
@@ -374,6 +376,13 @@
     <string name="lab_request">Lab Request</string>
     <string name="lab_results">Lab Results</string>
     <string name="required_admission">Admission Number is required</string>
+
+    <string name="lbl_search_details">Search using form and value</string>
+    <string name="lbl_search">Search</string>
+    <string name="lbl_choose_form">Choose form</string>
+    <string name="lbl_choose_field">Choose search field</string>
+    <string name="lbl_enter_value">Enter search value</string>
+    <string name="required_search_value">Search value is required</string>
 
 
     <!--Login issues -->

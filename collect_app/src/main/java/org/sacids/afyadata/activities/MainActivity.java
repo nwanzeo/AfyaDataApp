@@ -31,6 +31,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -43,6 +44,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -56,11 +58,13 @@ import org.sacids.afyadata.fragments.FeedbackFragment;
 import org.sacids.afyadata.fragments.GlossaryListFragment;
 import org.sacids.afyadata.fragments.HealthTipsFragment;
 import org.sacids.afyadata.fragments.LaboratoryFragment;
+import org.sacids.afyadata.fragments.SearchFragment;
 import org.sacids.afyadata.models.NavDrawerItem;
 import org.sacids.afyadata.preferences.PrefManager;
 import org.sacids.afyadata.preferences.PreferencesActivity;
 import org.sacids.afyadata.prefs.Preferences;
 import org.sacids.afyadata.receivers.FeedbackReceiver;
+import org.sacids.afyadata.tasks.DownloadSearchableForm;
 import org.sacids.afyadata.web.RestClient;
 
 import java.util.ArrayList;
@@ -107,6 +111,8 @@ public class MainActivity extends Activity {
 
     private PendingIntent pendingIntent;
     private AlarmManager manager;
+
+    private boolean doubleBackToExitPressedOnce;
 
 
     @Override
@@ -202,6 +208,9 @@ public class MainActivity extends Activity {
         manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         int interval = 1800000; // 30 minutes
         manager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+
+        // Start the service
+        startService(new Intent(this, DownloadSearchableForm.class));
 
         // Get the message from the intent
         Intent intent = getIntent();
@@ -312,7 +321,7 @@ public class MainActivity extends Activity {
                 break;
             case 4:
                 //Lab
-                fragment = new LaboratoryFragment();
+                fragment = new SearchFragment();
                 break;
             case 5:
                 //change Language
@@ -500,22 +509,20 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(getResources().getString(R.string.exit_status))
-                .setCancelable(false)
-                .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        moveTaskToBack(true);
-                        finish();
-                    }
-                })
-                .setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, getString(R.string.on_back_pressed), Toast.LENGTH_SHORT).show();
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+
+            }
+        }, 1000);
     }
 
 

@@ -99,6 +99,7 @@ public class SearchFragment extends Fragment {
         final List<SearchableForm> formList = db.getSearchableForms();
 
         ArrayList<String> StringFormList = new ArrayList<>();
+        //StringFormList.add("Choose Form");
         for (SearchableForm form : formList
                 ) {
             StringFormList.add(form.getTitle());

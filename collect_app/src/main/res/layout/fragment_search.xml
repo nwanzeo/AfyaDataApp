@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/lbl_search_details"
+        android:textSize="@dimen/title_medium" />
+
+    <!-- Form Spinner Dropdown -->
+    <Spinner
+        android:id="@+id/form"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:prompt="@string/lbl_choose_form"
+        android:spinnerMode="dropdown"/>
+
+    <!-- Form Spinner Dropdown -->
+    <Spinner
+        android:id="@+id/label"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:prompt="@string/lbl_choose_field"
+        android:spinnerMode="dropdown"/>
+
+    <EditText
+        android:id="@+id/value"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:hint="@string/lbl_enter_value"
+        android:padding="10dp"
+        android:singleLine="true"
+        android:textColor="@color/primary_text"
+        android:textColorHint="@color/color_text"
+        android:textSize="@dimen/title_medium" />
+
+    <Button
+        android:id="@+id/btn_search"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:padding="10dp"
+        android:text="@string/lbl_search"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_large" />
+
+</LinearLayout>

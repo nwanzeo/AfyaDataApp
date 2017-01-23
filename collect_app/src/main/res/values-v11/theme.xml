@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<style name="Collect" parent="android:Theme.Holo.Light">
-	    <item name="android:scrollbarThumbHorizontal">@+drawable/thumb</item>
-	    <item name="android:scrollbarThumbVertical">@+drawable/thumb</item>
-	    <item name="android:scrollbarSize">1.75mm</item>
-	    <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
-	    <item name="android:fadeScrollbars">false</item>
+		<!-- API 11 theme customizations can go here. -->
+		<item name="android:actionBarStyle">@style/ActionBar</item>
 	</style>
+
+	<style name="ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+		<item name="android:background">@color/primary</item>
+		<item name="android:titleTextStyle">@style/Theme.AppTheme.ActionBar.TitleTextStyle</item>
+	</style>
+
+	<style name="Theme.AppTheme.ActionBar.TitleTextStyle" parent="android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+		<item name="android:textColor">@color/white</item>
+		<item name="android:textStyle">normal</item>
+	</style>
+
 </resources>

@@ -14,21 +14,22 @@ applicationScripts.each {
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     // The following are set in the common.gradle file
     compileSdkVersion('Google Inc.:Google APIs:23')
     buildToolsVersion('23.0.1')
-    useLibrary  'org.apache.http.legacy'
-
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
-        applicationId("org.odk.collect.android")
-        minSdkVersion(8)
-        targetSdkVersion(8)
-        versionCode(1053)
-        versionName("1.4.7")
+        applicationId("org.sacids.afyadata")
+        minSdkVersion(11)
+        targetSdkVersion(11)
+        versionCode(1)
+        versionName('1.0')
+        // Enabling multidex support.
+        multiDexEnabled true
     }
-
     buildTypes {
         release {
             minifyEnabled(minify)
@@ -41,11 +42,13 @@ android {
             testCoverageEnabled(testCoverage) // Allows AndroidTest JaCoCo reports to be generated
         }
     }
-
-    packagingOptions { // Pick first occurrence of any files that cause conflicts, as defined in common.gradle
+    packagingOptions {
+        // Pick first occurrence of any files that cause conflicts, as defined in common.gradle
         packageList.each {
             pickFirst it
         }
+    }
+    productFlavors {
     }
 }
 
@@ -59,4 +62,9 @@ dependencies {
         debugCompile(group: groupId, name: playServicesArtifactName, version: playServicesSnapshot, ext: 'aar')
     }
     testCompile 'junit:junit:4.12'
+    compile files('libs/android-smart-image-view-1.0.0.jar')
+    apt 'org.parceler:parceler:1.1.1'
+    compile 'com.loopj.android:android-async-http:1.4.8'
+    compile 'in.srain.cube:grid-view-with-header-footer:1.0.12'
+    compile 'org.parceler:parceler-api:1.1.1'
 }

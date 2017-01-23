@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="org.sacids.afyadata.activities.LabResultsActivity">
+
+    <LinearLayout
+        android:id="@+id/layout_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/search_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:hint="Search by Admission Number"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textSize="@dimen/title_small" />
+
+        <ImageButton
+            android:id="@+id/button_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/primary"
+            android:padding="5dp"
+            android:src="@android:drawable/ic_menu_search"
+            android:text="Search"
+            android:textColor="@color/white"
+            tools:ignore="contentDescription" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_search"
+        android:layout_marginBottom="45dp"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_row_selector"
+        android:scrollbars="none" />
+
+    <Button
+        android:id="@+id/fill_results"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/primary"
+        android:padding="10dp"
+        android:text="@string/lbl_fill_results"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:visibility="gone"/>
+
+</RelativeLayout>

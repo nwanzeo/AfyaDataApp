@@ -8,7 +8,7 @@ import org.parceler.Parcel;
 @Parcel
 public class SearchableData {
     long id;
-    String formId;
+    long formId;
     String label;
     String value;
 
@@ -23,11 +23,11 @@ public class SearchableData {
         this.id = id;
     }
 
-    public String getFormId() {
+    public long getFormId() {
         return formId;
     }
 
-    public void setFormId(String formId) {
+    public void setFormId(long formId) {
         this.formId = formId;
     }
 

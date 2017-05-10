@@ -58,6 +58,7 @@ import org.sacids.afyadata.fragments.FeedbackFragment;
 import org.sacids.afyadata.fragments.GlossaryListFragment;
 import org.sacids.afyadata.fragments.HealthTipsFragment;
 import org.sacids.afyadata.fragments.LaboratoryFragment;
+import org.sacids.afyadata.fragments.MenuFragment;
 import org.sacids.afyadata.fragments.SearchFragment;
 import org.sacids.afyadata.models.NavDrawerItem;
 import org.sacids.afyadata.preferences.PrefManager;
@@ -71,7 +72,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 /**
- *
  * @author Renfrid Ngolongolo (renfrid.ngolongolo@sacids.org)
  * @author Godluck Akyoo (godluck.akyoo@sacids.org)
  */
@@ -224,10 +224,7 @@ public class MainActivity extends Activity {
         }
     }
 
-
-    /**
-     * Slide menu item click listener
-     */
+    //Slide menu item click listener
     private class SlideMenuClickListener implements
             ListView.OnItemClickListener {
         @Override
@@ -238,74 +235,14 @@ public class MainActivity extends Activity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // toggle nav drawer on selecting action bar app icon/title
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_fill_form:
-                //fill blank form
-                Intent blankForms = new Intent(getApplicationContext(),
-                        FormChooserList.class);
-                startActivity(blankForms);
-                return true;
-
-            case R.id.action_edit_form:
-                //Edit forms
-                Intent editForms = new Intent(getApplicationContext(),
-                        InstanceChooserList.class);
-                startActivity(editForms);
-                return true;
-
-            case R.id.action_send_form:
-                //send finalized Forms
-                Intent sendForms = new Intent(getApplicationContext(),
-                        InstanceUploaderList.class);
-                startActivity(sendForms);
-                return true;
-
-            case R.id.action_delete_form:
-                //delete saved forms
-                Intent deleteForms = new Intent(getApplicationContext(),
-                        FileManagerTabs.class);
-                startActivity(deleteForms);
-                return true;
-
-            case R.id.action_download_form:
-                //Download form from server
-                Intent downloadForms = new Intent(getApplicationContext(),
-                        FormDownloadList.class);
-                startActivity(downloadForms);
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
-    /**
-     * Diplaying fragment view for selected nav drawer list item
-     */
+    //Displaying fragment view for selected nav drawer list item
     private void displayView(int position) {
         // update the main_menu content by replacing fragments
         Fragment fragment = null;
         switch (position) {
             case 0:
                 //campaign fragment
-                fragment = new CampaignFragment();
+                fragment = new MenuFragment();
                 break;
             case 1:
                 //Forms feedback

@@ -82,7 +82,7 @@ public class DownloadSearchableForm extends IntentService {
                                 JSONObject obj = formArray.getJSONObject(i);
 
                                 SearchableForm form = new SearchableForm();
-                                form.setId(obj.getInt(TAG_FORM_ID));
+                                form.setId(obj.getLong(TAG_FORM_ID));
                                 form.setTitle(obj.getString(TAG_TITLE));
                                 form.setJrFormId(obj.getString(TAG_JR_FORM_ID));
                                 //check if form exists
@@ -98,7 +98,7 @@ public class DownloadSearchableForm extends IntentService {
                                     JSONObject jsonObject = searchArray.getJSONObject(j);
 
                                     SearchableData data = new SearchableData();
-                                    data.setFormId(obj.getString(TAG_FORM_ID));
+                                    data.setFormId(obj.getLong(TAG_FORM_ID));
                                     data.setLabel(jsonObject.getString(TAG_LABEL));
                                     data.setValue(jsonObject.getString(TAG_VALUE));
                                     //check if searchable data exist

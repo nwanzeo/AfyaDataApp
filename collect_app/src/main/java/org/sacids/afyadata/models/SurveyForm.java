@@ -24,17 +24,17 @@ import java.util.Date;
  */
 public class SurveyForm implements Parcelable {
 
-    private long id;
-    private String displayName;
-    private String submissionUri;
-    private String instanceFilePath;
-    private String jrFormId;
-    private String jrInstanceId;
-    private String jrVersion;
-    private String status;
-    private boolean canEditWhenComplete;
-    private Date lastStatusChangeDate;
-    private String displaySubText;
+    long id;
+    String displayName;
+    String submissionUri;
+    String instanceFilePath;
+    String jrFormId;
+    String jrInstanceId;
+    String jrVersion;
+    String status;
+    boolean canEditWhenComplete;
+    Date lastStatusChangeDate;
+    String displaySubText;
 
     public SurveyForm() {
     }

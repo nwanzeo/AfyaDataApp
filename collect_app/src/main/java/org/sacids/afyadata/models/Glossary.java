@@ -22,10 +22,10 @@ import android.os.Parcelable;
  */
 @org.parceler.Parcel
 public class Glossary {
-    private int id;
-    private String title;
-    private String code;
-    private String description;
+    int id;
+    String title;
+    String code;
+    String description;
 
     public Glossary() {
     }

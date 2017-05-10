@@ -9,12 +9,12 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.sacids.afyadata"
-    android:versionCode="1"
-    android:versionName="1.0">
+    android:versionCode="2"
+    android:versionName="1.2">
 
     <uses-sdk
         android:minSdkVersion="11"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="23" />
 
     <uses-feature
         android:name="android.hardware.location"

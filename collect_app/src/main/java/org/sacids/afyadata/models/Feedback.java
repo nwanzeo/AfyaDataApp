@@ -22,18 +22,17 @@ import org.parceler.Parcel;
  */
 @Parcel
 public class Feedback{
-
-    private long id;
-    private String formId;
-    private String instanceId;
-    private String title;
-    private String message;
-    public String sender;
-    private String userName;
-    private String chrName;
-    private String dateCreated;
-    private String status;
-    private String replyBy;
+    long id;
+    String formId;
+    String instanceId;
+    String title;
+    String message;
+    String sender;
+    String userName;
+    String chrName;
+    String dateCreated;
+    String status;
+    String replyBy;
 
     public Feedback() {
     }

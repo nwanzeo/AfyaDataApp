@@ -22,14 +22,14 @@ import org.parceler.Parcel;
  */
 @Parcel
 public class Disease {
-    private long id;
-    private String title;
-    private String specie_title;
-    private String description;
-    private String causes;
-    private String symptoms;
-    private String diagnosis;
-    private String treatment;
+    long id;
+    String title;
+    String specie_title;
+    String description;
+    String causes;
+    String symptoms;
+    String diagnosis;
+    String treatment;
 
     public Disease() {
     }

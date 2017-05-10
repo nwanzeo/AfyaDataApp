@@ -304,15 +304,14 @@ public class AfyaDataDB extends SQLiteOpenHelper {
     }
 
     //getAllSearchable Form
-    public List<SearchableData> getSearchableData() {
+    public List<SearchableData> getSearchableData(long formId) {
 
         List<SearchableData> dataList = new ArrayList<SearchableData>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_SEARCHABLE_DATA
-                + " ORDER BY " + KEY_SEARCHABLE_DATA_VALUE + " ASC";
+        String selectQuery = "SELECT  * FROM " + TABLE_SEARCHABLE_DATA + " WHERE " + KEY_SEARCHABLE_FORM_ID + " = ?";
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        Cursor cursor = db.rawQuery(selectQuery, new String[]{String.valueOf(formId)});
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -320,7 +319,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
                 SearchableData data = new SearchableData();
                 data.setLabel(cursor.getString(cursor.getColumnIndex(KEY_SEARCHABLE_DATA_LABEL)));
                 data.setValue(cursor.getString(cursor.getColumnIndex(KEY_SEARCHABLE_DATA_VALUE)));
-                data.setFormId(cursor.getString(cursor.getColumnIndex(KEY_SEARCHABLE_FORM_ID)));
+                data.setFormId(cursor.getLong(cursor.getColumnIndex(KEY_SEARCHABLE_FORM_ID)));
 
                 // Adding form data to list
                 dataList.add(data);
@@ -341,7 +340,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         Cursor cursor = db.query(TABLE_SEARCHABLE_DATA, new String[]{KEY_SEARCHABLE_DATA_ID,
                         KEY_SEARCHABLE_FORM_ID, KEY_SEARCHABLE_DATA_LABEL, KEY_SEARCHABLE_DATA_VALUE},
                 KEY_SEARCHABLE_DATA_FORM_ID + "=? AND " + KEY_SEARCHABLE_DATA_LABEL + "=?",
-                new String[]{data.getFormId(), data.getLabel()}, null, null, null, null);
+                new String[]{String.valueOf(data.getFormId()), data.getLabel()}, null, null, null, null);
 
         int count = cursor.getCount();
         cursor.close();
@@ -361,7 +360,7 @@ public class AfyaDataDB extends SQLiteOpenHelper {
         // updating row
         return db.update(TABLE_SEARCHABLE_DATA, values, KEY_SEARCHABLE_DATA_FORM_ID + " = ? AND " +
                         KEY_SEARCHABLE_DATA_LABEL + " = ?",
-                new String[]{data.getFormId(), data.getValue()});
+                new String[]{String.valueOf(data.getFormId()), data.getValue()});
     }
 
     /**

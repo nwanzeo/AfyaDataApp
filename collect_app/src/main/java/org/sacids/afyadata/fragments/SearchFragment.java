@@ -62,9 +62,6 @@ public class SearchFragment extends Fragment {
         // Form Spinner
         loadSpinnerForm();
 
-        //data value spinner
-        loadSpinnerData();
-
         rootView.findViewById(R.id.btn_search).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,9 +96,7 @@ public class SearchFragment extends Fragment {
         final List<SearchableForm> formList = db.getSearchableForms();
 
         ArrayList<String> StringFormList = new ArrayList<>();
-        //StringFormList.add("Choose Form");
-        for (SearchableForm form : formList
-                ) {
+        for (SearchableForm form : formList) {
             StringFormList.add(form.getTitle());
         }
 
@@ -123,6 +118,9 @@ public class SearchFragment extends Fragment {
                 formId = sf.getId(); //formId
                 jrFormId = sf.getJrFormId(); //jrFormId
                 Log.d(TAG, "selected " + sf.toString());
+
+                //load another data
+                loadSpinnerData();
             }
 
             @Override
@@ -135,11 +133,10 @@ public class SearchFragment extends Fragment {
     //spinner for data value
     private void loadSpinnerData() {
         // Spinner Drop down elements
-        final List<SearchableData> dataList = db.getSearchableData();
+        final List<SearchableData> dataList = db.getSearchableData(formId);
 
         ArrayList<String> StringDataList = new ArrayList<>();
-        for (SearchableData data : dataList
-                ) {
+        for (SearchableData data : dataList) {
             StringDataList.add(data.getLabel());
         }
 

@@ -22,15 +22,14 @@ import org.parceler.Parcel;
  */
 @Parcel
 public class Campaign {
-
-    private int id;
-    private String title;
-    private String type;
-    private String featured;
-    private String jrFormId;
-    private String description;
-    private String icon;
-    private String dateCreated;
+    int id;
+    String title;
+    String type;
+    String featured;
+    String jrFormId;
+    String description;
+    String icon;
+    String dateCreated;
 
     public Campaign() {
     }

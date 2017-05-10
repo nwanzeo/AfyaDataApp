@@ -21,9 +21,9 @@ import org.parceler.Parcel;
  */
 @Parcel
 public class LabRequest {
-    private long id;
-    private String label;
-    private String value;
+    long id;
+    String label;
+    String value;
 
     public LabRequest() {
     }

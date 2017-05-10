@@ -18,11 +18,11 @@ package org.sacids.afyadata.models;
  * Created by Renfrid-Sacids on 6/30/2016.
  */
 public class FormDetails {
-    private long id;
-    private String label;
-    private String type;
-    private String value;
-    private String instanceId;
+    long id;
+    String label;
+    String type;
+    String value;
+    String instanceId;
 
 
     public FormDetails() {

@@ -142,8 +142,7 @@ public class MainActivity extends Activity {
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
         navDrawerItems = new ArrayList<NavDrawerItem>();
-
-        // adding nav drawer items to array
+        
         // Campaign
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
         // Form Feedback

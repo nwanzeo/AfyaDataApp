@@ -142,21 +142,20 @@ public class MainActivity extends Activity {
         mDrawerList = (ListView) findViewById(R.id.list_slidermenu);
 
         navDrawerItems = new ArrayList<NavDrawerItem>();
-        
-        // Campaign
+
+        // adding nav drawer items to array
+        // Home
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-        // Form Feedback
+        // Symptoms
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-        // Health Tips
+        // Search
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
-        // Symptoms List
+        // Settings
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
-        //Lab
+        //Change Language
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
-        // Change language
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
         //logout
-        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
 
         // Recycle the typed array
         navMenuIcons.recycle();
@@ -218,10 +217,11 @@ public class MainActivity extends Activity {
         if (extras != null) {
             String formFeedback = extras.getString("feedback");
             if (formFeedback.equalsIgnoreCase("formFeedback")) {
-                displayView(1);
+                startActivity(new Intent(this, FeedbackListActivity.class));
             }
         }
     }
+
 
     //Slide menu item click listener
     private class SlideMenuClickListener implements
@@ -234,36 +234,55 @@ public class MainActivity extends Activity {
         }
     }
 
-    //Displaying fragment view for selected nav drawer list item
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // toggle nav drawer on selecting action bar app icon/title
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        // Handle item selection
+        switch (item.getItemId()) {
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    // Displaying fragment view for selected nav drawer list item
     private void displayView(int position) {
         // update the main_menu content by replacing fragments
         Fragment fragment = null;
         switch (position) {
             case 0:
-                //campaign fragment
+                //Menu fragment
                 fragment = new MenuFragment();
                 break;
             case 1:
-                //Forms feedback
-                fragment = new FeedbackFragment();
-                break;
-            case 2:
-                //Health Tips
-                fragment = new HealthTipsFragment();
-                break;
-            case 3:
                 //Glossary List
                 fragment = new GlossaryListFragment();
                 break;
-            case 4:
+            case 2:
                 //Lab
                 fragment = new SearchFragment();
                 break;
-            case 5:
+            case 3:
+                //settings
+                startActivity(new Intent(context, PreferencesActivity.class));
+                break;
+            case 4:
                 //change Language
                 showChangeLanguageDialog();
                 break;
-            case 6:
+            case 5:
                 //clear session
                 pref.clearSession();
                 //start new Intent
@@ -323,7 +342,7 @@ public class MainActivity extends Activity {
      * check app version
      */
     public void updateAppVersion() {
-        String versionURL = serverUrl + "/api/v2/auth/version";
+        String versionURL = serverUrl + "/api/v3/auth/version";
         RestClient.get(versionURL, new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers,

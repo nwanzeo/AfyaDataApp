@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,11 +59,15 @@ import org.sacids.afyadata.web.RestClient;
 public class LoginActivity extends Activity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
+
+    //variables
     private Button btnLogin, btnLinkToRegister;
-    private EditText inputUsername;
+    private EditText inputCode;
+    private EditText inputMobile;
     private EditText inputPassword;
 
-    private String username;
+    private String code;
+    private String mobile;
     private String password;
 
     private ProgressDialog pDialog;
@@ -90,17 +95,32 @@ public class LoginActivity extends Activity {
 
         //setup view
         setUpViews();
+    }
+
+    //setUpViews
+    private void setUpViews() {
+        inputCode = (EditText) findViewById(R.id.country_code);
+        inputMobile = (EditText) findViewById(R.id.mobile);
+        inputPassword = (EditText) findViewById(R.id.password);
+
+        //set CountryCode
+        inputCode.setText(getCountryCode());
+        inputCode.setEnabled(false);
+
+        //button
+        btnLogin = (Button) findViewById(R.id.button_login);
+        btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen);
 
         // Login button Click Event
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-
-                username = inputUsername.getText().toString();
+                code = inputCode.getText().toString();
+                mobile = inputMobile.getText().toString();
                 password = inputPassword.getText().toString();
 
-                if (username == null || username.length() == 0) {
-                    inputUsername.setError(getResources().getString(R.string.username_required));
+                if (mobile == null || mobile.length() == 0) {
+                    inputMobile.setError(getResources().getString(R.string.phone_required));
                 } else if (password == null || password.length() == 0) {
                     inputPassword.setError(getResources().getString(R.string.password_required));
                 } else {
@@ -115,14 +135,14 @@ public class LoginActivity extends Activity {
         btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View view) {
-                Intent registerIntent = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(registerIntent);
+                startActivity(new Intent(context, RegisterActivity.class));
                 finish();
             }
         });
     }
 
 
+    //check user login
     public void checkLogin() {
         // Progress dialog
         pDialog = new ProgressDialog(this);
@@ -135,10 +155,10 @@ public class LoginActivity extends Activity {
                 getString(R.string.default_server_url));
 
         RequestParams params = new RequestParams();
-        params.add("username", username);
+        params.add("phone", code + mobile);
         params.add("password", password);
 
-        String loginURL = serverUrl + "/api/v2/auth/login";
+        String loginURL = serverUrl + "/api/v3/auth/login";
 
         RestClient.post(loginURL, params, new JsonHttpResponseHandler() {
             @Override
@@ -168,8 +188,7 @@ public class LoginActivity extends Activity {
                         editor.commit();
 
                         //Redirect to Main activity
-                        Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(mainIntent);
+                        startActivity(new Intent(context, MainActivity.class));
                         finish();
                     } else {
                         String message = response.getString("error_msg");
@@ -188,14 +207,6 @@ public class LoginActivity extends Activity {
                 Log.d(TAG, "Server response " + responseString);
             }
         });
-    }
-
-
-    private void setUpViews() {
-        inputUsername = (EditText) findViewById(R.id.username);
-        inputPassword = (EditText) findViewById(R.id.password);
-        btnLogin = (Button) findViewById(R.id.button_login);
-        btnLinkToRegister = (Button) findViewById(R.id.btnLinkToRegisterScreen);
     }
 
 
@@ -251,5 +262,30 @@ public class LoginActivity extends Activity {
         res.updateConfiguration(conf, dm);
         mSharedPreferences.edit().putString(Preferences.DEFAULT_LOCALE, locale).commit();
         mSharedPreferences.edit().putBoolean(Preferences.FIRST_TIME_APP_OPENED, false).commit();
+    }
+
+
+    /**
+     * Function to get County code
+     * country code should be of 3 digits length
+     *
+     * @return
+     */
+    public String getCountryCode() {
+        String CountryID = "";
+        String countryCode = "";
+
+        TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        //getNetworkCountryIso
+        CountryID = manager.getSimCountryIso().toUpperCase();
+        String[] rl = this.getResources().getStringArray(R.array.CountryCodes);
+        for (int i = 0; i < rl.length; i++) {
+            String[] g = rl[i].split(",");
+            if (g[1].trim().equals(CountryID.trim())) {
+                countryCode = g[0];
+                break;
+            }
+        }
+        return countryCode;
     }
 }

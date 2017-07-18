@@ -189,7 +189,7 @@ public class LabResultsActivity extends Activity {
         RequestParams params = new RequestParams();
         params.add("v", admissionNumber);
 
-        String labRequestURL = serverUrl + "/api/v2/feedback/requests";
+        String labRequestURL = serverUrl + "/api/v3/feedback/requests";
 
         RestClient.get(labRequestURL, params, new JsonHttpResponseHandler() {
             @Override

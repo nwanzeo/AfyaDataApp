@@ -30,6 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -55,9 +56,6 @@ import java.util.List;
 import org.sacids.afyadata.utilities.ImageLoader;
 import org.sacids.afyadata.web.BackgroundClient;
 
-import in.srain.cube.views.GridViewWithHeaderAndFooter;
-
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -67,7 +65,7 @@ public class CampaignFragment extends Fragment {
     private View rootView;
 
     private List<Campaign> campaignList = new ArrayList<Campaign>();
-    private GridViewWithHeaderAndFooter gridView;
+    private GridView gridView;
     private CampaignListAdapter campaignAdapter;
 
     private SharedPreferences mSharedPreferences;
@@ -114,9 +112,7 @@ public class CampaignFragment extends Fragment {
 
         db = new AfyaDataDB(getActivity());
 
-        //View layoutBanner = getActivity().getLayoutInflater().inflate(R.layout.campaign_header, null);
-        //gridView.addHeaderView(layoutBanner);
-        gridView = (GridViewWithHeaderAndFooter) rootView.findViewById(R.id.gridView);
+        gridView = (GridView) rootView.findViewById(R.id.gridView);
 
         fetchCampaign();
 

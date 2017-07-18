@@ -163,7 +163,7 @@ public class GlossaryListFragment extends Fragment {
             RequestParams param = new RequestParams();
             param.add("language", language);
 
-            String tipsURL = serverUrl + "/api/v2/ohkr/get_symptoms";
+            String tipsURL = serverUrl + "/api/v3/ohkr/get_symptoms";
 
             BackgroundClient.get(tipsURL, param, new JsonHttpResponseHandler() {
                 @Override

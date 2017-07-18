@@ -9,7 +9,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.sacids.afyadata"
-    android:versionCode="2"
+    android:versionCode="3"
     android:versionName="1.2">
 
     <uses-sdk
@@ -244,27 +244,7 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity android:name=".activities.MainActivity" />
-        <activity
-            android:name=".activities.ChatListActivity"
-            android:parentActivityName=".activities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.sacids.afyadata.activities.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activities.CampaignActivity"
-            android:parentActivityName=".activities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.sacids.afyadata.activities.MainActivity" />
-        </activity>
-        <activity
-            android:name=".activities.HeathTipsActivity"
-            android:parentActivityName=".activities.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.sacids.afyadata.activities.MainActivity" />
-        </activity>
+
         <activity
             android:name=".activities.LoginActivity"
             android:windowSoftInputMode="stateHidden" />
@@ -295,7 +275,33 @@
             android:name=".tasks.DownloadSearchableForm"
             android:exported="false" />
 
-        <activity android:name=".activities.SearchResultActivity"></activity>
+        <activity android:name=".activities.SearchResultActivity" />
+        <activity
+            android:name=".activities.FeedbackListActivity"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.sacids.afyadata.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.CampaignListActivity"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.sacids.afyadata.activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.HealthTipsListActivity"
+            android:parentActivityName=".activities.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.sacids.afyadata.activities.MainActivity" />
+        </activity>
+
+        <activity android:name=".activities.ChatListActivity" />
+        <activity android:name=".activities.CampaignActivity" />
+        <activity android:name=".activities.HeathTipsActivity" />
     </application>
 
 </manifest>

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 Copyright (C) 2009 University of Washington
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -47,6 +46,8 @@ the License.
     <color name="maroon">#800000</color>
     <color name="green">#008000</color>
     <color name="blue">#0000FF</color>
+    <color name="light_blue">#1976D2</color>
+    <color name="dark_orange">#e15f00</color>
     <color name="blueLight">#B3E5FC</color>
     <color name="black">#000000</color>
     <color name="Orange">#FFA500</color>

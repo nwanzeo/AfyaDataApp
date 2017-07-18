@@ -96,7 +96,7 @@
   <string name="please_wait">Tafadhali ngoja kudogo.</string>
   <string name="please_wait_long">Tafadhali ngoja. Hii itachukua dakika chache.</string>
   <string name="quit_application">Ondoka %s</string>
-  <string name="quit_entry">Hifadhi fomu na kuondoka</string>
+  <string name="quit_entry">Hakikisha na hifadhi</string>
   <string name="refresh">Onyesha upya</string>
   <string name="replace_barcode">Badili Barcode</string>
   <string name="replace_location">Badili mahali</string>
@@ -248,6 +248,7 @@
 
      <!-- NEW STRING -->
   <string name="on_back_pressed">Bonyeza tena kutoka.</string>
+  <string name="nav_item_home">Mwanzo</string>
   <string name="nav_item_forms">Kampeni</string>
   <string name="nav_item_feedback">Fomu Mrejesho</string>
   <string name="nav_item_tips">Afya Taarifa</string>
@@ -282,12 +283,18 @@
 
   <!--Login issues -->
   <string name="full_name">Jina Kamili</string>
+  <string name="first_name">Jina La Kwanza</string>
+  <string name="last_name">Jina La Mwisho</string>
   <string name="email">Barua Pepe</string>
-  <string name="phone">Namba ya Simu</string>
+  <string name="phone">Namba ya Simu i.e. 717705746</string>
   <string name="password_confirm">Hakiki neno siri</string>
+  <string name="first_name_required">Jina la kwanza linahitajika</string>
+  <string name="last_name_required">Jina la mwisho linahitajika</string>
+  <string name="phone_required">Namba ya simu inahitajika</string>
   <string name="name_required">Jina linahitajika</string>
   <string name="username_required">Jina la utambulisho linahitajika</string>
   <string name="password_required">Neno siri linahitajika</string>
+  <string name="password_match_required">Neno siri halijafanana</string>
   <string name="sign_in">INGIA</string>
   <string name="sign_up">JISAJILI</string>
   <string name="btn_link_to_register">Mgeni kwenye AfyaData? Jisajili sasa.</string>

@@ -16,10 +16,12 @@ package org.sacids.afyadata.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,13 +51,17 @@ public class RegisterActivity extends Activity {
 
     private static final String TAG = RegisterActivity.class.getSimpleName();
 
+    private Context context = this;
+    //variables
     private Button btnRegister;
     private Button btnLinkToLogin;
-    private EditText inputName, inputUsername;
+    private EditText inputFirstName, inputLastName, inputCode, inputMobile;
     private EditText inputPassword, inputPasswordConfirm;
 
-    private String username;
-    private String full_name;
+    private String firstName;
+    private String lastName;
+    private String code;
+    private String mobile;
     private String password;
     private String passwordConfirm;
 
@@ -66,6 +72,9 @@ public class RegisterActivity extends Activity {
     private SharedPreferences mSharedPreferences;
     private String serverUrl;
 
+    public static final String KEY_USERNAME = "username";
+    public static final String KEY_PASSWORD = "password";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,24 +84,45 @@ public class RegisterActivity extends Activity {
 
         //setup view
         setUpViews();
+    }
+
+    //set up views
+    private void setUpViews() {
+        inputFirstName = (EditText) findViewById(R.id.first_name);
+        inputLastName = (EditText) findViewById(R.id.last_name);
+        inputMobile = (EditText) findViewById(R.id.mobile);
+        inputCode = (EditText) findViewById(R.id.country_code);
+        inputPassword = (EditText) findViewById(R.id.password);
+        inputPasswordConfirm = (EditText) findViewById(R.id.password_confirm);
+
+        //set CountryCode
+        inputCode.setText(getCountryCode());
+        inputCode.setEnabled(false);
+
+        //button
+        btnRegister = (Button) findViewById(R.id.btnRegister);
+        btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
 
         // Register Button Click event
         btnRegister.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-
-                full_name = inputName.getText().toString();
-                username = inputUsername.getText().toString();
+                firstName = inputFirstName.getText().toString();
+                lastName = inputLastName.getText().toString();
+                code = inputCode.getText().toString();
+                mobile = inputMobile.getText().toString();
                 password = inputPassword.getText().toString();
                 passwordConfirm = inputPasswordConfirm.getText().toString();
 
-                if (full_name == null || full_name.length() == 0) {
-                    inputName.setError(getResources().getString(R.string.name_required));
-                } else if (username == null || username.length() == 0) {
-                    inputUsername.setError(getResources().getString(R.string.username_required));
+                if (firstName == null || firstName.length() == 0) {
+                    inputFirstName.setError(getString(R.string.first_name_required));
+                } else if (lastName == null || lastName.length() == 0) {
+                    inputLastName.setError(getString(R.string.last_name_required));
+                } else if (mobile == null || mobile.length() == 0) {
+                    inputLastName.setError(getString(R.string.phone_required));
                 } else if (password == null || password.length() == 0) {
-                    inputPassword.setError(getResources().getString(R.string.password_required));
+                    inputPassword.setError(getString(R.string.password_required));
                 } else if (passwordConfirm == null || passwordConfirm.length() == 0) {
-                    inputPassword.setError(getResources().getString(R.string.password_required));
+                    inputPasswordConfirm.setError(getString(R.string.password_required));
                 } else {
                     //Register now if condition accepts
                     registerUser();
@@ -103,22 +133,10 @@ public class RegisterActivity extends Activity {
         // Link to Login Screen
         btnLinkToLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(loginIntent);
+                startActivity(new Intent(context, LoginActivity.class));
                 finish();
             }
         });
-
-    }
-
-    //set up views
-    private void setUpViews() {
-        inputName = (EditText) findViewById(R.id.full_name);
-        inputUsername = (EditText) findViewById(R.id.username);
-        inputPassword = (EditText) findViewById(R.id.password);
-        inputPasswordConfirm = (EditText) findViewById(R.id.password_confirm);
-        btnRegister = (Button) findViewById(R.id.btnRegister);
-        btnLinkToLogin = (Button) findViewById(R.id.btnLinkToLoginScreen);
     }
 
     //Function to post details to the server
@@ -134,13 +152,14 @@ public class RegisterActivity extends Activity {
                 getString(R.string.default_server_url));
 
         final RequestParams params = new RequestParams();
-        params.add("full_name", full_name);
-        params.add("username", username);
+        params.add("first_name", firstName);
+        params.add("last_name", lastName);
+        params.add("phone", code + mobile);
         params.add("password", password);
         params.add("password_confirm", passwordConfirm);
 
 
-        String registerURL = serverUrl + "/api/v2/auth/register";
+        String registerURL = serverUrl + "/api/v3/auth/register";
 
         RestClient.post(registerURL, params, new JsonHttpResponseHandler() {
 
@@ -154,12 +173,24 @@ public class RegisterActivity extends Activity {
                     boolean error = response.getBoolean("error");
 
                     if (!error) {
-                        String message = response.getString("success_msg");
-                        Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_LONG).show();
+                        int userId = response.getInt("uid");
+                        JSONObject obj = response.getJSONObject("user");
 
-                        //Redirect to Login Activity
-                        Intent mainIntent = new Intent(RegisterActivity.this, LoginActivity.class);
-                        startActivity(mainIntent);
+                        String username = obj.getString("username");
+                        String first_name = obj.getString("first_name");
+                        String last_name = obj.getString("last_name");
+
+                        //login session
+                        prefManager.createLogin(userId, username);
+
+                        //save variables to shared Preference
+                        SharedPreferences.Editor editor = mSharedPreferences.edit();
+                        editor.putString(KEY_USERNAME, username);
+                        editor.putString(KEY_PASSWORD, password);
+                        editor.commit();
+
+                        //Redirect to Main activity
+                        startActivity(new Intent(context, MainActivity.class));
                         finish();
                     } else {
                         String message = response.getString("error_msg");
@@ -178,5 +209,29 @@ public class RegisterActivity extends Activity {
                 Toast.makeText(RegisterActivity.this, "Failed to create account", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /**
+     * Function to get County code
+     * country code should be of 3 digits length
+     *
+     * @return
+     */
+    public String getCountryCode() {
+        String CountryID = "";
+        String countryCode = "";
+
+        TelephonyManager manager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        //getNetworkCountryIso
+        CountryID = manager.getSimCountryIso().toUpperCase();
+        String[] rl = this.getResources().getStringArray(R.array.CountryCodes);
+        for (int i = 0; i < rl.length; i++) {
+            String[] g = rl[i].split(",");
+            if (g[1].trim().equals(CountryID.trim())) {
+                countryCode = g[0];
+                break;
+            }
+        }
+        return countryCode;
     }
 }

@@ -66,7 +66,7 @@ public class DownloadSearchableForm extends IntentService {
             param.add("username", username);
             param.add("language", language);
 
-            String formUrl = serverUrl + "/api/v2/search/init";
+            String formUrl = serverUrl + "/api/v3/search";
 
             BackgroundClient.get(formUrl, param, new JsonHttpResponseHandler() {
                 @Override

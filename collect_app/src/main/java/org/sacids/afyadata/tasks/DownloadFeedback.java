@@ -114,7 +114,7 @@ public class DownloadFeedback extends IntentService {
             param.add("date_created", dateCreated);
             param.add("language", language);
 
-            String feedbackURL = serverUrl + "/api/v2/feedback/get_notification_feedback";
+            String feedbackURL = serverUrl + "/api/v3/feedback/notification";
 
             BackgroundClient.get(feedbackURL, param, new JsonHttpResponseHandler() {
                 @Override

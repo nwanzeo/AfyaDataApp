@@ -124,7 +124,7 @@ public class FormDetailsActivity extends Activity {
             param.add("instance_id", feedback.getInstanceId());
             param.add("language", language);
 
-            String formURL = serverUrl + "/api/v2/feedback/get_form_details";
+            String formURL = serverUrl + "/api/v3/feedback/get_form_details";
 
             BackgroundClient.get(formURL, param, new JsonHttpResponseHandler() {
                 @Override

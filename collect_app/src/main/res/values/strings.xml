@@ -117,7 +117,7 @@
     <string name="please_wait_google_drive">Please wait. Accessing Google Drive.</string>
     <string name="please_wait_long">Please wait. This could take a few minutes.</string>
     <string name="quit_application">Exit %s</string>
-    <string name="quit_entry">Save Form and Exit</string>
+    <string name="quit_entry">Confirm and Save</string>
     <string name="refresh">Refresh</string>
     <string name="replace_barcode">Replace Barcode</string>
     <string name="replace_location">Replace Location</string>
@@ -352,6 +352,7 @@
 
     <!-- NEW STRING -->
     <string name="on_back_pressed">Press back again to exit</string>
+    <string name="nav_item_home">Home</string>
     <string name="nav_item_forms">Campaign</string>
     <string name="nav_item_feedback">Form Feedback</string>
     <string name="nav_item_tips">Health A-Z</string>
@@ -384,15 +385,20 @@
     <string name="lbl_enter_value">Enter search value</string>
     <string name="required_search_value">Search value is required</string>
 
-
     <!--Login issues -->
     <string name="full_name">Full name</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
     <string name="email">Email</string>
-    <string name="phone">Mobile number</string>
+    <string name="phone">Mobile i.e. 717705746</string>
     <string name="password_confirm">Password Confirm</string>
+    <string name="first_name_required">First name is required</string>
+    <string name="last_name_required">Last name is required</string>
+    <string name="phone_required">Mobile is required</string>
     <string name="name_required">Full name required</string>
     <string name="username_required">Username required</string>
     <string name="password_required">Password required</string>
+    <string name="password_match_required">Password does not match</string>
     <string name="sign_in">LOGIN</string>
     <string name="sign_up">REGISTER</string>
     <string name="btn_link_to_register">New member to AfyaData? Register Now.</string>

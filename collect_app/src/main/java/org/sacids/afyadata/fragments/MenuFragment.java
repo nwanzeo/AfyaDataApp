@@ -1,6 +1,5 @@
 package org.sacids.afyadata.fragments;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -11,9 +10,12 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import org.sacids.afyadata.R;
+import org.sacids.afyadata.activities.CampaignListActivity;
+import org.sacids.afyadata.activities.FeedbackListActivity;
 import org.sacids.afyadata.activities.FileManagerTabs;
 import org.sacids.afyadata.activities.FormChooserList;
 import org.sacids.afyadata.activities.FormDownloadList;
+import org.sacids.afyadata.activities.HealthTipsListActivity;
 import org.sacids.afyadata.activities.InstanceChooserList;
 import org.sacids.afyadata.activities.InstanceUploaderList;
 import org.sacids.afyadata.adapters.MenuGridAdapter;
@@ -35,7 +37,10 @@ public class MenuFragment extends Fragment {
             R.drawable.ic_edit_saved_form,
             R.drawable.ic_upload_form,
             R.drawable.ic_trash_bin,
-            R.drawable.ic_download_form
+            R.drawable.ic_download_form,
+            R.drawable.ic_comment,
+            R.drawable.ic_bullhorn_campaign,
+            R.drawable.ic_health_tips
     };
 
     private View rootView;
@@ -57,7 +62,10 @@ public class MenuFragment extends Fragment {
                 getResources().getString(R.string.review_data),
                 getResources().getString(R.string.send_data),
                 getResources().getString(R.string.manage_files),
-                getResources().getString(R.string.get_forms)
+                getResources().getString(R.string.get_forms),
+                getResources().getString(R.string.nav_item_feedback),
+                getResources().getString(R.string.nav_item_forms),
+                getResources().getString(R.string.nav_item_tips)
         };
 
         //gridView
@@ -91,6 +99,18 @@ public class MenuFragment extends Fragment {
 
                     case 4:
                         startActivity(new Intent(getActivity(), FormDownloadList.class));
+                        return;
+
+                    case 5:
+                        startActivity(new Intent(getActivity(), FeedbackListActivity.class));
+                        return;
+
+                    case 6:
+                        startActivity(new Intent(getActivity(), CampaignListActivity.class));
+                        return;
+
+                    case 7:
+                        startActivity(new Intent(getActivity(), HealthTipsListActivity.class));
                         return;
 
                     default:

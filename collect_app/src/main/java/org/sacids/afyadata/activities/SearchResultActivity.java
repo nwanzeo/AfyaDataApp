@@ -88,7 +88,7 @@ public class SearchResultActivity extends Activity {
                 getString(R.string.default_server_url));
 
         //search Url
-        String searchUrl = serverUrl + "/api/v2/search/form";
+        String searchUrl = serverUrl + "/api/v3/search/form";
 
         RequestParams params = new RequestParams();
         params.add("form_id", formId + "");

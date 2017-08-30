@@ -242,6 +242,25 @@ public class LoginActivity extends Activity {
             }
 
         });
+
+        promptView.findViewById(R.id.btn_french).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLocale("fr");
+                alertDialog.dismiss();
+            }
+
+        });
+
+        promptView.findViewById(R.id.btn_portuguese).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLocale("pt");
+                alertDialog.dismiss();
+            }
+
+        });
+
         alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {

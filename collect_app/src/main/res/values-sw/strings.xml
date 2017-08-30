@@ -242,11 +242,14 @@
   <string name="change_server_url">URL ya Seva</string>
   <string name="lang_swahili">Swahili</string>
   <string name="lang_english">Kiingereza</string>
+  <string name="lang_french">French</string>
+  <string name="lang_portuguese">Portuguese</string>
   <string name="btn_change_language">Badilisha lugha</string>
   <string name="title_choose_language">Chagua lugha</string>
 
 
      <!-- NEW STRING -->
+  <string name="powered_by">Powered by AfyaData</string>
   <string name="on_back_pressed">Bonyeza tena kutoka.</string>
   <string name="nav_item_home">Mwanzo</string>
   <string name="nav_item_forms">Kampeni</string>
@@ -302,7 +305,7 @@
   <string name="lbl_login_message">Tafadhari subiri.....</string>
   <string name="no_content">Hakuna cha kuonesha</string>
   <string name="no_feedback">Hakuna mrejesho kwa sasa</string>
-  <string name="no_campaign">No kampeni kwa sasa</string>
+  <string name="no_campaign">Hakuna kampeni kwa sasa</string>
   <string name="exit_status">Unataka kutoka sasa?</string>
   <string name="delete_status">Unataka kufuta mrejesho?</string>
   <string name="update_status">Kuna mabadiliko kwenye afyadata, Unahitaji mabadiliko?</string>

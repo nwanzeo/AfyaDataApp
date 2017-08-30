@@ -6,10 +6,10 @@
 
     <ImageView
         android:id="@+id/app_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="290dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/logo" />
+        android:src="@drawable/app_logo_national" />
 
 
     <ProgressBar
@@ -22,5 +22,25 @@
         android:layout_marginBottom="80dp"
         android:indeterminateTint="@color/primary"
         android:indeterminateTintMode="src_atop" />
+
+    <TextView
+        android:id="@+id/powered_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Powered by AfyaData"
+        android:textColor="@color/primary_text"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="@dimen/title_large" />
+
+    <ImageView
+        android:layout_width="103dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="5dp"
+        android:src="@drawable/inline_logo" />
 
 </RelativeLayout>

@@ -344,6 +344,8 @@
     <string name="google_play_services_error_occured">Unable to access Google Maps. Is Google Play Services installed?</string>
     <string name="lang_swahili">Swahili</string>
     <string name="lang_english">English</string>
+    <string name="lang_french">French</string>
+    <string name="lang_portuguese">Portuguese</string>
     <string name="btn_change_language">Change language</string>
     <string name="title_choose_language">Choose language</string>
 
@@ -351,6 +353,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- NEW STRING -->
+    <string name="powered_by">Powered by AfyaData</string>
     <string name="on_back_pressed">Press back again to exit</string>
     <string name="nav_item_home">Home</string>
     <string name="nav_item_forms">Campaign</string>
